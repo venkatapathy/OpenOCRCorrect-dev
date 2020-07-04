@@ -25,7 +25,8 @@ SOURCES +=\
     main.cpp \
     zoom.cpp \
     qcustomplot.cpp \
-	diff_match_patch.cpp
+	diff_match_patch.cpp \
+	DiffView.cpp
 
 HEADERS  += mainwindow.h \
     eddis.h \
@@ -52,9 +53,10 @@ HEADERS  += mainwindow.h \
     zoom.h \
     qcustomplot.h \
     meanStdPage.h \
-	diff_match_patch.h
+	diff_match_patch.h \
+	DiffView.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui DiffView.ui
 
 RESOURCES += \
     AppResources.qrc
