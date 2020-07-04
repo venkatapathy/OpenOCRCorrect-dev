@@ -165,10 +165,11 @@ private slots:
     void on_pushButton_3_clicked();
 
     void on_pushButton_2_clicked();
+	void on_actionDiff_triggered();
 
 private:
     Ui::MainWindow *ui;
-
+	QString qs1,qs2;
     QString mFilename;
     QString mFilenamejpeg;
 };

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1369</width>
-    <height>736</height>
+    <height>802</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -256,6 +256,12 @@ p, li { white-space: pre-wrap; }
     <addaction name="actionRightAlign"/>
     <addaction name="actionCentreAlign"/>
    </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>View</string>
+    </property>
+    <addaction name="actionDiff"/>
+   </widget>
    <addaction name="menuSelectLanguage"/>
    <addaction name="menuOCR_Correction_Window"/>
    <addaction name="menuCreateReports"/>
@@ -263,6 +269,7 @@ p, li { white-space: pre-wrap; }
    <addaction name="menuFontAndLayout"/>
    <addaction name="menuConvertFiles"/>
    <addaction name="menuFeatureExtraction"/>
+   <addaction name="menuView"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -622,6 +629,11 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="text">
     <string>CentreAlign</string>
+   </property>
+  </action>
+  <action name="actionDiff">
+   <property name="text">
+    <string>Diff</string>
    </property>
   </action>
  </widget>

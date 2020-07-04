@@ -7,6 +7,7 @@
 #include <math.h>
 #include <tesseract/baseapi.h>
 #include <leptonica/allheaders.h>
+#include "DiffView.h"
 //# include <QTask>
 
 //gs -dNOPAUSE -dBATCH -sDEVICE=jpeg -r300 -sOutputFile='page-%00d.jpeg' Book.pdf
@@ -2764,6 +2765,7 @@ void MainWindow::on_pushButton_2_clicked()
             QTextStream in(&sFile);
 			in.setCodec("UTF-8");
             QString t = in.readAll();
+			qs1 = t;
             s1 = t.toUtf8().constData();
 			ui->textBrowser->setPlainText(t);
             text1checked = 1;
@@ -2784,6 +2786,7 @@ void MainWindow::on_pushButton_3_clicked()
             QTextStream in(&sFile);
 			in.setCodec("UTF-8");
             QString t = in.readAll();
+			qs2 = t;
             s2 = t.toUtf8().constData();
 			ui->plainTextEdit->setPlainText(t);
             text2checked = 1;
@@ -2793,4 +2796,8 @@ void MainWindow::on_pushButton_3_clicked()
     }
 }
 
-
+void MainWindow::on_actionDiff_triggered() {
+	DiffView * dv =new DiffView(qs1,qs2);
+	dv->show();
+	
+}

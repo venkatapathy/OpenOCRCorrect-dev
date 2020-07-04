@@ -8,7 +8,7 @@ class DiffView : public QMainWindow
 	Q_OBJECT
 
 public:
-	DiffView(QWidget *parent = Q_NULLPTR);
+	DiffView(const QString &str1, const QString &str2,QWidget *parent = Q_NULLPTR);
 	~DiffView();
 
 private:

@@ -77,6 +77,7 @@ public:
     QAction *actionLeftAlign;
     QAction *actionRightAlign;
     QAction *actionCentreAlign;
+    QAction *actionDiff;
     QWidget *centralWidget;
     QGridLayout *gridLayout;
     QVBoxLayout *verticalLayout_2;
@@ -100,6 +101,7 @@ public:
     QMenu *menuFeatureExtraction;
     QMenu *menuSelectLanguage;
     QMenu *menuFontAndLayout;
+    QMenu *menuView;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
 
@@ -107,7 +109,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(1369, 736);
+        MainWindow->resize(1369, 802);
         QSizePolicy sizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
@@ -243,6 +245,8 @@ public:
         QIcon icon13;
         icon13.addFile(QString::fromUtf8(":/Images/AlignCenter.png"), QSize(), QIcon::Normal, QIcon::On);
         actionCentreAlign->setIcon(icon13);
+        actionDiff = new QAction(MainWindow);
+        actionDiff->setObjectName(QString::fromUtf8("actionDiff"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         gridLayout = new QGridLayout(centralWidget);
@@ -361,6 +365,8 @@ public:
         menuSelectLanguage->setObjectName(QString::fromUtf8("menuSelectLanguage"));
         menuFontAndLayout = new QMenu(menuBar);
         menuFontAndLayout->setObjectName(QString::fromUtf8("menuFontAndLayout"));
+        menuView = new QMenu(menuBar);
+        menuView->setObjectName(QString::fromUtf8("menuView"));
         MainWindow->setMenuBar(menuBar);
         mainToolBar = new QToolBar(MainWindow);
         mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
@@ -376,6 +382,7 @@ public:
         menuBar->addAction(menuFontAndLayout->menuAction());
         menuBar->addAction(menuConvertFiles->menuAction());
         menuBar->addAction(menuFeatureExtraction->menuAction());
+        menuBar->addAction(menuView->menuAction());
         menuOCR_Correction_Window->addAction(actionNew);
         menuOCR_Correction_Window->addAction(actionOpen);
         menuOCR_Correction_Window->addAction(actionSave);
@@ -421,6 +428,7 @@ public:
         menuFontAndLayout->addAction(actionLeftAlign);
         menuFontAndLayout->addAction(actionRightAlign);
         menuFontAndLayout->addAction(actionCentreAlign);
+        menuView->addAction(actionDiff);
         mainToolBar->addAction(actionNew);
         mainToolBar->addAction(actionOpen);
         mainToolBar->addAction(actionSave);
@@ -543,6 +551,7 @@ public:
         actionLeftAlign->setText(QCoreApplication::translate("MainWindow", "LeftAlign", nullptr));
         actionRightAlign->setText(QCoreApplication::translate("MainWindow", "RightAlign", nullptr));
         actionCentreAlign->setText(QCoreApplication::translate("MainWindow", "CentreAlign", nullptr));
+        actionDiff->setText(QCoreApplication::translate("MainWindow", "Diff", nullptr));
         pushButton->setText(QCoreApplication::translate("MainWindow", "Similarity", nullptr));
         pushButton_2->setText(QCoreApplication::translate("MainWindow", "Text1", nullptr));
         pushButton_3->setText(QCoreApplication::translate("MainWindow", "Text2", nullptr));
@@ -558,6 +567,7 @@ public:
         menuFeatureExtraction->setTitle(QCoreApplication::translate("MainWindow", "FeatureExtraction", nullptr));
         menuSelectLanguage->setTitle(QCoreApplication::translate("MainWindow", "SelectLanguage", nullptr));
         menuFontAndLayout->setTitle(QCoreApplication::translate("MainWindow", "FontAndLayout", nullptr));
+        menuView->setTitle(QCoreApplication::translate("MainWindow", "View", nullptr));
     } // retranslateUi
 
 };
