@@ -2762,9 +2762,10 @@ void MainWindow::on_pushButton_2_clicked()
         if(sFile.open(QFile::ReadOnly | QFile::Text))
         {
             QTextStream in(&sFile);
+			in.setCodec("UTF-8");
             QString t = in.readAll();
             s1 = t.toUtf8().constData();
-			
+			ui->textBrowser->setPlainText(t);
             text1checked = 1;
             sFile.close();
         }
@@ -2781,8 +2782,10 @@ void MainWindow::on_pushButton_3_clicked()
         if(sFile.open(QFile::ReadOnly | QFile::Text))
         {
             QTextStream in(&sFile);
+			in.setCodec("UTF-8");
             QString t = in.readAll();
             s2 = t.toUtf8().constData();
+			ui->plainTextEdit->setPlainText(t);
             text2checked = 1;
             sFile.close();
         }

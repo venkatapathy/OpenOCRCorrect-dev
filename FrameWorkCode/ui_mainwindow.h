@@ -333,6 +333,12 @@ public:
         splitter->addWidget(textBrowser);
         plainTextEdit = new QPlainTextEdit(splitter);
         plainTextEdit->setObjectName(QString::fromUtf8("plainTextEdit"));
+        QFont font2;
+        font2.setFamily(QString::fromUtf8("Shobhika Bold"));
+        font2.setPointSize(16);
+        font2.setBold(true);
+        font2.setWeight(75);
+        plainTextEdit->setFont(font2);
         splitter->addWidget(plainTextEdit);
 
         gridLayout->addWidget(splitter, 1, 2, 1, 1);
