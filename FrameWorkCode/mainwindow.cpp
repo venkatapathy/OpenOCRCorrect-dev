@@ -481,9 +481,9 @@ void MainWindow::on_actionOpen_triggered()
 
                 QGraphicsScene *graphic = new QGraphicsScene(this);
                 graphic->addPixmap(QPixmap::fromImage(imageOrig));
-                ui->graphicsView->setScene(graphic);
-                ui->graphicsView->adjustSize();
-                ui->graphicsView->fitInView(graphic->itemsBoundingRect(),Qt::KeepAspectRatio);
+               // ui->graphicsView->setScene(graphic);
+               // ui->graphicsView->adjustSize();
+                //ui->graphicsView->fitInView(graphic->itemsBoundingRect(),Qt::KeepAspectRatio);
                 localmFilename = mFilename;
                 //mFilename.replace(QString("jpeg"),QString("txt"));*/
 
@@ -495,8 +495,8 @@ void MainWindow::on_actionOpen_triggered()
                 if (!prevTRig) on_actionSpell_Check_triggered();
                 //OPENSPELLFLAG = 0;
 
-                Graphics_view_zoom* z = new Graphics_view_zoom(ui->graphicsView);
-                z->set_modifiers(Qt::NoModifier);
+               // Graphics_view_zoom* z = new Graphics_view_zoom(ui->graphicsView);
+                //z->set_modifiers(Qt::NoModifier);
                 // fill indexes according to Tesseract
                 
 
@@ -2764,6 +2764,7 @@ void MainWindow::on_pushButton_2_clicked()
             QTextStream in(&sFile);
             QString t = in.readAll();
             s1 = t.toUtf8().constData();
+			
             text1checked = 1;
             sFile.close();
         }
