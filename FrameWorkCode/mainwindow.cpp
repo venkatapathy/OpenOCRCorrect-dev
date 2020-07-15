@@ -23,7 +23,6 @@
 map<string, int> Dict, GBook, IBook, PWords, PWordsP,ConfPmap,ConfPmapFont,CPairRight;
 trie TDict,TGBook,TGBookP, newtrie,TPWords,TPWordsP;
 vector<string> vGBook,vIBook;
-QImage imageOrig;
 vector<QString> vs; vector<int> vx,vy,vw,vh,vright;
 map<string, vector<string>> SRules;
 map<string, string> TopConfusions;
@@ -281,126 +280,15 @@ void MainWindow::on_actionOpen_triggered()
         timefile.close();
         file = QFileDialog::getOpenFileName(this,"Open a File");
     }
-       //qDebug() <<"here" << file <<endl;
         QString localmFilename1;
-        if(!file.isEmpty())
-        { //CPair["BApyopetam"] = "BAzyopetam"; CPairRight["BAzyopetam"]++;
+        if(!file.isEmpty()){
             QFile sFile(file);
-            //if(sFile.open(QFile::ReadOnly | QFile::Text))
             if(sFile.open(QFile::ReadOnly)) //Sanoj
             {
                 mFilename = file;
                 localmFilename1 = mFilename;
                 string localFilename =  localmFilename1.toUtf8().constData();
-                // load vIPage and vCPage for calculating WER if corresponding CPage exist
-                /*vIPage.clear(); vCPage.clear();
-                //QString localmFilename1 = mFilename;
-                std::ifstream ssIPage(localmFilename1.toUtf8().constData());
-                string localstr;
-                while(ssIPage >> localstr) vIPage.push_back(localstr); ssIPage.close();
-                localmFilename1.replace("Inds","Correct");
-                std::ifstream ssCPage(localmFilename1.toUtf8().constData()); localmFilename1 = mFilename;
-
-                vCPage.clear();
-                if (ssCPage.is_open()){
-                 while(ssCPage >> localstr) {vCPage.push_back(localstr); } ssCPage.close();
-                    int vGsz = vCPage.size(), vIsz =  vIPage.size();
-                    cout << vGsz << " " << vIsz << endl;
-                    int win = vGsz  - vIsz;
-                    if(win<0) win = -1*win;
-                    win = maxIG(win,5);
-                    cout << win << endl;
-                    float WER = 0;
-                    // search for a word(pre space, post space as well) in Indsenz within win sized window in GDocs and if found then add to PWords
-                    for(int t = 0; t < vIsz;t++){
-                        string s1 = vIPage[t]; //(vGBook[t1].find(s1) != string::npos) || (vGBook[t1] == s1)
-                        for(int t1 = maxIG(t-win,0); t1 < min(t+win,vGsz); t1++){
-                            if (vCPage[t1] == s1) {WER++; break;}
-                        }
-                    }
-                    cout << vIsz - WER << endl;
-                    ui->lineEdit->setText("Page WER = " + QString::number((vIsz-WER)*100/vIsz));
-                }
-                */
-                // load and set data in Browzer
-                // if file exist in corrected open that else open file in Indz
-//                QString tesslocalmFilename = localmFilename1;
-//                Pix * image1;
-//                image1 = pixRead((tesslocalmFilename.replace(QString("txt"),QString("jpeg"))).toUtf8().constData());//phototest.tif
-
-//                tesseract::TessBaseAPI *api = new tesseract::TessBaseAPI();
-//                api->Init(NULL, "hin+san");
-//                api->SetImage(image1);
-//                Boxa* boxes = api->GetComponentImages(tesseract::RIL_TEXTLINE, true, NULL, NULL);//RIL_SYMBOL
-//                printf("Found %d textline image components.\n", boxes->n);
-//                vs.clear();vx.clear();vy.clear();vw.clear();vh.clear();
-//                vs.push_back(""); vx.push_back(1); vy.push_back(1); vw.push_back(1); vh.push_back(1); vright.push_back(1);
-//                int n = boxes->n;
-//                for(int i = 0; i < n; i++){
-//                    BOX* box = boxaGetBox(boxes, i, L_CLONE);
-//                    api->SetRectangle(box->x, box->y, box->w, box->h);
-//                    string ocrResult = api->GetUTF8Text(); //string ocrResultstr = ocrResult;
-//                    QString qstr = QString::fromStdString(ocrResult);
-//                    vs.push_back(qstr); vx.push_back(box->x); vy.push_back(box->y); vw.push_back(box->w); vh.push_back(box->h); vright.push_back(box->w + box->x);
-//                    qDebug() << qstr << vx << vy << vw << vh << vright << endl;
-                    //                float leftmean = accumulate(vx.begin(),vx.end(),0)/n;
-                    //                float leftdiff = 0;
-                    //                float rightmean = accumulate(vright.begin(),vright.end(),0)/n;
-                    //                float rightdiff = 0;
-                    //                 for(int i=0; i<n; i++)
-                    //                 {
-                    //                     leftdiff += abs(vx[i]-leftmean);
-                    //                     rightdiff += abs(vright[i]-rightmean);
-                    
-                    //                 }
-                    //                 float leftvariance = leftdiff/n;
-                    //                 float rightvariance = rightdiff/n;
-                    //                 qDebug() << leftvariance<< "-" <<leftmean << "   " << rightvariance << "-" << rightmean << endl;
-                    //                 if((leftvariance/leftmean)<0.1)
-                    //                 {
-                    //                    ui->textBrowser->setAlignment(Qt::AlignLeft);
-                    //                    alignment = "\"left\"";
-                    //                 }
-                    //                 else if((rightvariance/rightmean)<0.1)
-                    //                 {
-                    //                     ui->textBrowser->setAlignment(Qt::AlignRight);
-                    //                     alignment = "\"right\"";
-                    //                 }
-                    //                 else
-                    //                 {
-                    //                    ui->textBrowser->setAlignment(Qt::AlignCenter);
-                    //                    alignment = "\"center\"";
-                    //                 }
-//                 }
-
-//                float leftmean = accumulate(vx.begin(),vx.end(),0)/n;
-//                float leftdiff = 0;
-//                float rightmean = accumulate(vright.begin(),vright.end(),0)/n;
-//                float rightdiff = 0;
-//                 for(int i=0; i<n; i++)
-//                 {
-//                     leftdiff += abs(vx[i]-leftmean);
-//                     rightdiff += abs(vright[i]-rightmean);
-
-//                 }
-//                 float leftvariance = leftdiff/n;
-//                 float rightvariance = rightdiff/n;
-//                 qDebug() << leftvariance<< "-" <<leftmean << "   " << rightvariance << "-" << rightmean << endl;
-//                 if((leftvariance/leftmean)<0.1)
-//                 {
-//                    ui->textBrowser->setAlignment(Qt::AlignLeft);
-//                    alignment = "\"left\"";
-//                 }
-//                 else if((rightvariance/rightmean)<0.1)
-//                 {
-//                     ui->textBrowser->setAlignment(Qt::AlignRight);
-//                     alignment = "\"right\"";
-//                 }
-//                 else
-//                 {
-//                    ui->textBrowser->setAlignment(Qt::AlignCenter);
-//                    alignment = "\"center\"";
-//                 }
+                
                 myTimer.start();
                 //int nMilliseconds = myTimer.elapsed();
                 // do something..
@@ -415,13 +303,6 @@ void MainWindow::on_actionOpen_triggered()
                 //if(sFile1.open(QFile::ReadOnly | QFile::Text))
                 if(sFile1.open(QFile::ReadOnly)) //Sanoj
                 {
-//                    QTextStream in(&sFile1);
-//                    QString text = in.readAll();
-//                    sFile.close();
-//                    //ui->textBrowser->setPlainText(text);
-//                    ui->textBrowser->setHtml(text); //Sanoj
-//                    align=\"left\" style =\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"
-
                     QTextStream in(&sFile);
 					in.setCodec("UTF-8");
                     QString text = in.readAll();
@@ -429,48 +310,23 @@ void MainWindow::on_actionOpen_triggered()
                     QString  simplifiedtext = text.simplified();
                     openedFileWords = simplifiedtext.count(" ");
                     sFile.close();
-                    //ui->textBrowser->setPlainText(text);
+                    
                     string str1 = text.toUtf8().constData();
                     istringstream iss(str1);
                     string strHtml = "<html><body>"; string line;
                     while (getline(iss, line)) {
 
                         strHtml += "<p align=" + alignment+ ">" + line + "</p>";
-                        //strHtml +="<br>"; // To add new line
+                        
 
                    }
                    strHtml += "</body></html>";
                    ui->textBrowser->setHtml(QString::fromStdString(strHtml));//Sanoj
-//                   qDebug() << ui->textBrowser->toHtml();
-//                    QTextStream in(&sFile1); //Sanoj
-//                    string text2 = "<html><body>";
-//                    string p1 = "<p>";
-//                    string p2 = "</p>";
-//                    ui->textBrowser->setPlainText("");
-//                    ui->textBrowser->append(QString::fromStdString(text2));
-//                    while(!in.atEnd())
-//                    {
-
-//                        QString text = in.readLine();
-//                        string text1 = text.toUtf8().constData();
-//                        text1 = p1 + text1 + p2 + "<br>";
-//                        QString htmlcode = (QString::fromStdString(text1)).toHtmlEscaped();
-//                        ui->textBrowser->append(QString::fromStdString(text1));
-//                        QString op = ui->textBrowser->toHtml();
-//                        qDebug() << op;
-//                    }
-//                    text2 = "</body></html>";
-//                    sFile.close();
-//                    ui->textBrowser->append(QString::fromStdString(text2));
 
 
 
                 } else {
-//                    QTextStream in(&sFile);
-//                    QString text = in.readAll();
-//                    sFile.close();
-//                    //ui->textBrowser->setPlainText(text);
-//                    ui->textBrowser->setHtml(text); //Sanoj
+
 
                     QTextStream in(&sFile);
 					in.setCodec("UTF-8");
@@ -479,40 +335,18 @@ void MainWindow::on_actionOpen_triggered()
                     QString  simplifiedtext = text.simplified();
                     openedFileWords = simplifiedtext.count(" ");
                     sFile.close();
-                    //ui->textBrowser->setPlainText(text);
+                   
                     string str1 = text.toUtf8().constData();
                     istringstream iss(str1);
                     string strHtml = "<html><body>"; string line;
                     while (getline(iss, line)) {
 
                         strHtml += "<p>" + line + "</p> ";
-                        //strHtml +="<br>"; // To add new line
+                       
 
                    }
                    strHtml += "</body></html>";
                    ui->textBrowser->setHtml(QString::fromStdString(strHtml));//Sanoj
-
-
-//                    QTextStream in(&sFile1); //Sanoj
-//                    string text2 = "<html><body>";
-//                    string p1 = "<p>";
-//                    string p2 = "</p>";
-//                    ui->textBrowser->setPlainText("");
-//                    ui->textBrowser->append(QString::fromStdString(text2));
-//                    while(!in.atEnd())
-//                    {
-
-//                        QString text = in.readLine();
-//                        string text1 = text.toUtf8().constData();
-//                        text1 = p1 + text1 + p2 + "<br>";
-//                        QString htmlcode = (QString::fromStdString(text1)).toHtmlEscaped();
-//                        ui->textBrowser->append(QString::fromStdString(text1));
-//                        QString op = ui->textBrowser->toHtml();
-//                        qDebug() << op;
-//                    }
-//                    text2 = "</body></html>";
-//                    sFile.close();
-//                    ui->textBrowser->setHtml(QString::fromStdString(text2));
 
                 }
 
@@ -520,19 +354,16 @@ void MainWindow::on_actionOpen_triggered()
                 QString localmFilename = mFilename;
                 localmFilename.replace("txt","jpeg");
                 localmFilename.replace("html","jpeg");
-                //system("cd localmFilename");
-                //localmFilename = "gs -dNOPAUSE -dBATCH -sDEVICE=jpeg -r300 -sOutputFile='page-%00d.jpeg' " + localmFilename;
-                //string s2= localmFilename.toUtf8().constData();
-                //system(localmFilename.toStdString().c_str());
-                //localmFilename = mFilename;
-                //mFilenamejpeg = "page-1.jpeg";
+				QImage imageOrig;
                 imageOrig.load(localmFilename);
                 localmFilename = mFilename;
-
-                QGraphicsScene *graphic = new QGraphicsScene(this);
+				if (graphic)delete graphic;
+                graphic = new QGraphicsScene(this);
                 graphic->addPixmap(QPixmap::fromImage(imageOrig));
+				graphic->setSceneRect(QRectF());
+				//ui->graphicsView->setFixedSize(ui->graphicsView->size());
                 ui->graphicsView->setScene(graphic);
-                ui->graphicsView->adjustSize();
+                //ui->graphicsView->adjustSize();
                 ui->graphicsView->fitInView(graphic->itemsBoundingRect(),Qt::KeepAspectRatio);
                 localmFilename = mFilename;
                 //mFilename.replace(QString("jpeg"),QString("txt"));*/
@@ -544,9 +375,9 @@ void MainWindow::on_actionOpen_triggered()
                 //loadmaptoTrie(TGPage,GPage);
                 if (!prevTRig) on_actionSpell_Check_triggered();
                 //OPENSPELLFLAG = 0;
-
-                Graphics_view_zoom* z = new Graphics_view_zoom(ui->graphicsView);
-                z->set_modifiers(Qt::NoModifier);
+				if (z) delete z;
+				z = new Graphics_view_zoom(ui->graphicsView);
+				z->set_modifiers(Qt::NoModifier);
                 // fill indexes according to Tesseract
 
                 commentdict.clear();
@@ -2852,17 +2683,7 @@ void MainWindow::on_actionAllFontProperties_triggered() //Sanoj
 
 
 
-//void MainWindow::on_actionSaveAsODF_triggered()//Sanoj
-//{
-//    QString s = ui->textBrowser->toHtml();
-//    QTextDocument *doc = new QTextDocument();
-//    doc->setHtml(s);
-//    QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"),
-//        "untitled",tr("Open Document ('''.odt)"));
-//    QTextDocumentWriter odfWritter(fileName);
-//    odfWritter.write(doc); // doc is QTextDocument*
 
-//}
 
 
 
