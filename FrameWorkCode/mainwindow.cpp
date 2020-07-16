@@ -163,6 +163,7 @@ void MainWindow::on_actionLoad_Next_Page_triggered()
     file = QString::fromStdString(localFilename); fileFlag = 1;
     //OPENSPELLFLAG = 1;
     on_actionOpen_triggered();
+	fileFlag = false;
     }
     //imageOrig.load(localFilename.replace(QString("txt"),QString("jpeg")));
 
@@ -278,8 +279,10 @@ void MainWindow::on_actionOpen_triggered()
             TimeLog[key] = value;
         }
         timefile.close();
-        file = QFileDialog::getOpenFileName(this,"Open a File");
+		file = QFileDialog::getOpenFileName(this, "Open a File");
     }
+	
+
         QString localmFilename1;
         if(!file.isEmpty()){
             QFile sFile(file);
@@ -360,6 +363,7 @@ void MainWindow::on_actionOpen_triggered()
 				if (graphic)delete graphic;
                 graphic = new QGraphicsScene(this);
                 graphic->addPixmap(QPixmap::fromImage(imageOrig));
+				//ui->graphicsView->AdjustIgnored
 				graphic->setSceneRect(QRectF());
 				//ui->graphicsView->setFixedSize(ui->graphicsView->size());
                 ui->graphicsView->setScene(graphic);
@@ -511,65 +515,134 @@ void MainWindow::on_actionSpell_Check_triggered()
         istringstream iss(str1);
         string strHtml = "<html><body>"; string line;
 
+		QTextFormat f;
+		QBrush b;
+		b.setColor(Qt::GlobalColor::magenta);
+		f.setForeground(b);
+		QTextCharFormat f2;
+		f2.setForeground(b);
+		
+		QBrush b2;
+		b2.setColor(QColor("red"));
+		auto cursor = ui->textBrowser->cursor();
+		auto txcursor = ui->textBrowser->textCursor();
+		int value = 0;
+		f2.setBackground(b2);
+		while (!txcursor.atEnd()) {
+			txcursor.movePosition(QTextCursor::MoveOperation::EndOfWord);
+			//txcursor.select(QTextCursor::SelectionType::WordUnderCursor);
+			//if(txcursor.hasSelection()){
+				//QString str = txcursor.selectedText();
+				//auto cf = f.toCharFormat();
+				//txcursor.beginEditBlock();
+				txcursor.mergeCharFormat(f2);
+				//txcursor.mergeBlockCharFormat(f2);
+				//txcursor.endEditBlock();
+			//}
+			txcursor.movePosition(QTextCursor::MoveOperation::NextWord);
+		}
+		QString str = ui->textBrowser->toHtml();
+		auto str3 = str.toStdString();
+		
+			//QString str = txcursor.selectedText();
+			//std::string word = str.toStdString();
+			//if (ConvertSlpDevFlag) {
+			//	string word1 = word;
+			//	word = toslp1(word);
+			//	string wordNext;
+			//	if (hasM40PerAsci(word1)) { wordNext = word1; }
+			//	else { wordNext = toDev(word); }
+			//	strHtml += wordNext; strHtml += " "; //cout << strHtml << endl;
+			//	value++;
+			//}
+			//else {
+			//	string word1 = word;
+			//	word = toslp1(word);
+			//	string wordNext;
+			//	//cout << GPage.size() <<  word << " " << GPage[word] << endl;
+			//	if (hasM40PerAsci(word1)) { wordNext = word1; }
+			//	else if (GBook[(word)] > 0) { wordNext = toDev(word); PWords[word]++; }
+			//	//else if(CPairRight[word] >0) {wordNext = "<font color=\'purple\'>" + toDev(CPair[word]) + "</font>";}
+			//	else if (PWords[word] > 0) {
+			//		f.setForeground(b2);
+			//		txcursor.mergeCharFormat(f.toCharFormat());
+			//	}
+			//	else if ((Dict[word] == 0) && (PWords[word] == 0) && (CPair[word].size() > 0)) {
 
-        int value = 0;
-        while (getline(iss, line)) {
-                    istringstream issw(line);
-                    string word;
-                    strHtml += "<p>";
-                    while(issw >> word) {
-                        if(ConvertSlpDevFlag){
-                            string word1 = word;
-                            word = toslp1(word);
-                            string wordNext;
-                            if(hasM40PerAsci(word1)){wordNext = word1;}else{wordNext = toDev(word);}
-                            strHtml += wordNext; strHtml += " "; //cout << strHtml << endl;
-                            value ++;
-                        }
-                        else{
-                            string word1 = word;
-                            word = toslp1(word);
-                            string wordNext;
-                            //cout << GPage.size() <<  word << " " << GPage[word] << endl;
-                            if(hasM40PerAsci(word1)){wordNext = word1;}
-                            else if(GBook[(word)] > 0 ){wordNext = toDev(word); PWords[word]++;}
-                            //else if(CPairRight[word] >0) {wordNext = "<font color=\'purple\'>" + toDev(CPair[word]) + "</font>";}
-                            else if(PWords[word] > 0) { wordNext = "<font color=\'gray\'>" + toDev(word) + "</font>";}
-                            else if((Dict[word] ==0) && (PWords[word] == 0) && (CPair[word].size() > 0)) {
-                                wordNext = "<font color=\'purple\'>" + toDev(CPair[word]) + "</font>";
-                            } else {
-                            wordNext = findDictEntries(toslp1(word),Dict,PWords, word.size());//replace m1 with m2,m1 for combined search
-                            wordNext = find_and_replace_oddInstancesblue(wordNext);
-                            wordNext = find_and_replace_oddInstancesorange(wordNext);
-                            }
+			//		f.set
+			//		txcursor.mergeCharFormat(f.toCharFormat());
+			//	}
+			//	else {
+			//		wordNext = findDictEntries(toslp1(word), Dict, PWords, word.size());//replace m1 with m2,m1 for combined search
+			//		wordNext = find_and_replace_oddInstancesblue(wordNext);
+			//		wordNext = find_and_replace_oddInstancesorange(wordNext);
+			//	}
 
-                            strHtml += wordNext; strHtml += " "; //cout << strHtml << endl;
-                            value ++;
-                        }
+			//	strHtml += wordNext; strHtml += " "; //cout << strHtml << endl;
+			//	value++;
+			//}
+		
+       // while (getline(iss, line)) {
+       //             istringstream issw(line);
+       //             string word;
+       //             strHtml += "<p>";
+       //             while(issw >> word) {
+       //                 if(ConvertSlpDevFlag){
+       //                     string word1 = word;
+       //                     word = toslp1(word);
+       //                     string wordNext;
+       //                     if(hasM40PerAsci(word1)){wordNext = word1;}else{wordNext = toDev(word);}
+       //                     strHtml += wordNext; strHtml += " "; //cout << strHtml << endl;
+       //                     value ++;
+       //                 }
+       //                 else{
+       //                     string word1 = word;
+       //                     word = toslp1(word);
+       //                     string wordNext;
+       //                     //cout << GPage.size() <<  word << " " << GPage[word] << endl;
+       //                     if(hasM40PerAsci(word1)){wordNext = word1;}
+       //                     else if(GBook[(word)] > 0 ){wordNext = toDev(word); PWords[word]++;}
+       //                     //else if(CPairRight[word] >0) {wordNext = "<font color=\'purple\'>" + toDev(CPair[word]) + "</font>";}
+       //                     else if(PWords[word] > 0) { 
+							//	
+							//	wordNext = "<font color=\'gray\'>" + toDev(word) + "</font>";
+							//}
+       //                     else if((Dict[word] ==0) && (PWords[word] == 0) && (CPair[word].size() > 0)) {
 
-                    //cout << GPage[(word)] << endl;
-                    //Ui -> Dialog -> progressBar -> setValue(value);
-                    }
-            strHtml +="</p>"; // To add new line
+       //                         wordNext = "<font color=\'purple\'>" + toDev(CPair[word]) + "</font>";
+       //                     } else {
+       //                     wordNext = findDictEntries(toslp1(word),Dict,PWords, word.size());//replace m1 with m2,m1 for combined search
+       //                     wordNext = find_and_replace_oddInstancesblue(wordNext);
+       //                     wordNext = find_and_replace_oddInstancesorange(wordNext);
+       //                     }
 
-       }
-       strHtml += "</body></html>";
-       ui->textBrowser->setHtml(QString::fromStdString(strHtml));
+       //                     strHtml += wordNext; strHtml += " "; //cout << strHtml << endl;
+       //                     value ++;
+       //                 }
+
+       //             //cout << GPage[(word)] << endl;
+       //             //Ui -> Dialog -> progressBar -> setValue(value);
+       //             }
+       //     strHtml +="</p>"; // To add new line
+
+       //}
+       //strHtml += "</body></html>";
+       //ui->textBrowser->setHtml(QString::fromStdString(strHtml));
        //dialog->progressBar-> setValue(WordCount);
 
        //secdialog.progressBar.setValue(WordCount);
 
 
-       // load wordLineIndex map for pairing with WordImages
-       str1=textBrowserText.toUtf8().constData();
-       // str1 = clean(str1);
-       istringstream iss2(str1);
-       size_t WordCount2 = 0;
-       while (getline(iss2, line)) {
-                   istringstream issw(line);
-                   string word;
-                   while(issw >> word){ wordLineIndex[(word + "###" + line)] = WordCount2; WordCount2++;} // clean(word) instead of word
-       }
+       //// load wordLineIndex map for pairing with WordImages
+       //str1=textBrowserText.toUtf8().constData();
+       //// str1 = clean(str1);
+       //istringstream iss2(str1);
+       //size_t WordCount2 = 0;
+       //while (getline(iss2, line)) {
+       //            istringstream issw(line);
+       //            string word;
+       //            while(issw >> word){ wordLineIndex[(word + "###" + line)] = WordCount2; WordCount2++;} // clean(word) instead of word
+       //}
 
 }
 
@@ -646,7 +719,7 @@ string selectedStr;
 //GIVE EVENT TO TEXT BROWZER INSTEAD OF MAINWINDOW
 void MainWindow::mousePressEvent(QMouseEvent *ev)
 {
-    //on_actionLoadData_triggered(); //Sanoj
+    on_actionLoadData_triggered(); //Sanoj
 
 
     ui->textBrowser->cursorForPosition(ev->pos());
@@ -657,15 +730,17 @@ void MainWindow::mousePressEvent(QMouseEvent *ev)
     int mins = secs/60;
     secs = secs - mins*60;
     ui->lineEdit->setText(QString::number(mins) + "mins " + QString::number(secs) + " secs elapsed on this page(Right Click to update)");
-    if ((ev->button() == Qt::RightButton) || (RightclickFlag))
-    {
-        QTextCursor cursor1 = ui->textBrowser->cursorForPosition(ev->pos());
-        QTextCursor cursor = ui->textBrowser->textCursor();
-        cursor.select(QTextCursor::WordUnderCursor);
-        // code to copy selected string:-
-        QString str1 = cursor.selectedText();
-        selectedStr = str1.toUtf8().constData();
-
+	if ((ev->button() == Qt::RightButton) || (RightclickFlag))
+	{
+		QTextCursor cursor1 = ui->textBrowser->cursorForPosition(ev->pos());
+		QTextCursor cursor = ui->textBrowser->textCursor();
+		cursor.select(QTextCursor::WordUnderCursor);
+		// code to copy selected string:-
+		QString str1 = cursor.selectedText();
+		selectedStr = str1.toUtf8().constData();
+		
+	}
+	if(ui->textBrowser->textCursor().hasSelection()){
     // code to display options on rightclick
     ui->textBrowser->setContextMenuPolicy(Qt::CustomContextMenu);//IMP TO AVOID UNDO ETC AFTER SELECTING A SUGGESTION
     QMenu* popup_menu = ui->textBrowser->createStandardContextMenu();
