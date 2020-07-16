@@ -182,8 +182,7 @@ private slots:
     
 private:
     Ui::MainWindow *ui;
-	Graphics_view_zoom*z=nullptr;
-	QGraphicsScene * graphic=nullptr;
+
     QString mFilename;
     QString mFilenamejpeg;
 };
