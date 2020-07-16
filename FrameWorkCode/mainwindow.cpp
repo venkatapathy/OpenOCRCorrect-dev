@@ -354,6 +354,7 @@ void MainWindow::on_actionOpen_triggered()
                 }
 
                 // load and show image:
+				setWindowTitle(mFilename);
                 QString localmFilename = mFilename;
                 localmFilename.replace("txt","jpeg");
                 localmFilename.replace("html","jpeg");

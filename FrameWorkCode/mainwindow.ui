@@ -163,6 +163,38 @@ p, li { white-space: pre-wrap; }
     <property name="geometry">
      <rect>
       <x>670</x>
+      <y>10</y>
+      <width>421</width>
+      <height>27</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QPushButton" name="pushButton_3">
+       <property name="text">
+        <string>Compare Output</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>670</x>
       <y>40</y>
       <width>531</width>
       <height>27</height>
@@ -173,13 +205,6 @@ p, li { white-space: pre-wrap; }
       <widget class="QLineEdit" name="commentsfield">
        <property name="text">
         <string>Add Highlights/Select Text, then add Comments</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="addcomments">
-       <property name="text">
-        <string>Add</string>
        </property>
       </widget>
      </item>
@@ -329,7 +354,6 @@ p, li { white-space: pre-wrap; }
    <addaction name="actionCentreAlign"/>
    <addaction name="actionRightAlign"/>
    <addaction name="actionJusitfiedAlign"/>
-   <addaction name="actionHighlight"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionOpen">

@@ -64,10 +64,8 @@ public:
         VerifierText = new QTextEdit(centralWidget);
         VerifierText->setObjectName(QString::fromUtf8("VerifierText"));
         QFont font;
-
-        font.setFamily(QStringLiteral("Shobhika"));
+        font.setFamily(QString::fromUtf8("Shobhika"));
         font.setPointSize(11);
-
         font.setBold(true);
         font.setWeight(75);
         VerifierText->setFont(font);
@@ -132,29 +130,27 @@ public:
 
     void retranslateUi(QMainWindow *DiffView)
     {
-
-        DiffView->setWindowTitle(QApplication::translate("DiffView", "DiffView", Q_NULLPTR));
-        VerifierLabel->setText(QApplication::translate("DiffView", "<p><b>Verified Text</b></p>\n"
-"Changes Made by Verifier: ", Q_NULLPTR));
-        VerifierText->setHtml(QApplication::translate("DiffView", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        DiffView->setWindowTitle(QCoreApplication::translate("DiffView", "DiffView", nullptr));
+        VerifierLabel->setText(QCoreApplication::translate("DiffView", "<p><b>Verified Text</b></p>\n"
+"Changes Made by Verifier: ", nullptr));
+        VerifierText->setHtml(QCoreApplication::translate("DiffView", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'Shobhika'; font-size:11pt; font-weight:600; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Shobhika Regular'; font-weight:400;\"><br /></p></body></html>", Q_NULLPTR));
-        InternLabel->setText(QApplication::translate("DiffView", "<b><p>Corrector's Output Text</b></p>Changes Made by Corrector: ", Q_NULLPTR));
-        InternText->setHtml(QApplication::translate("DiffView", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Shobhika Regular'; font-weight:400;\"><br /></p></body></html>", nullptr));
+        InternLabel->setText(QCoreApplication::translate("DiffView", "<b><p>Corrector's Output Text</b></p>Changes Made by Corrector: ", nullptr));
+        InternText->setHtml(QCoreApplication::translate("DiffView", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'Shobhika'; font-size:11pt; font-weight:600; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Shobhika Regular'; font-weight:400;\"><br /></p></body></html>", Q_NULLPTR));
-        OCRLabel->setText(QApplication::translate("DiffView", "<p><b>OCR Text </b><i>(To be Replaced with Image)</i></p>\n"
-"Accuracy of OCR Text (w.r.t Verified Text): ", Q_NULLPTR));
-        OCRText->setHtml(QApplication::translate("DiffView", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Shobhika Regular'; font-weight:400;\"><br /></p></body></html>", nullptr));
+        OCRLabel->setText(QCoreApplication::translate("DiffView", "<p><b>OCR Text </b><i>(To be Replaced with Image)</i></p>\n"
+"Accuracy of OCR Text (w.r.t Verified Text): ", nullptr));
+        OCRText->setHtml(QCoreApplication::translate("DiffView", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'Shobhika'; font-size:11pt; font-weight:600; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Shobhika Regular'; font-weight:400;\"><br /></p></body></html>", Q_NULLPTR));
-
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Shobhika Regular'; font-weight:400;\"><br /></p></body></html>", nullptr));
     } // retranslateUi
 
 };

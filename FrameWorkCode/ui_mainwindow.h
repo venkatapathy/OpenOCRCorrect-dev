@@ -20,6 +20,7 @@
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QProgressBar>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QTextBrowser>
 #include <QtWidgets/QTextEdit>
@@ -89,9 +90,12 @@ public:
     QProgressBar *progressBar;
     QLineEdit *lineEdit;
     QWidget *layoutWidget2;
+    QHBoxLayout *horizontalLayout_2;
+    QPushButton *pushButton_3;
+    QSpacerItem *horizontalSpacer;
+    QWidget *layoutWidget3;
     QHBoxLayout *horizontalLayout_3;
     QLineEdit *commentsfield;
-    QPushButton *addcomments;
     QPushButton *viewallcomments;
     QMenuBar *menuBar;
     QMenu *menuOCR_Correction_Window;
@@ -328,23 +332,35 @@ public:
 
         layoutWidget2 = new QWidget(centralWidget);
         layoutWidget2->setObjectName(QString::fromUtf8("layoutWidget2"));
-        layoutWidget2->setGeometry(QRect(670, 40, 531, 27));
-        horizontalLayout_3 = new QHBoxLayout(layoutWidget2);
+        layoutWidget2->setGeometry(QRect(670, 10, 421, 27));
+        horizontalLayout_2 = new QHBoxLayout(layoutWidget2);
+        horizontalLayout_2->setSpacing(6);
+        horizontalLayout_2->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
+        horizontalLayout_2->setContentsMargins(0, 0, 0, 0);
+        pushButton_3 = new QPushButton(layoutWidget2);
+        pushButton_3->setObjectName(QString::fromUtf8("pushButton_3"));
+
+        horizontalLayout_2->addWidget(pushButton_3);
+
+        horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_2->addItem(horizontalSpacer);
+
+        layoutWidget3 = new QWidget(centralWidget);
+        layoutWidget3->setObjectName(QString::fromUtf8("layoutWidget3"));
+        layoutWidget3->setGeometry(QRect(670, 40, 531, 27));
+        horizontalLayout_3 = new QHBoxLayout(layoutWidget3);
         horizontalLayout_3->setSpacing(6);
         horizontalLayout_3->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_3->setObjectName(QString::fromUtf8("horizontalLayout_3"));
         horizontalLayout_3->setContentsMargins(0, 0, 0, 0);
-        commentsfield = new QLineEdit(layoutWidget2);
+        commentsfield = new QLineEdit(layoutWidget3);
         commentsfield->setObjectName(QString::fromUtf8("commentsfield"));
 
         horizontalLayout_3->addWidget(commentsfield);
 
-        addcomments = new QPushButton(layoutWidget2);
-        addcomments->setObjectName(QString::fromUtf8("addcomments"));
-
-        horizontalLayout_3->addWidget(addcomments);
-
-        viewallcomments = new QPushButton(layoutWidget2);
+        viewallcomments = new QPushButton(layoutWidget3);
         viewallcomments->setObjectName(QString::fromUtf8("viewallcomments"));
 
         horizontalLayout_3->addWidget(viewallcomments);
@@ -458,7 +474,6 @@ public:
         mainToolBar->addAction(actionCentreAlign);
         mainToolBar->addAction(actionRightAlign);
         mainToolBar->addAction(actionJusitfiedAlign);
-        mainToolBar->addAction(actionHighlight);
 
         retranslateUi(MainWindow);
 
@@ -567,8 +582,8 @@ public:
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'Shobhika'; font-size:16pt; font-weight:400; font-style:normal;\">\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:'Ubuntu'; font-size:11pt;\">Please Select the Language from top left menu before loading any document.</span></p></body></html>", nullptr));
+        pushButton_3->setText(QCoreApplication::translate("MainWindow", "Compare Output", nullptr));
         commentsfield->setText(QCoreApplication::translate("MainWindow", "Add Highlights/Select Text, then add Comments", nullptr));
-        addcomments->setText(QCoreApplication::translate("MainWindow", "Add", nullptr));
         viewallcomments->setText(QCoreApplication::translate("MainWindow", "View All", nullptr));
         menuOCR_Correction_Window->setTitle(QCoreApplication::translate("MainWindow", "File", nullptr));
         menuCreateReports->setTitle(QCoreApplication::translate("MainWindow", "CreateReports", nullptr));
