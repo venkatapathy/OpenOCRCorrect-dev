@@ -159,63 +159,34 @@ p, li { white-space: pre-wrap; }
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="layoutWidget">
+   <widget class="QPushButton" name="pushButton_3">
     <property name="geometry">
      <rect>
-      <x>670</x>
-      <y>10</y>
-      <width>421</width>
-      <height>27</height>
+      <x>671</x>
+      <y>11</y>
+      <width>171</width>
+      <height>25</height>
      </rect>
     </property>
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
-     <item>
-      <widget class="QPushButton" name="pushButton_3">
-       <property name="text">
-        <string>Compare Output</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-    </layout>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Open any file in CorrectorOutput Folder to view Changes made.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <property name="text">
+     <string>Compare Output</string>
+    </property>
    </widget>
-   <widget class="QWidget" name="layoutWidget">
+   <widget class="QPushButton" name="viewallcomments">
     <property name="geometry">
      <rect>
       <x>670</x>
       <y>40</y>
-      <width>531</width>
-      <height>27</height>
+      <width>171</width>
+      <height>25</height>
      </rect>
     </property>
-    <layout class="QHBoxLayout" name="horizontalLayout_3">
-     <item>
-      <widget class="QLineEdit" name="commentsfield">
-       <property name="text">
-        <string>Add Highlights/Select Text, then add Comments</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="viewallcomments">
-       <property name="text">
-        <string>View All</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
+    <property name="text">
+     <string>View All Comments</string>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -224,7 +195,7 @@ p, li { white-space: pre-wrap; }
      <x>0</x>
      <y>0</y>
      <width>1386</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuOCR_Correction_Window">
