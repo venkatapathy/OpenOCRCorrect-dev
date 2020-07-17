@@ -637,7 +637,7 @@ string selectedStr;
 //GIVE EVENT TO TEXT BROWZER INSTEAD OF MAINWINDOW
 void MainWindow::mousePressEvent(QMouseEvent *ev)
 {
-    //on_actionLoadData_triggered();
+    on_actionLoadData_triggered();
 
 
     ui->textBrowser->cursorForPosition(ev->pos());
@@ -920,22 +920,33 @@ void MainWindow::on_actionSave_triggered()
 //        QString localFilename = mFilename;
 //        localFilename.replace("Inds","CorrectorOutput");
 //        localFilename.replace("txt","html");//Sanoj
+		
+		QFileInfo f(mFilename);
+		QString ext=f.completeSuffix();
 
         QString changefiledir = filestructure_fw[currentdirname];
         QString localFilename = dir2levelup + "/" +changefiledir +"/" + currentpagename;
         localFilename.replace("txt","html");
 
-                QFile sFile(localFilename);
+        QFile sFile(localFilename);
                   //if(sFile.open(QFile::WriteOnly | QFile::Text))
-                    if(sFile.open(QFile::WriteOnly))
-                  {
-                      QTextStream out(&sFile);
-                      out.setCodec("UTF-8");
-                      out << ui->textBrowser->toHtml();//toPlainText()
-
-                      sFile.flush();
-                      sFile.close();
-                  }
+		if(sFile.open(QFile::WriteOnly))
+		{
+            QTextStream out(&sFile);
+			out.setCodec("UTF-8");
+			out << ui->textBrowser->toHtml();//toPlainText()
+			sFile.flush();
+			sFile.close();
+        }
+		localFilename.replace("html","txt");
+		QFile sfile2(localFilename);
+		if (sfile2.open(QFile::WriteOnly)) {
+			QTextStream out(&sfile2);
+			out.setCodec("UTF-8");
+			out << ui->textBrowser->toPlainText();//toPlainText()
+			sfile2.flush();
+			sfile2.close();
+		}
     }
     ConvertSlpDevFlag =0;
     //on_actionSpell_Check_triggered();

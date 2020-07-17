@@ -177,7 +177,7 @@ private slots:
    // void on_actionHighlight_triggered();
 
    // void on_addcomments_clicked();
-    
+	void on_actionSave_As_HTMLtriggered() {}
     void on_viewallcomments_clicked();
     
 private:
