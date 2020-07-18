@@ -420,7 +420,6 @@ public:
         mainToolBar->addAction(actionSave_As);
         mainToolBar->addAction(actionLoadData);
         mainToolBar->addSeparator();
-        mainToolBar->addAction(actionSpell_Check);
         mainToolBar->addSeparator();
         mainToolBar->addAction(actionLoad_Prev_Page);
         mainToolBar->addAction(actionLoad_Next_Page);

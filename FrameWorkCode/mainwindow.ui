@@ -304,7 +304,6 @@ p, li { white-space: pre-wrap; }
    <addaction name="actionSave_As"/>
    <addaction name="actionLoadData"/>
    <addaction name="separator"/>
-   <addaction name="actionSpell_Check"/>
    <addaction name="separator"/>
    <addaction name="actionLoad_Prev_Page"/>
    <addaction name="actionLoad_Next_Page"/>
