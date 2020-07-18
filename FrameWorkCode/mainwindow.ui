@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1386</width>
-    <height>733</height>
+    <width>1296</width>
+    <height>708</height>
    </rect>
   </property>
   <property name="mouseTracking">
@@ -194,7 +194,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1386</width>
+     <width>1296</width>
      <height>21</height>
     </rect>
    </property>
@@ -206,7 +206,6 @@ p, li { white-space: pre-wrap; }
     <addaction name="actionOpen"/>
     <addaction name="actionSave"/>
     <addaction name="actionSave_As_HTML"/>
-    <addaction name="actionSpell_Check"/>
     <addaction name="actionLoad_Next_Page"/>
     <addaction name="actionLoad_Prev_Page"/>
     <addaction name="separator"/>
