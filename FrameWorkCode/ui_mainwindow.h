@@ -106,7 +106,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(1386, 733);
+        MainWindow->resize(1296, 708);
         MainWindow->setMouseTracking(true);
         actionOpen = new QAction(MainWindow);
         actionOpen->setObjectName(QString::fromUtf8("actionOpen"));
@@ -335,7 +335,7 @@ public:
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 1386, 21));
+        menuBar->setGeometry(QRect(0, 0, 1296, 21));
         menuOCR_Correction_Window = new QMenu(menuBar);
         menuOCR_Correction_Window->setObjectName(QString::fromUtf8("menuOCR_Correction_Window"));
         menuCreateReports = new QMenu(menuBar);
@@ -371,7 +371,6 @@ public:
         menuOCR_Correction_Window->addAction(actionOpen);
         menuOCR_Correction_Window->addAction(actionSave);
         menuOCR_Correction_Window->addAction(actionSave_As_HTML);
-        menuOCR_Correction_Window->addAction(actionSpell_Check);
         menuOCR_Correction_Window->addAction(actionLoad_Next_Page);
         menuOCR_Correction_Window->addAction(actionLoad_Prev_Page);
         menuOCR_Correction_Window->addSeparator();

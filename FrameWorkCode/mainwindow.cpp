@@ -2809,14 +2809,15 @@ void MainWindow::on_pushButton_3_clicked() //INTERN NIPUN
     string s1 = "",s2 = ""; QString qs1="", qs2="",qs3="";
     file = QFileDialog::getOpenFileName(this,"Open Corrector's Output File");
     QString correctortext = file;
-
+	QTextDocument doc;
+	
     QString ocrtext = file;
-    ocrtext.replace("CorrectorOutput","Inds"); //CAN CHANGE ACCORDING TO FILE STRUCTURE
-    ocrtext.replace(".html",".txt");
+    ocrtext = ocrtext.replace("CorrectorOutput","Inds"); //CAN CHANGE ACCORDING TO FILE STRUCTURE
+    ocrtext = ocrtext.replace(".html",".txt");
 
     QString ocrimage = ocrtext;
-    ocrimage.replace(".txt",".jpeg");
-    ocrimage.replace("Inds","Images");
+    ocrimage = ocrimage.replace(".txt",".jpeg");
+    ocrimage = ocrimage.replace("Inds","Images");
 
 
     if(!ocrtext.isEmpty())
@@ -2851,9 +2852,15 @@ void MainWindow::on_pushButton_3_clicked() //INTERN NIPUN
         }
 
     }
-
+	doc.setHtml(qs1);
+	qs1 = doc.toPlainText();
+	s1 = qs1.toStdString();
+	doc.setHtml(qs2);
+	
+	qs2 = doc.toPlainText();
     int l1,l2, levenshtein; float accuracy;
-    l1 = s1.length();
+	s2 = qs2.toStdString();
+	l1 = s1.length();
     l2= s2.length();
 
     levenshtein = editDist(s2,s1);

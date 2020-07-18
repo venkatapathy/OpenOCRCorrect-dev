@@ -5,12 +5,7 @@
 InternDiffView::InternDiffView( QString &ocroutput,  QString &interntxt, const QString &ocrimgpath, const QString acc, QWidget *parent)
     : QMainWindow(parent)
 {
-    QTextDocument doc;
-    doc.setHtml(interntxt);
-    interntxt = doc.toPlainText();
-
-    doc.setHtml(ocroutput);
-    ocroutput = doc.toPlainText();
+    
     ui = new Ui::InternDiffView();
     ui->setupUi(this);
     diff_match_patch dmp;
