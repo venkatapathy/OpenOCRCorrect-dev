@@ -1013,15 +1013,19 @@ void MainWindow::on_actionLoadGDocPage_triggered()
 
 void MainWindow::on_actionSave_As_triggered()
 {
-    QString file = QFileDialog::getSaveFileName(this,"Open a File");
-    if(!file.isEmpty())
-    {
-        mFilename = file;
-        on_actionSave_triggered();
-    }
-
+	QString file = QFileDialog::getSaveFileName(this, "Open a File");
+	if (!file.isEmpty())
+	{
+		mFilename = file;
+		int pos1 = mFilename.lastIndexOf("/");
+		dir1levelup = mFilename.mid(0, pos1);
+		currentpagename = mFilename.mid(pos1 + 1, mFilename.length() - pos1);
+		int pos2 = dir1levelup.lastIndexOf("/");
+		dir2levelup = dir1levelup.mid(0, pos2);
+		currentdirname = dir1levelup.mid(pos2 + 1, dir1levelup.length() - pos2);
+		on_actionSave_triggered();
+	}
 }
-
 
 
 
@@ -2991,54 +2995,19 @@ void MainWindow::on_actionAccuracyLog_triggered()
 
 }
 
-/*
 void MainWindow::on_actionHighlight_triggered()
 {
-//    QString previouscomment = ui->commentsfield->text();
-//    int loc = previouscomment.lastIndexOf(":");
-//    previouscomment = previouscomment.mid(loc, previouscomment.length()-loc);
-//    if(previouscomment!="" | previouscomment!=" ")
-//    {
-//        on_addcomments_clicked();
-//    }
-    QTextCursor cursor = ui->textBrowser->textCursor();
-    QString text = cursor.selectedText().toUtf8().constData();
-    int pos1 = ui->textBrowser->textCursor().selectionStart();
-    int pos2 = ui->textBrowser->textCursor().selectionEnd();
-    int pos = min(pos1,pos2);
-    //qDebug()<<text;
-    //QString key =  QString::number(pos) + text;
-    int key = pos;
-    QTextCharFormat  format  = cursor.charFormat();
-    if(ui->textBrowser->textBackgroundColor() == Qt::yellow)
-    {
-        format.setBackground(Qt::transparent);
-        if(commentdict.find(key)!=commentdict.end())
-        {
-            commentdict.erase(key);
-        }
-        if(commentederrors.find(key)!=commentederrors.end())
-        {
-             commentederrors.erase(key);
-        }
-    }
-    else
-    {
-        format.setBackground(Qt::yellow);
- //       ui->commentsfield->setText(text + ":");
-        int chars = text.length();
-        QString simplifiedtext = text.simplified();
-        int words = simplifiedtext.count(" ") + 1;
-
-        vector<int> counts;
-        counts.push_back(chars); counts.push_back(words);
-        commentederrors[key] = counts;
-
-    }
-    ui->textBrowser->textCursor().mergeCharFormat(format);
- //   ui->commentsfield->setFocus();
+	QTextCursor cursor = ui->textBrowser->textCursor();
+	QString text = cursor.selectedText().toUtf8().constData();
+	int pos1 = ui->textBrowser->textCursor().selectionStart();
+	int pos2 = ui->textBrowser->textCursor().selectionEnd();
+	int cursorpos = round((float)(pos1 + pos2) / 2);
+	cursor.setPosition(cursorpos);
+	QTextCharFormat  format = cursor.charFormat();
+	format.setBackground(Qt::transparent);
+	ui->textBrowser->textCursor().mergeCharFormat(format);
 }
-
+/*
 void MainWindow::on_addcomments_clicked()
 {
 //    QString commentstext = ui->commentsfield->text().toUtf8().constData();

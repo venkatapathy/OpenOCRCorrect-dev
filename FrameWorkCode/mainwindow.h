@@ -174,7 +174,7 @@ private slots:
     
    // void on_actionHighlight_toggled(bool arg1);
 
-   // void on_actionHighlight_triggered();
+   void on_actionHighlight_triggered();
 
    // void on_addcomments_clicked();
 	void on_actionSave_As_HTMLtriggered() {}
