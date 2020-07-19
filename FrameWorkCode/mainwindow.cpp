@@ -487,8 +487,8 @@ void MainWindow::on_actionSpell_Check_triggered()
 	on_actionSave_triggered();
 
 	QString textBrowserText = ui->textBrowser->toPlainText();
-	QChar ch;
-	ch = textBrowserText[1];
+	//QChar ch;
+	//ch = textBrowserText[1];
 	textBrowserText += " ";
 	string str1 = textBrowserText.toUtf8().constData();
 
@@ -524,14 +524,22 @@ void MainWindow::on_actionSpell_Check_triggered()
 				string wordNext;
 				//cout << GPage.size() <<  word << " " << GPage[word] << endl;
 				if (hasM40PerAsci(word1)) { wordNext = word1; }
-				else if (GBook[(word)] > 0) { wordNext = toDev(word); PWords[word]++; }
+
+				else if (GBook[(word)] > 0) { 
+					wordNext = toDev(word); 
+					PWords[word]++; // Updating domain dictionary
+				}//Checks in seccondary OCR (GBook) vocab
 				//else if(CPairRight[word] >0) {wordNext = "<font color=\'purple\'>" + toDev(CPair[word]) + "</font>";}
-				else if (PWords[word] > 0) { wordNext = "<font color=\'gray\'>" + toDev(word) + "</font>"; }
-				else if ((Dict[word] == 0) && (PWords[word] == 0) && (CPair[word].size() > 0)) {
-					wordNext = "<font color=\'purple\'>" + toDev(CPair[word]) + "</font>";
+				else if (PWords[word] > 0) { 
+					wordNext = "<font color=\'gray\'>" + toDev(word) + "</font>";//if it's found in domain dictionary mark it gray 
+				}
+				else if ((Dict[word] == 0) && (PWords[word] == 0) && (CPair[word].size() > 0)) {//Dict is general Dictionary, CPair is pair of word corrections
+					wordNext = "<font color=\'purple\'>" + toDev(CPair[word]) + "</font>";//Purple correct using CPair
 				}
 				else {
-					wordNext = findDictEntries(toslp1(word), Dict, PWords, word.size());//replace m1 with m2,m1 for combined search
+					//removed toslp1 conversion
+					wordNext = findDictEntries(word, Dict, PWords, word.size());//replace m1 with m2,m1 for combined search
+					
 					wordNext = find_and_replace_oddInstancesblue(wordNext);
 					wordNext = find_and_replace_oddInstancesorange(wordNext);
 				}
