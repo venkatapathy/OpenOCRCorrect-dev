@@ -42,7 +42,8 @@ int openedFileWords;
 QString dir1levelup,dir2levelup,currentpagename, currentdirname;
 map<QString, QString> filestructure_fw = {
                                             {"Inds","CorrectorOutput"},
-                                            {"CorrectorOutput","CorrectorOutput"}
+                                            {"CorrectorOutput","CorrectorOutput"},
+                                            {"VerifierOutput", "Version"}
                                          };
 map<QString, QString> filestructure_bw = {
                                             {"CorrectorOutput","Inds"},
@@ -3033,60 +3034,56 @@ void MainWindow::on_addcomments_clicked()
 */
 void MainWindow::on_viewallcomments_clicked()
 {
-    QString commentFilename = dir2levelup + "/Comments/" + currentpagename;
-    commentFilename.replace(".txt",".json");
-    commentFilename.replace(".html",".json");
-    //qDebug() << commentFilename;
+    map<int, int> wordcount;
+        QString commentFilename = dir2levelup + "/Comments/" + currentpagename;
+        commentFilename.replace(".txt",".json");
+        commentFilename.replace(".html",".json");
+        int totalcharerr = 0, totalworderr = 0, rating = 0; QString comments = ""; double characc = 100.0, wordacc = 100.0;
 
-    int totalcharerr = 0 ,totalworderr = 0; QString commentfield = "";
-    map<int, QString>::iterator it1;
-    map<int, vector<int>>::iterator it2;
+        QFileInfo file(commentFilename);
+        if(file.exists() && file.isFile())
+        {
+            QFile jsonFile(commentFilename);
+            jsonFile.open(QIODevice::ReadOnly | QIODevice::Text);
+            QByteArray data = jsonFile.readAll();
 
-    QJsonObject page;
-    QJsonArray comments;
-    for(it1 = commentdict.begin(); it1!= commentdict.end(); it1++)
-    {
-        QJsonObject comment;
-        comment["key"] = it1->first;
-        comment["value"] = it1->second.toUtf8().constData();
-        comments.push_back(comment);
-        commentfield += it1->second+"\n";
-    }
-    page.insert("comments",comments);
+            QJsonParseError errorPtr;
+            QJsonDocument document = QJsonDocument::fromJson(data, &errorPtr);
+            QJsonObject page = document.object();
+            if(document.isNull())
+            {
+                //qDebug()<<"empty json/parse error";
+            }
 
-    QJsonArray charerrors;
-    QJsonArray worderrors;
+            comments = page.value("comments").toString();
+            rating = page.value("rating").toInt();
+            totalcharerr = page.value("charerrors").toInt();
+            totalworderr = page.value("worderrors").toInt();
+            characc = page.value("characcuracy").toDouble();
+            wordacc = page.value("wordaccuracy").toDouble();
+            jsonFile.close();
+        }
+//        auto textcursor1 = ui->textBrowser->textCursor();
+//        textcursor1.setPosition(0);
+//        while(!textcursor1.atEnd())
+//        {
+//            int anchor = textcursor1.position();
+//            QTextCharFormat format = textcursor1.charFormat();
+//            textcursor1.select(QTextCursor::WordUnderCursor);
+//            QString wordundercursor = textcursor1.selectedText();
+//            int key = textcursor1.selectionStart();
+//            qDebug()<<wordundercursor<<" :Word" <<wordundercursor.length()<< " :len" <<anchor<<"anchor" <<key << "key";
 
-    for(it2 = commentederrors.begin(); it2!= commentederrors.end(); it2++)
-    {
-        auto wordchars = it2->second;
-        totalcharerr += wordchars[0];
-        totalworderr += wordchars[1];
+//            if(format.background() == Qt::yellow && anchor>=(key+1))
+//            {
+//                totalcharerr++;
+//                wordcount[key]++;
+//                qDebug()<<wordcount<<totalcharerr;
+//            }
+//            textcursor1.setPosition(anchor+1);
+//            //textcursor1.movePosition(QTextCursor::NextCharacter , QTextCursor::MoveAnchor, 1);
+//        }
 
-        QJsonObject charerror;
-        QJsonObject worderror;
-        charerror["key"] = it2->first;
-        charerror["value"] = wordchars[0];
-        worderror["key"] = it2->first;
-        worderror["value"] = wordchars[1];
-
-        charerrors.push_back(charerror);
-        worderrors.push_back(worderror);
-    }
-    page.insert("charerrors",charerrors);
-    page.insert("worderrors",worderrors);
-    QJsonDocument document(page);
-
-    QFile jsonFile(commentFilename);
-    jsonFile.open(QIODevice::WriteOnly);
-    jsonFile.write(document.toJson());
-
-    float characc = (float)(openedFileChars - totalcharerr)/(float)openedFileChars*100;
-    float wordacc = (float)(openedFileWords - totalworderr)/(float)openedFileWords*100 ;
-    wordacc = ((float)lround(wordacc*100))/100;
-    characc = ((float)lround(characc*100))/100;
-
-    CommentsView *cv = new CommentsView(totalworderr,totalcharerr,wordacc,characc,commentfield);
-    cv->show();
-
+        CommentsView *cv = new CommentsView(totalworderr,totalcharerr,wordacc,characc,comments,commentFilename, rating);
+        cv->show();
 }
