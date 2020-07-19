@@ -484,83 +484,101 @@ bool ConvertSlpDevFlag =0;
 void MainWindow::on_actionSpell_Check_triggered()
 {
 
-    on_actionSave_triggered();
+	on_actionSave_triggered();
 
-    QString textBrowserText = ui->textBrowser->toPlainText();
-    QChar ch;
-    ch = textBrowserText[1];
-    textBrowserText += " ";
-    string str1 = textBrowserText.toUtf8().constData();
+	QString textBrowserText = ui->textBrowser->toPlainText();
+	QChar ch;
+	ch = textBrowserText[1];
+	textBrowserText += " ";
+	string str1 = textBrowserText.toUtf8().constData();
 
-    // load no of words
-    istringstream iss1(str1);
-    size_t WordCount = 0; string word1;
-    while (iss1 >> word1) WordCount++;
+	// load no of words
+	istringstream iss1(str1);
+	size_t WordCount = 0; string word1;
+	while (iss1 >> word1) WordCount++;
 
-    //str1 = toslp1(str1);
-    istringstream iss(str1);
-    string strHtml = "<html><body>"; string line;
+	//str1 = toslp1(str1);
+	istringstream iss(str1);
+	string strHtml = "<html><body>"; string line;
+	QTextDocument doc;
+	
+
+	int value = 0;
+	while (getline(iss, line)) {
+		istringstream issw(line);
+		string word;
+		strHtml += "<p>";
+		while (issw >> word) {
+			if (ConvertSlpDevFlag) {
+				string word1 = word;
+				word = toslp1(word);
+				string wordNext;
+				if (hasM40PerAsci(word1)) { wordNext = word1; }
+				else { wordNext = toDev(word); }
+				strHtml += wordNext; strHtml += " "; //cout << strHtml << endl;
+				value++;
+			}
+			else {
+				string word1 = word;
+				word = toslp1(word);
+				string wordNext;
+				//cout << GPage.size() <<  word << " " << GPage[word] << endl;
+				if (hasM40PerAsci(word1)) { wordNext = word1; }
+				else if (GBook[(word)] > 0) { wordNext = toDev(word); PWords[word]++; }
+				//else if(CPairRight[word] >0) {wordNext = "<font color=\'purple\'>" + toDev(CPair[word]) + "</font>";}
+				else if (PWords[word] > 0) { wordNext = "<font color=\'gray\'>" + toDev(word) + "</font>"; }
+				else if ((Dict[word] == 0) && (PWords[word] == 0) && (CPair[word].size() > 0)) {
+					wordNext = "<font color=\'purple\'>" + toDev(CPair[word]) + "</font>";
+				}
+				else {
+					wordNext = findDictEntries(toslp1(word), Dict, PWords, word.size());//replace m1 with m2,m1 for combined search
+					wordNext = find_and_replace_oddInstancesblue(wordNext);
+					wordNext = find_and_replace_oddInstancesorange(wordNext);
+				}
+				strHtml += wordNext; strHtml += " "; //cout << strHtml << endl;
+				value++;
+			}
+
+			//cout << GPage[(word)] << endl;
+			//Ui -> Dialog -> progressBar -> setValue(value);
+		}
+		strHtml += "</p>"; // To add new line
+
+	}
+	strHtml += "</body></html>";
+	doc.setHtml(QString::fromStdString(strHtml));
+	QTextCursor texcursor1(&doc);
+	auto texcursor2 = ui->textBrowser->textCursor();
+	texcursor2.setPosition(0);
+	QTextCharFormat fmt;
+	fmt.setForeground(QColor(255, 0, 0, 255));
+	auto len = doc.toPlainText().length();
+	while (!texcursor1.atEnd() && !texcursor2.atEnd()) {		
+
+		auto fmt1 =  texcursor1.charFormat();
+		auto color = fmt1.foreground().color();
+		//texcursor2.select(QTextCursor::SelectionType::WordUnderCursor);
+		texcursor2.mergeCharFormat(fmt1);
+		texcursor1.movePosition(QTextCursor::WordRight, QTextCursor::KeepAnchor);
+		texcursor2.movePosition(QTextCursor::WordRight, QTextCursor::KeepAnchor);
+		if (texcursor1.position() > len)break;
+	}
+
+	//dialog->progressBar-> setValue(WordCount);
+
+	//secdialog.progressBar.setValue(WordCount);
 
 
-    int value = 0;
-    while (getline(iss, line)) {
-        istringstream issw(line);
-        string word;
-        strHtml += "<p>";
-        while (issw >> word) {
-            if (ConvertSlpDevFlag) {
-                string word1 = word;
-                word = toslp1(word);
-                string wordNext;
-                if (hasM40PerAsci(word1)) { wordNext = word1; }
-                else { wordNext = toDev(word); }
-                strHtml += wordNext; strHtml += " "; //cout << strHtml << endl;
-                value++;
-            }
-            else {
-                string word1 = word;
-                word = toslp1(word);
-                string wordNext;
-                //cout << GPage.size() <<  word << " " << GPage[word] << endl;
-                if (hasM40PerAsci(word1)) { wordNext = word1; }
-                else if (GBook[(word)] > 0) { wordNext = toDev(word); PWords[word]++; }
-                //else if(CPairRight[word] >0) {wordNext = "<font color=\'purple\'>" + toDev(CPair[word]) + "</font>";}
-                else if (PWords[word] > 0) { wordNext = "<font color=\'gray\'>" + toDev(word) + "</font>"; }
-                else if ((Dict[word] == 0) && (PWords[word] == 0) && (CPair[word].size() > 0)) {
-                    wordNext = "<font color=\'purple\'>" + toDev(CPair[word]) + "</font>";
-                }
-                else {
-                    wordNext = findDictEntries(toslp1(word), Dict, PWords, word.size());//replace m1 with m2,m1 for combined search
-                    wordNext = find_and_replace_oddInstancesblue(wordNext);
-                    wordNext = find_and_replace_oddInstancesorange(wordNext);
-                }
-                strHtml += wordNext; strHtml += " "; //cout << strHtml << endl;
-                value++;
-            }
-
-            //cout << GPage[(word)] << endl;
-            //Ui -> Dialog -> progressBar -> setValue(value);
-        }
-        strHtml += "</p>"; // To add new line
-
-    }
-    strHtml += "</body></html>";
-    ui->textBrowser->setHtml(QString::fromStdString(strHtml));
-    //dialog->progressBar-> setValue(WordCount);
-
-    //secdialog.progressBar.setValue(WordCount);
-
-
-    // load wordLineIndex map for pairing with WordImages
-    str1 = textBrowserText.toUtf8().constData();
-    // str1 = clean(str1);
-    istringstream iss2(str1);
-    size_t WordCount2 = 0;
-    while (getline(iss2, line)) {
-        istringstream issw(line);
-        string word;
-        while (issw >> word) { wordLineIndex[(word + "###" + line)] = WordCount2; WordCount2++; } // clean(word) instead of word
-    }
+	// load wordLineIndex map for pairing with WordImages
+	str1 = textBrowserText.toUtf8().constData();
+	// str1 = clean(str1);
+	istringstream iss2(str1);
+	size_t WordCount2 = 0;
+	while (getline(iss2, line)) {
+		istringstream issw(line);
+		string word;
+		while (issw >> word) { wordLineIndex[(word + "###" + line)] = WordCount2; WordCount2++; } // clean(word) instead of word
+	}
 
 }
 
@@ -637,7 +655,7 @@ string selectedStr;
 //GIVE EVENT TO TEXT BROWZER INSTEAD OF MAINWINDOW
 void MainWindow::mousePressEvent(QMouseEvent *ev)
 {
-    //on_actionLoadData_triggered();
+    on_actionLoadData_triggered();
 
 
     ui->textBrowser->cursorForPosition(ev->pos());
@@ -920,22 +938,30 @@ void MainWindow::on_actionSave_triggered()
 //        QString localFilename = mFilename;
 //        localFilename.replace("Inds","CorrectorOutput");
 //        localFilename.replace("txt","html");//Sanoj
-
+		QFileInfo f(mFilename);
+		QString ext=f.completeSuffix();
         QString changefiledir = filestructure_fw[currentdirname];
         QString localFilename = dir2levelup + "/" +changefiledir +"/" + currentpagename;
         localFilename.replace("txt","html");
-
-                QFile sFile(localFilename);
-                  //if(sFile.open(QFile::WriteOnly | QFile::Text))
-                    if(sFile.open(QFile::WriteOnly))
-                  {
-                      QTextStream out(&sFile);
-                      out.setCodec("UTF-8");
-                      out << ui->textBrowser->toHtml();//toPlainText()
-
-                      sFile.flush();
-                      sFile.close();
-                  }
+        QFile sFile(localFilename);
+        //if(sFile.open(QFile::WriteOnly | QFile::Text))
+		if(sFile.open(QFile::WriteOnly))
+		{
+            QTextStream out(&sFile);
+			out.setCodec("UTF-8");
+			out << ui->textBrowser->toHtml();//toPlainText()
+			sFile.flush();
+			sFile.close();
+        }
+		localFilename.replace("html","txt");
+		QFile sfile2(localFilename);
+		if (sfile2.open(QFile::WriteOnly)) {
+			QTextStream out(&sfile2);
+			out.setCodec("UTF-8");
+			out << ui->textBrowser->toPlainText();//toPlainText()
+			sfile2.flush();
+			sfile2.close();
+		}
     }
     ConvertSlpDevFlag =0;
     //on_actionSpell_Check_triggered();
@@ -987,15 +1013,19 @@ void MainWindow::on_actionLoadGDocPage_triggered()
 
 void MainWindow::on_actionSave_As_triggered()
 {
-    QString file = QFileDialog::getSaveFileName(this,"Open a File");
-    if(!file.isEmpty())
-    {
-        mFilename = file;
-        on_actionSave_triggered();
-    }
-
+	QString file = QFileDialog::getSaveFileName(this, "Open a File");
+	if (!file.isEmpty())
+	{
+		mFilename = file;
+		int pos1 = mFilename.lastIndexOf("/");
+		dir1levelup = mFilename.mid(0, pos1);
+		currentpagename = mFilename.mid(pos1 + 1, mFilename.length() - pos1);
+		int pos2 = dir1levelup.lastIndexOf("/");
+		dir2levelup = dir1levelup.mid(0, pos2);
+		currentdirname = dir1levelup.mid(pos2 + 1, dir1levelup.length() - pos2);
+		on_actionSave_triggered();
+	}
 }
-
 
 
 
@@ -2783,14 +2813,15 @@ void MainWindow::on_pushButton_3_clicked() //INTERN NIPUN
     string s1 = "",s2 = ""; QString qs1="", qs2="",qs3="";
     file = QFileDialog::getOpenFileName(this,"Open Corrector's Output File");
     QString correctortext = file;
-
+	QTextDocument doc;
+	
     QString ocrtext = file;
-    ocrtext.replace("CorrectorOutput","Inds"); //CAN CHANGE ACCORDING TO FILE STRUCTURE
-    ocrtext.replace(".html",".txt");
+    ocrtext = ocrtext.replace("CorrectorOutput","Inds"); //CAN CHANGE ACCORDING TO FILE STRUCTURE
+    ocrtext = ocrtext.replace(".html",".txt");
 
     QString ocrimage = ocrtext;
-    ocrimage.replace(".txt",".jpeg");
-    ocrimage.replace("Inds","Images");
+    ocrimage = ocrimage.replace(".txt",".jpeg");
+    ocrimage = ocrimage.replace("Inds","Images");
 
 
     if(!ocrtext.isEmpty())
@@ -2825,9 +2856,15 @@ void MainWindow::on_pushButton_3_clicked() //INTERN NIPUN
         }
 
     }
-
+	doc.setHtml(qs1);
+	qs1 = doc.toPlainText();
+	s1 = qs1.toStdString();
+	doc.setHtml(qs2);
+	
+	qs2 = doc.toPlainText();
     int l1,l2, levenshtein; float accuracy;
-    l1 = s1.length();
+	s2 = qs2.toStdString();
+	l1 = s1.length();
     l2= s2.length();
 
     levenshtein = editDist(s2,s1);
@@ -2958,54 +2995,19 @@ void MainWindow::on_actionAccuracyLog_triggered()
 
 }
 
-/*
 void MainWindow::on_actionHighlight_triggered()
 {
-//    QString previouscomment = ui->commentsfield->text();
-//    int loc = previouscomment.lastIndexOf(":");
-//    previouscomment = previouscomment.mid(loc, previouscomment.length()-loc);
-//    if(previouscomment!="" | previouscomment!=" ")
-//    {
-//        on_addcomments_clicked();
-//    }
-    QTextCursor cursor = ui->textBrowser->textCursor();
-    QString text = cursor.selectedText().toUtf8().constData();
-    int pos1 = ui->textBrowser->textCursor().selectionStart();
-    int pos2 = ui->textBrowser->textCursor().selectionEnd();
-    int pos = min(pos1,pos2);
-    //qDebug()<<text;
-    //QString key =  QString::number(pos) + text;
-    int key = pos;
-    QTextCharFormat  format  = cursor.charFormat();
-    if(ui->textBrowser->textBackgroundColor() == Qt::yellow)
-    {
-        format.setBackground(Qt::transparent);
-        if(commentdict.find(key)!=commentdict.end())
-        {
-            commentdict.erase(key);
-        }
-        if(commentederrors.find(key)!=commentederrors.end())
-        {
-             commentederrors.erase(key);
-        }
-    }
-    else
-    {
-        format.setBackground(Qt::yellow);
- //       ui->commentsfield->setText(text + ":");
-        int chars = text.length();
-        QString simplifiedtext = text.simplified();
-        int words = simplifiedtext.count(" ") + 1;
-
-        vector<int> counts;
-        counts.push_back(chars); counts.push_back(words);
-        commentederrors[key] = counts;
-
-    }
-    ui->textBrowser->textCursor().mergeCharFormat(format);
- //   ui->commentsfield->setFocus();
+	QTextCursor cursor = ui->textBrowser->textCursor();
+	QString text = cursor.selectedText().toUtf8().constData();
+	int pos1 = ui->textBrowser->textCursor().selectionStart();
+	int pos2 = ui->textBrowser->textCursor().selectionEnd();
+	int cursorpos = round((float)(pos1 + pos2) / 2);
+	cursor.setPosition(cursorpos);
+	QTextCharFormat  format = cursor.charFormat();
+	format.setBackground(Qt::transparent);
+	ui->textBrowser->textCursor().mergeCharFormat(format);
 }
-
+/*
 void MainWindow::on_addcomments_clicked()
 {
 //    QString commentstext = ui->commentsfield->text().toUtf8().constData();

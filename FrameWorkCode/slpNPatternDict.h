@@ -64,21 +64,21 @@ string toDev(string s)
         string no_slp1[]={"0","1","2","3","4","5","6","7","8","9","||","|","-","-"};
 
         for(int i=0;i<44;i++)
-                {
-                    s=ReplaceString(s,consonants_slp1[i],consonants_dn_halanta[i]);
-                }
-                for(int i=0;i<12;i++)
-                {
-                    s=ReplaceString(s,"्"+vowel_slp1[i],vowel_dn_joiner[i]);
-                }
-                for(int i=0;i<16;i++)
-                {
-                    s=ReplaceString(s,vowel_slp1[i],vowel_dn[i]);
-                }
-                for(int i=0;i<13;i++)
-                {
-                    s=ReplaceString(s,no_slp1[i],no_dn[i]);
-                }
+        {
+			s=ReplaceString(s,consonants_slp1[i],consonants_dn_halanta[i]);
+        }
+        for(int i=0;i<12;i++)
+        {
+            s=ReplaceString(s,"्"+vowel_slp1[i],vowel_dn_joiner[i]);
+        }
+        for(int i=0;i<16;i++)
+        {
+            s=ReplaceString(s,vowel_slp1[i],vowel_dn[i]);
+        }
+        for(int i=0;i<13;i++)
+        {
+            s=ReplaceString(s,no_slp1[i],no_dn[i]);
+        }
     }
 else if(SanFlag ){
     string vowel_dn[]={"अ","आ","इ","ई","उ","ऊ","ऋ","ॠ","ऌ","ॡ","ए","ऐ","ओ","औ","ं","ः","ँ","ᳲ","ᳳ","ऽ","ॐ"};
@@ -91,27 +91,27 @@ else if(SanFlag ){
     string numbers_eng[]={"1","2","3","4","5","6","7","8","9","0","|","||","0","$","'","'","''","''","%"};
 
 
-        for(int i=0;i<34;i++)
-        {
-            s=ReplaceString(s,consonants_slp1[i],consonants_dn_halanta[i]);
-        }
-        //cout << "here1 " << s <<endl;
-        for(int i=0;i<14;i++)
-        {
-            s=ReplaceString(s,"्"+vowel_slp1[i],vowel_dn_joiner[i]);
-        }
-        //cout << "here2 " << s <<endl;
-        for(int i=0;i<21;i++)
-        {
-            s=ReplaceString(s,vowel_slp1[i],vowel_dn[i]);
-        }
-        //cout << "here3 " << s <<endl;
-        for(unsigned int i=0;i<(sizeof(numbers_etc_dn)/sizeof(numbers_etc_dn[0]));i++)
-        {
-            s=ReplaceString(s,numbers_eng[i],numbers_etc_dn[i]);
-        }
-        //cout << "here3 " << s <<endl;
-        //cout<<s<<endl;
+       for(int i=0;i<34;i++)
+       {
+           s=ReplaceString(s,consonants_slp1[i],consonants_dn_halanta[i]);
+       }
+       //cout << "here1 " << s <<endl;
+       for(int i=0;i<14;i++)
+       {
+           s=ReplaceString(s,"्"+vowel_slp1[i],vowel_dn_joiner[i]);
+       }
+       //cout << "here2 " << s <<endl;
+       for(int i=0;i<21;i++)
+       {
+           s=ReplaceString(s,vowel_slp1[i],vowel_dn[i]);
+       }
+       //cout << "here3 " << s <<endl;
+       for(unsigned int i=0;i<(sizeof(numbers_etc_dn)/sizeof(numbers_etc_dn[0]));i++)
+       {
+           s=ReplaceString(s,numbers_eng[i],numbers_etc_dn[i]);
+       }
+       //cout << "here3 " << s <<endl;
+       //cout<<s<<endl;
     }
 
     return s;
