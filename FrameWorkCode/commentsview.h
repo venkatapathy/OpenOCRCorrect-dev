@@ -14,9 +14,6 @@ public:
     explicit CommentsView(const int &words, const int &chars, const float &wordacc, const float &characc, const QString comments, const QString commentFilename,int rating, QWidget *parent = nullptr);
     ~CommentsView();
 
-private slots:
-    void on_pushButton_clicked();
-
 private:
     Ui::CommentsView *ui;
 };
