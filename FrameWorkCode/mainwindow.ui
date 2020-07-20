@@ -195,7 +195,7 @@ p, li { white-space: pre-wrap; }
      <x>0</x>
      <y>0</y>
      <width>1296</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuOCR_Correction_Window">
@@ -280,6 +280,7 @@ p, li { white-space: pre-wrap; }
     <addaction name="actionCentreAlign"/>
     <addaction name="actionJusitfiedAlign"/>
     <addaction name="actionHighlight"/>
+    <addaction name="actionFontBlack"/>
    </widget>
    <addaction name="menuSelectLanguage"/>
    <addaction name="menuOCR_Correction_Window"/>
@@ -325,6 +326,7 @@ p, li { white-space: pre-wrap; }
    <addaction name="actionCentreAlign"/>
    <addaction name="actionRightAlign"/>
    <addaction name="actionJusitfiedAlign"/>
+   <addaction name="actionFontBlack"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionOpen">
@@ -700,6 +702,11 @@ p, li { white-space: pre-wrap; }
   <action name="actionHighlight_2">
    <property name="text">
     <string>Highlight</string>
+   </property>
+  </action>
+  <action name="actionFontBlack">
+   <property name="text">
+    <string>FontBlack</string>
    </property>
   </action>
  </widget>

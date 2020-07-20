@@ -3087,3 +3087,8 @@ void MainWindow::on_viewallcomments_clicked()
         CommentsView *cv = new CommentsView(totalworderr,totalcharerr,wordacc,characc,comments,commentFilename, rating);
         cv->show();
 }
+
+void MainWindow::on_actionFontBlack_triggered()
+{
+    ui->textBrowser->setTextColor(Qt::black);
+}
