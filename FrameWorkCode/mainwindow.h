@@ -184,6 +184,8 @@ private slots:
 
     void on_actionFontBlack_triggered();
     
+    void on_actionViewAverageAccuracies_triggered();
+
 private:
     Ui::MainWindow *ui;
 	QGraphicsScene * graphic=nullptr;

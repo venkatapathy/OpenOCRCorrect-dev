@@ -15,7 +15,7 @@
 #include <fstream>
 #include <vector>
 #include <utility> // std::pair
-
+#include "averageaccuracies.h"
 
 //# include <QTask>
 
@@ -3054,54 +3054,38 @@ void MainWindow::on_addcomments_clicked()
 void MainWindow::on_viewallcomments_clicked()
 {
     map<int, int> wordcount;
-        QString commentFilename = dir2levelup + "/Comments/" + currentpagename;
-        commentFilename.replace(".txt",".json");
-        commentFilename.replace(".html",".json");
-        int totalcharerr = 0, totalworderr = 0, rating = 0; QString comments = ""; double characc = 100.0, wordacc = 100.0;
-
-        QFileInfo file(commentFilename);
-        if(file.exists() && file.isFile())
+        QString commentFilename = dir2levelup + "/Comments/comments.json";
+    //    commentFilename.replace(".txt",".json");
+    //    commentFilename.replace(".html",".json");
+        QString pagename = currentpagename;
+        pagename.replace(".txt", "");
+        pagename.replace(".html", "");
+        int totalcharerr = 0, totalworderr = 0, rating = 0; QString comments = ""; float wordacc,characc;
+    
+        QFile jsonFile(commentFilename);
+        jsonFile.open(QIODevice::ReadOnly | QIODevice::Text);
+        QByteArray data = jsonFile.readAll();
+    
+        QJsonParseError errorPtr;
+        QJsonDocument document = QJsonDocument::fromJson(data, &errorPtr);
+        QJsonObject mainObj = document.object();
+        QJsonObject pages = mainObj.value("pages").toObject();
+        QJsonObject page = pages.value(pagename).toObject();
+    
+        if(document.isNull())
         {
-            QFile jsonFile(commentFilename);
-            jsonFile.open(QIODevice::ReadOnly | QIODevice::Text);
-            QByteArray data = jsonFile.readAll();
-
-            QJsonParseError errorPtr;
-            QJsonDocument document = QJsonDocument::fromJson(data, &errorPtr);
-            QJsonObject page = document.object();
-            if(document.isNull())
-            {
-                //qDebug()<<"empty json/parse error";
-            }
-
-            comments = page.value("comments").toString();
-            rating = page.value("rating").toInt();
-            totalcharerr = page.value("charerrors").toInt();
-            totalworderr = page.value("worderrors").toInt();
-            characc = page.value("characcuracy").toDouble();
-            wordacc = page.value("wordaccuracy").toDouble();
-            jsonFile.close();
+            //qDebug()<<"empty json/parse error";
         }
-//        auto textcursor1 = ui->textBrowser->textCursor();
-//        textcursor1.setPosition(0);
-//        while(!textcursor1.atEnd())
-//        {
-//            int anchor = textcursor1.position();
-//            QTextCharFormat format = textcursor1.charFormat();
-//            textcursor1.select(QTextCursor::WordUnderCursor);
-//            QString wordundercursor = textcursor1.selectedText();
-//            int key = textcursor1.selectionStart();
-//            qDebug()<<wordundercursor<<" :Word" <<wordundercursor.length()<< " :len" <<anchor<<"anchor" <<key << "key";
+    
+        comments = page.value("comments").toString();
+        rating = page.value("rating").toInt();
+        totalcharerr = page.value("charerrors").toInt();
+        totalworderr = page.value("worderrors").toInt();
+        wordacc = page.value("wordaccuracy").toDouble();
+        characc = page.value("characcuracy").toDouble();
 
-//            if(format.background() == Qt::yellow && anchor>=(key+1))
-//            {
-//                totalcharerr++;
-//                wordcount[key]++;
-//                qDebug()<<wordcount<<totalcharerr;
-//            }
-//            textcursor1.setPosition(anchor+1);
-//            //textcursor1.movePosition(QTextCursor::NextCharacter , QTextCursor::MoveAnchor, 1);
-//        }
+    
+        jsonFile.close();
 
         CommentsView *cv = new CommentsView(totalworderr,totalcharerr,wordacc,characc,comments,commentFilename, rating);
         cv->show();
@@ -3110,4 +3094,27 @@ void MainWindow::on_viewallcomments_clicked()
 void MainWindow::on_actionFontBlack_triggered()
 {
     ui->textBrowser->setTextColor(Qt::black);
+}
+
+void MainWindow::on_actionViewAverageAccuracies_triggered()
+{
+    QString commentFilename = dir2levelup + "/Comments/comments.json";
+    QString csvfile = dir2levelup + "/Comments/AverageAccuracies.csv";
+    float avgcharacc=0, avgwordacc = 0, avgrating  = 0; int avgcharerrors = 0, avgworderrors = 0;
+
+    QFile jsonFile(commentFilename);
+    jsonFile.open(QIODevice::ReadOnly | QIODevice::Text);
+    QByteArray data = jsonFile.readAll();
+
+    QJsonParseError errorPtr;
+    QJsonDocument document = QJsonDocument::fromJson(data, &errorPtr);
+    QJsonObject mainObj = document.object();
+
+    avgcharacc= mainObj["AverageCharAccuracy"].toDouble();
+    avgwordacc = mainObj["AverageWordAccuracy"].toDouble();
+    avgcharerrors = mainObj["AverageCharErrors"].toInt();
+    avgworderrors = mainObj["AverageWordErrors"].toInt();
+
+    AverageAccuracies *aa = new AverageAccuracies(csvfile, avgwordacc, avgcharacc, avgworderrors, avgcharerrors);
+    aa->show();
 }
