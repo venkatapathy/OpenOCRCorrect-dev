@@ -43,12 +43,16 @@ QString dir1levelup,dir2levelup,currentpagename, currentdirname;
 map<QString, QString> filestructure_fw = {
                                             {"Inds","CorrectorOutput"},
                                             {"CorrectorOutput","CorrectorOutput"},
-                                            {"VerifierOutput", "Version"}
+                                            {"VerifierOutput", "CorrectorOutput"}
                                          };
 map<QString, QString> filestructure_bw = {
                                             {"CorrectorOutput","Inds"},
                                             {"Inds" , "Inds"}
                                         };
+map<QString, QString> fileversion_fw = {
+                                            {"V1_","V2_"},
+                                            {"V2_","V3_"}
+                                         };
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -136,6 +140,7 @@ QTime myTimer;
 int secs;
 void MainWindow::on_actionLoad_Next_Page_triggered()
 {   if(mFilename.size()>0){
+        on_actionSave_triggered();
     string localFilename = mFilename.toUtf8().constData();
     int nMilliseconds = myTimer.elapsed();
     secs = nMilliseconds/1000;
@@ -182,6 +187,8 @@ void MainWindow::on_actionLoad_Next_Page_triggered()
 
 void MainWindow::on_actionLoad_Prev_Page_triggered()
 {   if(mFilename.size() >0 ){
+        on_actionSave_triggered();
+
     string localFilename = mFilename.toUtf8().constData();
     int nMilliseconds = myTimer.elapsed();
     secs = nMilliseconds/1000;
@@ -939,11 +946,23 @@ void MainWindow::on_actionSave_triggered()
 //        QString localFilename = mFilename;
 //        localFilename.replace("Inds","CorrectorOutput");
 //        localFilename.replace("txt","html");//Sanoj
-		QFileInfo f(mFilename);
-		QString ext=f.completeSuffix();
+//		QFileInfo f(mFilename);
+//		QString ext=f.completeSuffix();
+        QString temp_currentpagename = currentpagename;
+        if(currentdirname == "Inds")
+        {
+            temp_currentpagename = "V1_" + currentpagename;
+        }
+        if(currentdirname == "VerifierOutput")
+        {
+            temp_currentpagename.replace("V2_","V3_");
+            temp_currentpagename.replace("V1_","V2_");
+        }
         QString changefiledir = filestructure_fw[currentdirname];
-        QString localFilename = dir2levelup + "/" +changefiledir +"/" + currentpagename;
-        localFilename.replace("txt","html");
+        QString localFilename = dir2levelup + "/" +changefiledir +"/" + temp_currentpagename;
+        localFilename.replace(".txt",".html");
+
+
         QFile sFile(localFilename);
         //if(sFile.open(QFile::WriteOnly | QFile::Text))
 		if(sFile.open(QFile::WriteOnly))
@@ -954,15 +973,15 @@ void MainWindow::on_actionSave_triggered()
 			sFile.flush();
 			sFile.close();
         }
-		localFilename.replace("html","txt");
-		QFile sfile2(localFilename);
-		if (sfile2.open(QFile::WriteOnly)) {
-			QTextStream out(&sfile2);
-			out.setCodec("UTF-8");
-			out << ui->textBrowser->toPlainText();//toPlainText()
-			sfile2.flush();
-			sfile2.close();
-		}
+//		localFilename.replace("html","txt");
+//		QFile sfile2(localFilename);
+//		if (sfile2.open(QFile::WriteOnly)) {
+//			QTextStream out(&sfile2);
+//			out.setCodec("UTF-8");
+//			out << ui->textBrowser->toPlainText();//toPlainText()
+//			sfile2.flush();
+//			sfile2.close();
+//		}
     }
     ConvertSlpDevFlag =0;
     //on_actionSpell_Check_triggered();

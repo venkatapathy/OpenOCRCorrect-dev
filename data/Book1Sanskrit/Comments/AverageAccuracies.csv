@@ -1,0 +1,7 @@
+Page Name,Accuracy of Corrector (Word level),Accuracy of Corrector (Character-Level),Errors (Word level),Errors (Character-Level),
+page-14,98.45,99.3,3,12
+page-14,98.93,99.1,2,15
+page-14,97.44,98.97,3,13
+page-14,98.45,99.64,2,6
+ ,Average Accuracy (Word level),Average Accuracy (Character-Level),Average Errors (Word level),Average Errors (Character-Level),
+ ,98.3175,99.2525,2,11
