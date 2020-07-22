@@ -565,6 +565,9 @@ public:
 #endif // QT_NO_TOOLTIP
         actionAllFontProperties->setText(QApplication::translate("MainWindow", "AllFontProperties", Q_NULLPTR));
         actionBold->setText(QApplication::translate("MainWindow", "Bold", Q_NULLPTR));
+#ifndef QT_NO_SHORTCUT
+        actionBold->setShortcut(QApplication::translate("MainWindow", "Ctrl+B", Q_NULLPTR));
+#endif // QT_NO_SHORTCUT
         actionUnBold->setText(QApplication::translate("MainWindow", "UnBold", Q_NULLPTR));
         actionLeftAlign->setText(QApplication::translate("MainWindow", "LeftAlign", Q_NULLPTR));
         actionRightAlign->setText(QApplication::translate("MainWindow", "RightAlign", Q_NULLPTR));
@@ -589,7 +592,7 @@ public:
         pushButton_2->setText(QApplication::translate("MainWindow", "Compare Verifier's Output", Q_NULLPTR));
         viewallcomments->setText(QApplication::translate("MainWindow", "Comments and Accuracy", Q_NULLPTR));
         menuOCR_Correction_Window->setTitle(QApplication::translate("MainWindow", "File", Q_NULLPTR));
-        menuCreateReports->setTitle(QApplication::translate("MainWindow", "CreateReports", Q_NULLPTR));
+        menuCreateReports->setTitle(QApplication::translate("MainWindow", "Reports", Q_NULLPTR));
         menuSaveVariables->setTitle(QApplication::translate("MainWindow", "SaveVariables", Q_NULLPTR));
         menuConvertFiles->setTitle(QApplication::translate("MainWindow", "ConvertFiles", Q_NULLPTR));
         menuFeatureExtraction->setTitle(QApplication::translate("MainWindow", "FeatureExtraction", Q_NULLPTR));

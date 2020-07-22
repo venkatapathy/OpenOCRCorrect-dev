@@ -246,7 +246,7 @@ p, li { white-space: pre-wrap; }
    </widget>
    <widget class="QMenu" name="menuCreateReports">
     <property name="title">
-     <string>CreateReports</string>
+     <string>Reports</string>
     </property>
     <addaction name="actionCreateBest2OCR"/>
     <addaction name="actionCreateSuggestionLog"/>
@@ -641,6 +641,9 @@ p, li { white-space: pre-wrap; }
   <action name="actionBold">
    <property name="text">
     <string>Bold</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+B</string>
    </property>
   </action>
   <action name="actionUnBold">
