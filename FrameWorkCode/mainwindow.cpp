@@ -399,6 +399,9 @@ void MainWindow::on_actionOpen_triggered()
                 // load and show image:
                 setWindowTitle(mFilename);
                 QString localmFilename = dir2levelup + "/Images/" + currentpagename;
+                localmFilename.replace("V1_","");
+                localmFilename.replace("V2_","");
+                localmFilename.replace("V3_","");
                 localmFilename.replace(".txt",".jpeg");
                 localmFilename.replace(".html",".jpeg");
                 QImage imageOrig;
