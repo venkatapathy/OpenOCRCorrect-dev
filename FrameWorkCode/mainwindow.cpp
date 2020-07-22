@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "averageaccuracies.h"
 #include "eddis.h"
 #include "slpNPatternDict.h" //as included through lcsqt.h
 #include "trieEditdis.h"
@@ -41,6 +42,7 @@ map<int, QString> commentdict;
 map<int,  vector<int>> commentederrors;
 int openedFileChars;
 int openedFileWords;
+bool save_triggered = 0;
 QString dir1levelup,dir2levelup,currentpagename, currentdirname;
 map<QString, QString> filestructure_fw = {{"Inds","CorrectorOutput"},
                                      {"CorrectorOutput","VerifierOutput",},
@@ -545,58 +547,58 @@ void MainWindow::on_actionOpen_triggered()
                     z->set_modifiers(Qt::NoModifier);
                     // fill indexes according to Tesseract
 
-                    commentdict.clear();
-                    commentederrors.clear();
+//                    commentdict.clear();
+//                    commentederrors.clear();
 
-                    QString commentFilename = dir2levelup + "/Comments/" + currentpagename;
-                    commentFilename.replace(".txt",".json");
-                    commentFilename.replace(".html",".json");
-                    QFile jsonFile(commentFilename);
-                    jsonFile.open(QIODevice::ReadOnly | QIODevice::Text);
-                    QByteArray data = jsonFile.readAll();
+//                    QString commentFilename = dir2levelup + "/Comments/" + currentpagename;
+//                    commentFilename.replace(".txt",".json");
+//                    commentFilename.replace(".html",".json");
+//                    QFile jsonFile(commentFilename);
+//                    jsonFile.open(QIODevice::ReadOnly | QIODevice::Text);
+//                    QByteArray data = jsonFile.readAll();
 
-                    QJsonParseError errorPtr;
-                    QJsonDocument document = QJsonDocument::fromJson(data, &errorPtr);
-                    QJsonObject page = document.object();
-                    if(document.isNull())
-                    {
-                        //qDebug()<<"empty json/parse error";
-                    }
+//                    QJsonParseError errorPtr;
+//                    QJsonDocument document = QJsonDocument::fromJson(data, &errorPtr);
+//                    QJsonObject page = document.object();
+//                    if(document.isNull())
+//                    {
+//                        //qDebug()<<"empty json/parse error";
+//                    }
 
-                    QJsonArray comments = page.value("comments").toArray();
-                    QJsonArray charerrors = page.value("charerrors").toArray();
-                    QJsonArray worderrors = page.value("worderrors").toArray();
+//                    QJsonArray comments = page.value("comments").toArray();
+//                    QJsonArray charerrors = page.value("charerrors").toArray();
+//                    QJsonArray worderrors = page.value("worderrors").toArray();
 
-                    foreach(const QJsonValue &val, comments)
-                    {
-                        int key = val.toObject().value("key").toInt();
-                        QString value = val.toObject().value("value").toString();
-                        commentdict[key] = value;
-                        //qDebug()<<commentdict<<"onload commentdict";
-                    }
+//                    foreach(const QJsonValue &val, comments)
+//                    {
+//                        int key = val.toObject().value("key").toInt();
+//                        QString value = val.toObject().value("value").toString();
+//                        commentdict[key] = value;
+//                        //qDebug()<<commentdict<<"onload commentdict";
+//                    }
 
-                    QJsonArray::iterator it1;
-                    QJsonArray::iterator it2;
-                    vector<int> v;
-                    for(auto it1 = charerrors.begin(), it2 = worderrors.begin(); it1!=charerrors.end();it1++,it2++)
-                    {
-                        v.clear();
-                        QJsonObject val1 = it1->toObject();
-                        int key1 = val1.value("key").toInt();
-                        int value1 = val1.value("value").toInt();
-                        v.push_back(value1);
-                        QJsonObject val2 = it2->toObject();
-                        int key2 = val2.value("key").toInt();
-                        int value2 = val2.value("value").toInt();
-                        v.push_back(value2);
-                        if(key1==key2)
-                        {
-                            commentederrors[key1] = v;
-                            //qDebug()<<key1<<"key1"<<v<<"v";
-                        }
+//                    QJsonArray::iterator it1;
+//                    QJsonArray::iterator it2;
+//                    vector<int> v;
+//                    for(auto it1 = charerrors.begin(), it2 = worderrors.begin(); it1!=charerrors.end();it1++,it2++)
+//                    {
+//                        v.clear();
+//                        QJsonObject val1 = it1->toObject();
+//                        int key1 = val1.value("key").toInt();
+//                        int value1 = val1.value("value").toInt();
+//                        v.push_back(value1);
+//                        QJsonObject val2 = it2->toObject();
+//                        int key2 = val2.value("key").toInt();
+//                        int value2 = val2.value("value").toInt();
+//                        v.push_back(value2);
+//                        if(key1==key2)
+//                        {
+//                            commentederrors[key1] = v;
+//                            //qDebug()<<key1<<"key1"<<v<<"v";
+//                        }
 
 
-                    }
+//                    }
 
 
                 } //if(sFile.open(QFile::ReadOnly | QFile::Text))
@@ -1030,7 +1032,12 @@ void MainWindow::on_actionNew_triggered()
 }
 
 void MainWindow::on_actionSave_triggered()
-{   int nMilliseconds = myTimer.elapsed();
+{
+    save_triggered = 1;
+    on_viewallcomments_clicked();
+    updateAverageAccuracies();
+
+    int nMilliseconds = myTimer.elapsed();
     secs = nMilliseconds/1000;
     int mins = secs/60;
     secs = secs - mins*60;
@@ -1060,8 +1067,8 @@ void MainWindow::on_actionSave_triggered()
                   }
     }
     ConvertSlpDevFlag =0;
+    save_triggered = 0;
     //on_actionSpell_Check_triggered();
-
 }
 
 void MainWindow::on_actionLoadGDocPage_triggered()
@@ -1113,6 +1120,12 @@ void MainWindow::on_actionSave_As_triggered()
     if(!file.isEmpty())
     {
         mFilename = file;
+        int pos1 = mFilename.lastIndexOf("/");
+        dir1levelup = mFilename.mid(0,pos1);
+        currentpagename = mFilename.mid(pos1+1,mFilename.length()-pos1);
+        int pos2 = dir1levelup.lastIndexOf("/");
+        dir2levelup = dir1levelup.mid(0,pos2);
+        currentdirname = dir1levelup.mid(pos2+1,dir1levelup.length()-pos2);
         on_actionSave_triggered();
     }
 
@@ -2805,11 +2818,16 @@ void MainWindow::on_actionAllFontProperties_triggered() //Sanoj
     if(ok)
     {
         QTextCharFormat font1;
+        font1.LineHeight;
         font1.setFont(font);
         ui->textBrowser->textCursor().mergeCharFormat(font1);
     }
 }
 
+void MainWindow::on_actionFontBlack_triggered()
+{
+    ui->textBrowser->setTextColor(Qt::black);
+}
 
 
 //void MainWindow::on_actionSaveAsODF_triggered()//Sanoj
@@ -2845,8 +2863,6 @@ void MainWindow::on_pushButton_2_clicked() //VERIFER Sanoj
             QString t = in.readAll();
             t= t.replace(" \n","\n");
             qs1=t;
-            t= t.replace(" ","");
-            s1 = t.toUtf8().constData();
             sFile.close();
         }
 
@@ -2861,8 +2877,6 @@ void MainWindow::on_pushButton_2_clicked() //VERIFER Sanoj
             QString t = in.readAll();
             t= t.replace(" \n","\n");
             qs2=t;
-            t= t.replace(" ","");
-            s2 = t.toUtf8().constData();
             sFile.close();
         }
 
@@ -2877,12 +2891,24 @@ void MainWindow::on_pushButton_2_clicked() //VERIFER Sanoj
             QString t = in.readAll();
             t= t.replace(" \n","\n");
             qs3=t;
-            t= t.replace(" ","");
-            s3 = t.toUtf8().constData();
             sFile.close();
         }
 
     }
+    QTextDocument doc;
+
+    doc.setHtml(qs1);
+    qs1 = doc.toPlainText();
+    s1 = qs1.replace(" ", "").toUtf8().constData();
+
+    doc.setHtml(qs2);
+    qs2 = doc.toPlainText();
+    s2 = qs2.replace(" ", "").toUtf8().constData();
+
+    doc.setHtml(qs3);
+    qs3 = doc.toPlainText();
+    s3 = qs3.replace(" ", "").toUtf8().constData();
+
     int l1,l2,l3, DiffOcr_Corrector,DiffCorrector_Verifier,DiffOcr_Verifier; float correctorChangesPerc,verifierChangesPerc,ocrErrorPerc;
 
        l1 = s1.length();
@@ -2934,8 +2960,6 @@ void MainWindow::on_pushButton_3_clicked() //INTERN NIPUN
             QString t = in.readAll();
             t= t.replace(" \n","\n");
             qs1=t;
-            t= t.replace(" ","");
-            s1 = t.toUtf8().constData();
             sFile.close();
         }
 
@@ -2950,12 +2974,19 @@ void MainWindow::on_pushButton_3_clicked() //INTERN NIPUN
             QString t = in.readAll();
             t= t.replace(" \n","\n");
             qs2=t;
-            t= t.replace(" ","");
-            s2 = t.toUtf8().constData();
             sFile.close();
         }
 
     }
+    QTextDocument doc;
+
+    doc.setHtml(qs1);
+    qs1 = doc.toPlainText();
+    s1 = qs1.replace(" ", "").toUtf8().constData();
+
+    doc.setHtml(qs2);
+    qs2 = doc.toPlainText();
+    s2 = qs2.replace(" ", "").toUtf8().constData();
 
     int l1,l2, levenshtein; float accuracy;
     l1 = s1.length();
@@ -3088,8 +3119,344 @@ void MainWindow::on_actionAccuracyLog_triggered()
     csvFile.close();
 
 }
+void MainWindow::on_actionHighlight_triggered()
+{
+    QTextCursor cursor = ui->textBrowser->textCursor();
+    QString text = cursor.selectedText().toUtf8().constData();
+    int pos1 = ui->textBrowser->textCursor().selectionStart();
+    int pos2 = ui->textBrowser->textCursor().selectionEnd();
+
+    int cursorpos = round(((float)(pos1+pos2))/2);
+    cursor.setPosition(cursorpos);
+
+    QTextCharFormat  format  = cursor.charFormat();
+    if(format.background() == Qt::yellow)
+    {
+        format.setBackground(Qt::transparent);
+    }
+    else
+    {
+        format.setBackground(Qt::yellow);
+        LogHighlights(text);
+    }
+    ui->textBrowser->textCursor().mergeCharFormat(format);
+    ui->textBrowser->copy();
+}
 
 
+void MainWindow::updateAverageAccuracies()
+{
+    QString commentFilename = dir2levelup + "/Comments/comments.json";
+    QString pagename;
+    pagename.replace(".txt", "");
+    pagename.replace(".html", "");
+    float totalcharacc=0, totalwordacc = 0, totalrating  = 0; int totalcharerrors = 0, totalworderrors = 0, count = 0;
+
+    QFile jsonFile(commentFilename);
+    jsonFile.open(QIODevice::ReadOnly | QIODevice::Text);
+    QByteArray data = jsonFile.readAll();
+
+    QJsonParseError errorPtr;
+    QJsonDocument document = QJsonDocument::fromJson(data, &errorPtr);
+    QJsonObject mainObj = document.object();
+    QJsonObject pages = mainObj.value("pages").toObject();
+    QJsonObject page;
+    if(document.isNull())
+    {
+        //qDebug()<<"empty json/parse error";
+    }
+    jsonFile.close();
+
+    string csvfolder = dir2levelup.toUtf8().constData();
+    csvfolder += "/Comments/AverageAccuracies.csv";
+    std::ofstream csvFile(csvfolder);
+    csvFile<<"Page Name,"<< "Word-Level Accuracy,"<<"Character-Level Accuracy," <<"Word-Level Errors,"<<"Character-Level Errors"<<"\n";
+
+    foreach(const QJsonValue &val, pages)
+    {
+        QString page = val.toObject().value("pagename").toString();
+        float characc    = val.toObject().value("characcuracy").toDouble();
+        float wordacc    = val.toObject().value("wordaccuracy").toDouble();
+        int charerrors = val.toObject().value("charerrors").toInt();
+        int worderrors = val.toObject().value("worderrors").toInt();
+        //int rating     = val.toObject().value("rating").toInt();
+
+        csvFile << page.toUtf8().constData() <<"," << wordacc << "," << characc << "," << worderrors<< "," << charerrors<<"\n";
+
+        totalcharacc    += characc;
+        totalwordacc    += wordacc;
+        totalcharerrors += charerrors;
+        totalworderrors += worderrors;
+        //totalrating     += rating;
+
+        count++;
+    }
+    mainObj["AverageCharAccuracy"] = totalcharacc/count;
+    mainObj["AverageWordAccuracy"] = totalwordacc/count;
+    mainObj["AverageCharErrors"] = totalcharerrors/count;
+    mainObj["AverageWordErrors"] = totalworderrors/count;
+    //mainObj["AverageRating"] = totalrating/count;
+
+    csvFile<< ",,,,";
+    csvFile<<" ,"<< "Average Accuracy (Word level),"<<"Average Accuracy (Character-Level)," <<"Average Errors (Word level),"<<"Average Errors (Character-Level),"<<"\n";
+    csvFile <<" " <<"," << totalwordacc/count << "," << totalcharacc/count << "," << totalworderrors/count<< "," << totalcharerrors/count<<"\n";
+
+
+    QJsonDocument document1(mainObj);
+
+    QFile jsonFile1(commentFilename);
+    jsonFile1.open(QIODevice::WriteOnly);
+    jsonFile1.write(document1.toJson());
+    jsonFile1.close();
+
+}
+
+void MainWindow::on_viewallcomments_clicked()
+{
+
+    map<int, int> wordcount;
+    QString commentFilename = dir2levelup + "/Comments/comments.json";
+//    commentFilename.replace(".txt",".json");
+//    commentFilename.replace(".html",".json");
+    QString pagename = currentpagename;
+    pagename.replace(".txt", "");
+    pagename.replace(".html", "");
+    int totalcharerr = 0, totalworderr = 0, rating = 0; QString comments = "";
+
+    QFile jsonFile(commentFilename);
+    jsonFile.open(QIODevice::ReadOnly | QIODevice::Text);
+    QByteArray data = jsonFile.readAll();
+
+    QJsonParseError errorPtr;
+    QJsonDocument document = QJsonDocument::fromJson(data, &errorPtr);
+    QJsonObject mainObj = document.object();
+    QJsonObject pages = mainObj.value("pages").toObject();
+    QJsonObject page = pages.value(pagename).toObject();
+
+    if(document.isNull())
+    {
+        //qDebug()<<"empty json/parse error";
+    }
+
+    comments = page.value("comments").toString();
+    rating = page.value("rating").toInt();
+
+    jsonFile.close();
+
+    auto textcursor1 = ui->textBrowser->textCursor();
+    textcursor1.setPosition(0);
+    while(!textcursor1.atEnd())
+    {
+        int anchor = textcursor1.position();
+        QTextCharFormat format = textcursor1.charFormat();
+        textcursor1.select(QTextCursor::WordUnderCursor);
+        QString wordundercursor = textcursor1.selectedText();
+        int key = textcursor1.selectionStart();
+        //qDebug()<<wordundercursor<<" :Word" <<wordundercursor.length()<< " :len" <<anchor<<"anchor" <<key << "key";
+
+        if(format.background() == Qt::yellow && anchor>=(key+1))
+        {
+            totalcharerr++;
+            wordcount[key]++;
+            //qDebug()<<wordcount<<totalcharerr;
+        }
+        textcursor1.setPosition(anchor+1);
+        //textcursor1.movePosition(QTextCursor::NextCharacter , QTextCursor::MoveAnchor, 1);
+    }
+
+    totalworderr = wordcount.size();
+    float characc = (float)(openedFileChars - totalcharerr)/(float)openedFileChars*100;
+    float wordacc = (float)(openedFileWords - totalworderr)/(float)openedFileWords*100 ;
+    wordacc = ((float)lround(wordacc*100))/100;
+    characc = ((float)lround(characc*100))/100;
+
+    if(characc>99.0) rating =5;
+    else if(characc > 98.0) rating =4;
+    else if(characc > 97.0) rating =3;
+    else if(characc > 96.0) rating =2;
+    else if(characc > 95.0) rating =1;
+
+
+    page["comments"] = comments;
+    page["charerrors"] = totalcharerr;
+    page["worderrors"] = totalworderr;
+    page["characcuracy"] = characc;
+    page["wordaccuracy"] = wordacc;
+    page["rating"] = rating;
+    page["pagename"] = pagename;
+    pages.remove(pagename);
+    pages.insert(pagename, page);
+    mainObj.remove("pages");
+    mainObj.insert("pages",pages);
+    QJsonDocument document1(mainObj);
+
+    QFile jsonFile1(commentFilename);
+    jsonFile1.open(QIODevice::WriteOnly);
+    jsonFile1.write(document1.toJson());
+    jsonFile1.close();
+
+    if(!save_triggered)
+    {
+        CommentsView *cv = new CommentsView(totalworderr,totalcharerr,wordacc,characc,comments,commentFilename,pagename, rating);
+        cv->show();
+    }
+
+}
+
+
+
+void MainWindow::on_actionViewAverageAccuracies_triggered()
+{
+    QString commentFilename = dir2levelup + "/Comments/comments.json";
+    QString csvfile = dir2levelup + "/Comments/AverageAccuracies.csv";
+    QString pagename = currentpagename;
+    pagename.replace(".txt", "");
+    pagename.replace(".html", "");
+    float avgcharacc=0, avgwordacc = 0, avgrating  = 0; int avgcharerrors = 0, avgworderrors = 0;
+
+    QFile jsonFile(commentFilename);
+    jsonFile.open(QIODevice::ReadOnly | QIODevice::Text);
+    QByteArray data = jsonFile.readAll();
+
+    QJsonParseError errorPtr;
+    QJsonDocument document = QJsonDocument::fromJson(data, &errorPtr);
+    QJsonObject mainObj = document.object();
+
+    avgcharacc= mainObj["AverageCharAccuracy"].toDouble();
+    avgwordacc = mainObj["AverageWordAccuracy"].toDouble();
+    avgcharerrors = mainObj["AverageCharErrors"].toInt();
+    avgworderrors = mainObj["AverageWordErrors"].toInt();
+
+    AverageAccuracies *aa = new AverageAccuracies(csvfile, avgwordacc, avgcharacc, avgworderrors, avgcharerrors);
+    aa->show();
+}
+
+void MainWindow::LogHighlights(QString word)
+{
+    QString highlightsFilename = dir2levelup + "/Comments/HighlightsLog.json";
+    QString pagename = currentpagename;
+    pagename.replace(".txt", "");
+    pagename.replace(".html", "");
+    QFile jsonFile(highlightsFilename);
+    jsonFile.open(QIODevice::ReadOnly | QIODevice::Text);
+    QByteArray data = jsonFile.readAll();
+
+    QJsonParseError errorPtr;
+    QJsonDocument document = QJsonDocument::fromJson(data, &errorPtr);
+    QJsonObject mainObj = document.object();
+    QJsonObject page = mainObj.value(pagename).toObject();
+    QJsonObject highlights;
+    jsonFile.close();
+
+    int nMilliseconds = myTimer.elapsed();
+    secs = nMilliseconds/1000;
+//    int mins = secs/60;
+//    secs = secs - mins*60;
+    QString time = QTime::currentTime().toString();
+    highlights["Word"] = word;
+    highlights["Timestamp"] = time;
+    highlights["Time Elapsed (s)"] = secs;
+    highlights["Page Name"] = pagename;
+
+    page.remove(time);
+    page.insert(time,highlights);
+    mainObj.remove(pagename);
+    mainObj.insert(pagename,page);
+    document.setObject(mainObj);
+
+    QFile jsonFile1(highlightsFilename);
+    jsonFile1.open(QIODevice::WriteOnly);
+    jsonFile1.write(document.toJson());
+}
+
+
+
+//void MainWindow::on_viewallcomments_clicked()
+//{
+//    QString commentFilename = dir2levelup + "/Comments/" + currentpagename;
+//    int totalcharerr = 0, totalworderr = 0;
+//    auto textcursor1 = ui->textBrowser->textCursor();
+//    auto textcursor2 = textcursor1;
+//    textcursor1.setPosition(0);
+//    while(!textcursor1.atEnd())
+//    {
+//        int anchor = textcursor1.position();
+//        textcursor2.setPosition(anchor);
+//        int wordflag = 0;
+//        textcursor1.select(QTextCursor::WordUnderCursor);
+//        QString wordundercursor = textcursor1.selectedText();
+
+//        qDebug()<<wordundercursor<<" :Word" <<wordundercursor.length()<< " :len" <<anchor<<"anchor";
+
+//        for(int i = anchor;  i < anchor+wordundercursor.length(); ++i)
+//        {
+//            qDebug()<<textcursor2.position();
+//            QTextCharFormat format = textcursor2.charFormat();
+//            if(format.background() == Qt::yellow)
+//            {
+//                totalcharerr++;
+//                wordflag++;
+//            }
+//            if(wordflag == 1)
+//            {
+//                totalworderr++;
+//            }
+//            textcursor2.setPosition(i);
+//        }
+//        textcursor1.movePosition(QTextCursor::NextWord , QTextCursor::MoveAnchor, 1);
+//    }
+//    float characc = (float)(openedFileChars - totalcharerr)/(float)openedFileChars*100;
+//    float wordacc = (float)(openedFileWords - totalworderr)/(float)openedFileWords*100 ;
+//    wordacc = ((float)lround(wordacc*100))/100;
+//    characc = ((float)lround(characc*100))/100;
+
+//    CommentsView *cv = new CommentsView(totalworderr,totalcharerr,wordacc,characc,commentFilename);
+//    cv->show();
+
+//}
+
+/*
+
+void MainWindow::on_viewallcomments_clicked()
+{
+    map<int ,int> countwords;
+    QString commentFilename = dir2levelup + "/Comments/" + currentpagename;
+    int totalcharerr = 0, totalworderr = 0;
+    auto textcursor1 = ui->textBrowser->textCursor();
+    textcursor1.setPosition(0);
+    while(!textcursor1.atEnd())
+    {
+        QTextCharFormat format = textcursor1.charFormat();
+        if(format.background() == Qt::yellow)
+        {
+            totalcharerr++;
+        }
+        auto textcursor2 = ui->textBrowser->textCursor();
+        textcursor2.select(QTextCursor::WordUnderCursor);
+        int key = textcursor2.selectionStart();
+        QString wordundercursor = textcursor1.selectedText();
+        wordundercursor = wordundercursor.simplified();
+        int wordsinselection = wordundercursor.count(" ")+1;
+        countwords[key] += wordsinselection;
+        qDebug()<<key<<textcursor2.selectedText()<<countwords;
+        textcursor1.movePosition(QTextCursor::NextCharacter , QTextCursor::KeepAnchor);
+    }
+    map<int ,int>::iterator it;
+    for(it=countwords.begin(); it!=countwords.end(); it++)
+    {
+        totalworderr+= it->second;
+    }
+    float characc = (float)(openedFileChars - totalcharerr)/(float)openedFileChars*100;
+    float wordacc = (float)(openedFileWords - totalworderr)/(float)openedFileWords*100 ;
+    wordacc = ((float)lround(wordacc*100))/100;
+    characc = ((float)lround(characc*100))/100;
+
+    CommentsView *cv = new CommentsView(totalworderr,totalcharerr,wordacc,characc,commentFilename);
+    cv->show();
+
+}
+*/
+/*
 
 void MainWindow::on_actionHighlight_triggered()
 {
@@ -3104,13 +3471,16 @@ void MainWindow::on_actionHighlight_triggered()
     QString text = cursor.selectedText().toUtf8().constData();
     int pos1 = ui->textBrowser->textCursor().selectionStart();
     int pos2 = ui->textBrowser->textCursor().selectionEnd();
+    int cursorpos = round(((float)(pos1+pos2))/2);
+    cursor.setPosition(cursorpos);
     int pos = min(pos1,pos2);
     //qDebug()<<text;
     //QString key =  QString::number(pos) + text;
-    int key = pos;
+    int key = pos; 
     QTextCharFormat  format  = cursor.charFormat();
-    if(ui->textBrowser->textBackgroundColor() == Qt::yellow)
+    if(format.background() == Qt::yellow)
     {
+        qDebug()<<"text was yellow"<< text << pos1 << " "<< pos2;
         format.setBackground(Qt::transparent);
         if(commentdict.find(key)!=commentdict.end())
         {
@@ -3122,7 +3492,7 @@ void MainWindow::on_actionHighlight_triggered()
         }
     }
     else
-    {
+    {   qDebug()<<"text was not yellow "<< text << pos1 << " "<< pos2;
         format.setBackground(Qt::yellow);
         ui->commentsfield->setText(text + ":");
         int chars = text.length();
@@ -3145,8 +3515,13 @@ void MainWindow::on_addcomments_clicked()
     int pos2 = ui->textBrowser->textCursor().selectionEnd();
     int pos = min(pos1,pos2);
     int loc = commentstext.indexOf(":");
-    QString highlightedtext = commentstext.mid(0,loc) ;
+    QString highlightedtext = ui->textBrowser->textCursor().selectedText().toUtf8().constData();
     QString comment = commentstext.mid(loc+1,commentstext.length()-loc);
+    if(loc == -1)
+    {
+       comment = commentstext;
+    }
+
 
 //    QString key = QString::number(pos) + highlightedtext;
     int key = pos;
@@ -3219,3 +3594,7 @@ void MainWindow::on_viewallcomments_clicked()
     cv->show();
 
 }
+*/
+
+
+

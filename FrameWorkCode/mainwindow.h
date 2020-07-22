@@ -81,6 +81,7 @@ private slots:
 
     //bool eventFilter(QObject *object, QEvent *event);
 
+
     void on_actionLoad_Next_Page_triggered();
 
     void on_actionLoad_Prev_Page_triggered();
@@ -175,10 +176,18 @@ private slots:
 
     void on_actionHighlight_triggered();
 
-    void on_addcomments_clicked();
+   // void on_addcomments_clicked();
     
     void on_viewallcomments_clicked();
     
+    void on_actionFontBlack_triggered();
+
+    void updateAverageAccuracies();
+
+    void on_actionViewAverageAccuracies_triggered();
+
+    void LogHighlights(QString word);
+
 private:
     Ui::MainWindow *ui;
 
