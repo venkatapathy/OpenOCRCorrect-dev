@@ -46,7 +46,14 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="h_words"/>
+              <widget class="QLineEdit" name="h_words">
+               <property name="dragEnabled">
+                <bool>true</bool>
+               </property>
+               <property name="readOnly">
+                <bool>true</bool>
+               </property>
+              </widget>
              </item>
             </layout>
            </item>
@@ -60,7 +67,14 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="h_characters"/>
+              <widget class="QLineEdit" name="h_characters">
+               <property name="dragEnabled">
+                <bool>true</bool>
+               </property>
+               <property name="readOnly">
+                <bool>true</bool>
+               </property>
+              </widget>
              </item>
             </layout>
            </item>
@@ -129,7 +143,14 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="acc_word"/>
+              <widget class="QLineEdit" name="acc_word">
+               <property name="dragEnabled">
+                <bool>true</bool>
+               </property>
+               <property name="readOnly">
+                <bool>true</bool>
+               </property>
+              </widget>
              </item>
             </layout>
            </item>
@@ -143,7 +164,14 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="acc_character"/>
+              <widget class="QLineEdit" name="acc_character">
+               <property name="dragEnabled">
+                <bool>true</bool>
+               </property>
+               <property name="readOnly">
+                <bool>true</bool>
+               </property>
+              </widget>
              </item>
             </layout>
            </item>

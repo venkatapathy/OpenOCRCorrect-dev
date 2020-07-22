@@ -15,7 +15,7 @@
 #include <fstream>
 #include <vector>
 #include <utility> // std::pair
-
+#include "averageaccuracies.h"
 
 //# include <QTask>
 
@@ -42,12 +42,17 @@ int openedFileWords;
 QString dir1levelup,dir2levelup,currentpagename, currentdirname;
 map<QString, QString> filestructure_fw = {
                                             {"Inds","CorrectorOutput"},
-                                            {"CorrectorOutput","CorrectorOutput"}
+                                            {"CorrectorOutput","CorrectorOutput"},
+                                            {"VerifierOutput", "CorrectorOutput"}
                                          };
 map<QString, QString> filestructure_bw = {
                                             {"CorrectorOutput","Inds"},
                                             {"Inds" , "Inds"}
                                         };
+map<QString, QString> fileversion_fw = {
+                                            {"V1_","V2_"},
+                                            {"V2_","V3_"}
+                                         };
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -135,6 +140,7 @@ QTime myTimer;
 int secs;
 void MainWindow::on_actionLoad_Next_Page_triggered()
 {   if(mFilename.size()>0){
+        on_actionSave_triggered();
     string localFilename = mFilename.toUtf8().constData();
     int nMilliseconds = myTimer.elapsed();
     secs = nMilliseconds/1000;
@@ -181,6 +187,8 @@ void MainWindow::on_actionLoad_Next_Page_triggered()
 
 void MainWindow::on_actionLoad_Prev_Page_triggered()
 {   if(mFilename.size() >0 ){
+        on_actionSave_triggered();
+
     string localFilename = mFilename.toUtf8().constData();
     int nMilliseconds = myTimer.elapsed();
     secs = nMilliseconds/1000;
@@ -946,11 +954,23 @@ void MainWindow::on_actionSave_triggered()
 //        QString localFilename = mFilename;
 //        localFilename.replace("Inds","CorrectorOutput");
 //        localFilename.replace("txt","html");//Sanoj
-		QFileInfo f(mFilename);
-		QString ext=f.completeSuffix();
+//		QFileInfo f(mFilename);
+//		QString ext=f.completeSuffix();
+        QString temp_currentpagename = currentpagename;
+        if(currentdirname == "Inds")
+        {
+            temp_currentpagename = "V1_" + currentpagename;
+        }
+        if(currentdirname == "VerifierOutput")
+        {
+            temp_currentpagename.replace("V2_","V3_");
+            temp_currentpagename.replace("V1_","V2_");
+        }
         QString changefiledir = filestructure_fw[currentdirname];
-        QString localFilename = dir2levelup + "/" +changefiledir +"/" + currentpagename;
-        localFilename.replace("txt","html");
+        QString localFilename = dir2levelup + "/" +changefiledir +"/" + temp_currentpagename;
+        localFilename.replace(".txt",".html");
+
+
         QFile sFile(localFilename);
         //if(sFile.open(QFile::WriteOnly | QFile::Text))
 		if(sFile.open(QFile::WriteOnly))
@@ -961,15 +981,15 @@ void MainWindow::on_actionSave_triggered()
 			sFile.flush();
 			sFile.close();
         }
-		localFilename.replace("html","txt");
-		QFile sfile2(localFilename);
-		if (sfile2.open(QFile::WriteOnly)) {
-			QTextStream out(&sfile2);
-			out.setCodec("UTF-8");
-			out << ui->textBrowser->toPlainText();//toPlainText()
-			sfile2.flush();
-			sfile2.close();
-		}
+//		localFilename.replace("html","txt");
+//		QFile sfile2(localFilename);
+//		if (sfile2.open(QFile::WriteOnly)) {
+//			QTextStream out(&sfile2);
+//			out.setCodec("UTF-8");
+//			out << ui->textBrowser->toPlainText();//toPlainText()
+//			sfile2.flush();
+//			sfile2.close();
+//		}
     }
     ConvertSlpDevFlag =0;
     //on_actionSpell_Check_triggered();
@@ -3041,60 +3061,68 @@ void MainWindow::on_addcomments_clicked()
 */
 void MainWindow::on_viewallcomments_clicked()
 {
-    QString commentFilename = dir2levelup + "/Comments/" + currentpagename;
-    commentFilename.replace(".txt",".json");
-    commentFilename.replace(".html",".json");
-    //qDebug() << commentFilename;
+    map<int, int> wordcount;
+        QString commentFilename = dir2levelup + "/Comments/comments.json";
+    //    commentFilename.replace(".txt",".json");
+    //    commentFilename.replace(".html",".json");
+        QString pagename = currentpagename;
+        pagename.replace(".txt", "");
+        pagename.replace(".html", "");
+        int totalcharerr = 0, totalworderr = 0, rating = 0; QString comments = ""; float wordacc,characc;
+    
+        QFile jsonFile(commentFilename);
+        jsonFile.open(QIODevice::ReadOnly | QIODevice::Text);
+        QByteArray data = jsonFile.readAll();
+    
+        QJsonParseError errorPtr;
+        QJsonDocument document = QJsonDocument::fromJson(data, &errorPtr);
+        QJsonObject mainObj = document.object();
+        QJsonObject pages = mainObj.value("pages").toObject();
+        QJsonObject page = pages.value(pagename).toObject();
+    
+        if(document.isNull())
+        {
+            //qDebug()<<"empty json/parse error";
+        }
+    
+        comments = page.value("comments").toString();
+        rating = page.value("rating").toInt();
+        totalcharerr = page.value("charerrors").toInt();
+        totalworderr = page.value("worderrors").toInt();
+        wordacc = page.value("wordaccuracy").toDouble();
+        characc = page.value("characcuracy").toDouble();
 
-    int totalcharerr = 0 ,totalworderr = 0; QString commentfield = "";
-    map<int, QString>::iterator it1;
-    map<int, vector<int>>::iterator it2;
+    
+        jsonFile.close();
 
-    QJsonObject page;
-    QJsonArray comments;
-    for(it1 = commentdict.begin(); it1!= commentdict.end(); it1++)
-    {
-        QJsonObject comment;
-        comment["key"] = it1->first;
-        comment["value"] = it1->second.toUtf8().constData();
-        comments.push_back(comment);
-        commentfield += it1->second+"\n";
-    }
-    page.insert("comments",comments);
+        CommentsView *cv = new CommentsView(totalworderr,totalcharerr,wordacc,characc,comments,commentFilename, rating);
+        cv->show();
+}
 
-    QJsonArray charerrors;
-    QJsonArray worderrors;
+void MainWindow::on_actionFontBlack_triggered()
+{
+    ui->textBrowser->setTextColor(Qt::black);
+}
 
-    for(it2 = commentederrors.begin(); it2!= commentederrors.end(); it2++)
-    {
-        auto wordchars = it2->second;
-        totalcharerr += wordchars[0];
-        totalworderr += wordchars[1];
-
-        QJsonObject charerror;
-        QJsonObject worderror;
-        charerror["key"] = it2->first;
-        charerror["value"] = wordchars[0];
-        worderror["key"] = it2->first;
-        worderror["value"] = wordchars[1];
-
-        charerrors.push_back(charerror);
-        worderrors.push_back(worderror);
-    }
-    page.insert("charerrors",charerrors);
-    page.insert("worderrors",worderrors);
-    QJsonDocument document(page);
+void MainWindow::on_actionViewAverageAccuracies_triggered()
+{
+    QString commentFilename = dir2levelup + "/Comments/comments.json";
+    QString csvfile = dir2levelup + "/Comments/AverageAccuracies.csv";
+    float avgcharacc=0, avgwordacc = 0, avgrating  = 0; int avgcharerrors = 0, avgworderrors = 0;
 
     QFile jsonFile(commentFilename);
-    jsonFile.open(QIODevice::WriteOnly);
-    jsonFile.write(document.toJson());
+    jsonFile.open(QIODevice::ReadOnly | QIODevice::Text);
+    QByteArray data = jsonFile.readAll();
 
-    float characc = (float)(openedFileChars - totalcharerr)/(float)openedFileChars*100;
-    float wordacc = (float)(openedFileWords - totalworderr)/(float)openedFileWords*100 ;
-    wordacc = ((float)lround(wordacc*100))/100;
-    characc = ((float)lround(characc*100))/100;
+    QJsonParseError errorPtr;
+    QJsonDocument document = QJsonDocument::fromJson(data, &errorPtr);
+    QJsonObject mainObj = document.object();
 
-    CommentsView *cv = new CommentsView(totalworderr,totalcharerr,wordacc,characc,commentfield);
-    cv->show();
+    avgcharacc= mainObj["AverageCharAccuracy"].toDouble();
+    avgwordacc = mainObj["AverageWordAccuracy"].toDouble();
+    avgcharerrors = mainObj["AverageCharErrors"].toInt();
+    avgworderrors = mainObj["AverageWordErrors"].toInt();
 
+    AverageAccuracies *aa = new AverageAccuracies(csvfile, avgwordacc, avgcharacc, avgworderrors, avgcharerrors);
+    aa->show();
 }
