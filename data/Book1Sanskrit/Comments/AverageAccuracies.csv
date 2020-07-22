@@ -1,6 +1,11 @@
-Page Name,Accuracy of Corrector (Word level),Accuracy of Corrector (Character-Level),Errors (Word level),Errors (Character-Level),
+Page Name,Word-Level Accuracy,Character-Level Accuracy,Word-Level Errors,Character-Level Errors
+V1_page-2,98.11,97.62,2,35
+V1_page-3,97.94,97.2,4,42
+V1_page-4,99.15,97.78,1,28
+newfilename,98.11,97.62,2,35
 page-12,91.53,95.23,15,73
 page-13,95.88,96.73,8,56
 page-14,98.93,99.52,2,8
+test,98.11,97.62,2,35
 ,,,, ,Average Accuracy (Word level),Average Accuracy (Character-Level),Average Errors (Word level),Average Errors (Character-Level),
- ,95.4467,97.16,8,45
+ ,97.22,97.415,4,39

@@ -19,3 +19,4 @@
 /home/sanoj/new1/OpenOCRCorrect/data/Book1Sanskrit/Inds/page-15.txt 56
 /home/sanoj/new1/OpenOCRCorrect/data/Book1Sanskrit/Inds/page-9.txt 173
 <<<<<<< 0
+C:/Users/raman/source/repos/OpenOCRCorrect/data/Book1Sanskrit/VerifierOutput/page-1.html 578

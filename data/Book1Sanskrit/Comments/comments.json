@@ -1,9 +1,45 @@
 {
-    "AverageCharAccuracy": 97.16000366210938,
-    "AverageCharErrors": 45,
-    "AverageWordAccuracy": 95.44666290283203,
-    "AverageWordErrors": 8,
+    "AverageCharAccuracy": 97.41500091552734,
+    "AverageCharErrors": 39,
+    "AverageWordAccuracy": 97.2199935913086,
+    "AverageWordErrors": 4,
     "pages": {
+        "V1_page-2": {
+            "characcuracy": 97.62000274658203,
+            "charerrors": 35,
+            "comments": "",
+            "pagename": "V1_page-2",
+            "rating": 3,
+            "wordaccuracy": 98.11000061035156,
+            "worderrors": 2
+        },
+        "V1_page-3": {
+            "characcuracy": 97.19999694824219,
+            "charerrors": 42,
+            "comments": "",
+            "pagename": "V1_page-3",
+            "rating": 3,
+            "wordaccuracy": 97.94000244140625,
+            "worderrors": 4
+        },
+        "V1_page-4": {
+            "characcuracy": 97.77999877929688,
+            "charerrors": 28,
+            "comments": "",
+            "pagename": "V1_page-4",
+            "rating": 3,
+            "wordaccuracy": 99.1500015258789,
+            "worderrors": 1
+        },
+        "newfilename": {
+            "characcuracy": 97.62000274658203,
+            "charerrors": 35,
+            "comments": "",
+            "pagename": "newfilename",
+            "rating": 3,
+            "wordaccuracy": 98.11000061035156,
+            "worderrors": 2
+        },
         "page-12": {
             "characcuracy": 95.2300033569336,
             "charerrors": 73,
@@ -29,6 +65,15 @@
             "pagename": "page-14",
             "rating": 5,
             "wordaccuracy": 98.93000030517578,
+            "worderrors": 2
+        },
+        "test": {
+            "characcuracy": 97.62000274658203,
+            "charerrors": 35,
+            "comments": "",
+            "pagename": "test",
+            "rating": 3,
+            "wordaccuracy": 98.11000061035156,
             "worderrors": 2
         }
     }
