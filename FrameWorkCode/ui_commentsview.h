@@ -90,6 +90,8 @@ public:
 
         h_words = new QLineEdit(CommentsView);
         h_words->setObjectName(QString::fromUtf8("h_words"));
+        h_words->setDragEnabled(true);
+        h_words->setReadOnly(true);
 
         verticalLayout->addWidget(h_words);
 
@@ -105,6 +107,8 @@ public:
 
         h_characters = new QLineEdit(CommentsView);
         h_characters->setObjectName(QString::fromUtf8("h_characters"));
+        h_characters->setDragEnabled(true);
+        h_characters->setReadOnly(true);
 
         verticalLayout_2->addWidget(h_characters);
 
@@ -157,6 +161,8 @@ public:
 
         acc_word = new QLineEdit(CommentsView);
         acc_word->setObjectName(QString::fromUtf8("acc_word"));
+        acc_word->setDragEnabled(true);
+        acc_word->setReadOnly(true);
 
         verticalLayout_5->addWidget(acc_word);
 
@@ -172,6 +178,8 @@ public:
 
         acc_character = new QLineEdit(CommentsView);
         acc_character->setObjectName(QString::fromUtf8("acc_character"));
+        acc_character->setDragEnabled(true);
+        acc_character->setReadOnly(true);
 
         verticalLayout_6->addWidget(acc_character);
 

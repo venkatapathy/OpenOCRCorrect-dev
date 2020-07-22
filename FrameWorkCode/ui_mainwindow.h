@@ -81,6 +81,8 @@ public:
     QAction *actionSave_As_HTML;
     QAction *actionSave_As_2;
     QAction *actionHighlight_2;
+    QAction *actionFontBlack;
+    QAction *actionViewAverageAccuracies;
     QWidget *centralWidget;
     QWidget *layoutWidget;
     QHBoxLayout *horizontalLayout;
@@ -259,6 +261,10 @@ public:
         actionSave_As_2->setObjectName(QString::fromUtf8("actionSave_As_2"));
         actionHighlight_2 = new QAction(MainWindow);
         actionHighlight_2->setObjectName(QString::fromUtf8("actionHighlight_2"));
+        actionFontBlack = new QAction(MainWindow);
+        actionFontBlack->setObjectName(QString::fromUtf8("actionFontBlack"));
+        actionViewAverageAccuracies = new QAction(MainWindow);
+        actionViewAverageAccuracies->setObjectName(QString::fromUtf8("actionViewAverageAccuracies"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         layoutWidget = new QWidget(centralWidget);
@@ -341,7 +347,7 @@ public:
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 1296, 21));
+        menuBar->setGeometry(QRect(0, 0, 1296, 22));
         menuOCR_Correction_Window = new QMenu(menuBar);
         menuOCR_Correction_Window->setObjectName(QString::fromUtf8("menuOCR_Correction_Window"));
         menuCreateReports = new QMenu(menuBar);
@@ -398,6 +404,7 @@ public:
         menuCreateReports->addAction(actionErrorDetectWithoutAdaptation);
         menuCreateReports->addAction(actionErrorDetectionRepUniq);
         menuCreateReports->addAction(actionAccuracyLog);
+        menuCreateReports->addAction(actionViewAverageAccuracies);
         menuSaveVariables->addAction(actionCPair);
         menuSaveVariables->addAction(actionPrimarySecOCRPair);
         menuSaveVariables->addAction(actionCPairIEROcrVsCorrect);
@@ -421,6 +428,7 @@ public:
         menuFontAndLayout->addAction(actionCentreAlign);
         menuFontAndLayout->addAction(actionJusitfiedAlign);
         menuFontAndLayout->addAction(actionHighlight);
+        menuFontAndLayout->addAction(actionFontBlack);
         mainToolBar->addAction(actionNew);
         mainToolBar->addAction(actionOpen);
         mainToolBar->addAction(actionSave);
@@ -447,6 +455,7 @@ public:
         mainToolBar->addAction(actionCentreAlign);
         mainToolBar->addAction(actionRightAlign);
         mainToolBar->addAction(actionJusitfiedAlign);
+        mainToolBar->addAction(actionFontBlack);
 
         retranslateUi(MainWindow);
 
@@ -553,6 +562,8 @@ public:
         actionSave_As_HTML->setText(QCoreApplication::translate("MainWindow", "Save As HTML", nullptr));
         actionSave_As_2->setText(QCoreApplication::translate("MainWindow", "Save As", nullptr));
         actionHighlight_2->setText(QCoreApplication::translate("MainWindow", "Highlight", nullptr));
+        actionFontBlack->setText(QCoreApplication::translate("MainWindow", "FontBlack", nullptr));
+        actionViewAverageAccuracies->setText(QCoreApplication::translate("MainWindow", "ViewAverageAccuracies", nullptr));
         textBrowser->setHtml(QCoreApplication::translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
@@ -564,7 +575,7 @@ public:
         pushButton_3->setText(QCoreApplication::translate("MainWindow", "Compare Output", nullptr));
         viewallcomments->setText(QCoreApplication::translate("MainWindow", "View All Comments", nullptr));
         menuOCR_Correction_Window->setTitle(QCoreApplication::translate("MainWindow", "File", nullptr));
-        menuCreateReports->setTitle(QCoreApplication::translate("MainWindow", "CreateReports", nullptr));
+        menuCreateReports->setTitle(QCoreApplication::translate("MainWindow", "Reports", nullptr));
         menuSaveVariables->setTitle(QCoreApplication::translate("MainWindow", "SaveVariables", nullptr));
         menuConvertFiles->setTitle(QCoreApplication::translate("MainWindow", "ConvertFiles", nullptr));
         menuFeatureExtraction->setTitle(QCoreApplication::translate("MainWindow", "FeatureExtraction", nullptr));

@@ -964,7 +964,7 @@ void MainWindow::on_actionSave_triggered()
         if(currentdirname == "VerifierOutput")
         {
             temp_currentpagename.replace("V2_","V3_");
-            temp_currentpagename.replace("V1_","V2_");
+			temp_currentpagename.replace("V1_","V2_");
         }
         QString changefiledir = filestructure_fw[currentdirname];
         QString localFilename = dir2levelup + "/" +changefiledir +"/" + temp_currentpagename;
