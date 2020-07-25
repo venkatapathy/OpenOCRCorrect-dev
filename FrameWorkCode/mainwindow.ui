@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1296</width>
-    <height>708</height>
+    <width>1386</width>
+    <height>733</height>
    </rect>
   </property>
   <property name="mouseTracking">
@@ -159,33 +159,56 @@ p, li { white-space: pre-wrap; }
      </item>
     </layout>
    </widget>
-   <widget class="QPushButton" name="pushButton_3">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>671</x>
-      <y>11</y>
-      <width>171</width>
-      <height>25</height>
+      <x>670</x>
+      <y>10</y>
+      <width>421</width>
+      <height>27</height>
      </rect>
     </property>
-    <property name="toolTip">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Open any file in CorrectorOutput Folder to view Changes made.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-    </property>
-    <property name="text">
-     <string>Compare Output</string>
-    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QPushButton" name="pushButton_3">
+       <property name="text">
+        <string>Compare Corrector's Output</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_2">
+       <property name="text">
+        <string>Compare Verifier's Output</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
    <widget class="QPushButton" name="viewallcomments">
     <property name="geometry">
      <rect>
-      <x>670</x>
-      <y>40</y>
-      <width>171</width>
+      <x>671</x>
+      <y>41</y>
+      <width>201</width>
       <height>25</height>
      </rect>
     </property>
     <property name="text">
-     <string>View All Comments</string>
+     <string>Comments and Accuracy</string>
     </property>
    </widget>
   </widget>
@@ -194,8 +217,8 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1296</width>
-     <height>22</height>
+     <width>1386</width>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuOCR_Correction_Window">
@@ -205,8 +228,8 @@ p, li { white-space: pre-wrap; }
     <addaction name="actionNew"/>
     <addaction name="actionOpen"/>
     <addaction name="actionSave"/>
-    <addaction name="actionSave_As_2"/>
-    <addaction name="actionHighlight"/>
+    <addaction name="actionSave_As"/>
+    <addaction name="actionSpell_Check"/>
     <addaction name="actionLoad_Next_Page"/>
     <addaction name="actionLoad_Prev_Page"/>
     <addaction name="separator"/>
@@ -223,7 +246,7 @@ p, li { white-space: pre-wrap; }
    </widget>
    <widget class="QMenu" name="menuCreateReports">
     <property name="title">
-     <string>Reports</string>
+     <string>CreateReports</string>
     </property>
     <addaction name="actionCreateBest2OCR"/>
     <addaction name="actionCreateSuggestionLog"/>
@@ -282,6 +305,8 @@ p, li { white-space: pre-wrap; }
     <addaction name="actionJusitfiedAlign"/>
     <addaction name="actionHighlight"/>
     <addaction name="actionFontBlack"/>
+    <addaction name="actionSubscript"/>
+    <addaction name="actionSuperscript"/>
    </widget>
    <addaction name="menuSelectLanguage"/>
    <addaction name="menuOCR_Correction_Window"/>
@@ -307,8 +332,6 @@ p, li { white-space: pre-wrap; }
    <addaction name="actionSave_As"/>
    <addaction name="actionLoadData"/>
    <addaction name="separator"/>
-   <addaction name="actionHighlight"/>
-   <addaction name="separator"/>
    <addaction name="actionLoad_Prev_Page"/>
    <addaction name="actionLoad_Next_Page"/>
    <addaction name="separator"/>
@@ -323,10 +346,11 @@ p, li { white-space: pre-wrap; }
    <addaction name="actionAllFontProperties"/>
    <addaction name="actionBold"/>
    <addaction name="actionUnBold"/>
+   <addaction name="actionJusitfiedAlign"/>
    <addaction name="actionLeftAlign"/>
    <addaction name="actionCentreAlign"/>
    <addaction name="actionRightAlign"/>
-   <addaction name="actionJusitfiedAlign"/>
+   <addaction name="actionHighlight"/>
    <addaction name="actionFontBlack"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
@@ -684,25 +708,13 @@ p, li { white-space: pre-wrap; }
     </iconset>
    </property>
    <property name="text">
-    <string>Highlight</string>
+    <string>Highlight (Ctrl+H)</string>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Highlight&lt;span style=&quot; font-weight:600;&quot;&gt;(Ctrl+H)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+H</string>
-   </property>
-  </action>
-  <action name="actionSave_As_HTML">
-   <property name="text">
-    <string>Save As HTML</string>
-   </property>
-  </action>
-  <action name="actionSave_As_2">
-   <property name="text">
-    <string>Save As</string>
-   </property>
-  </action>
-  <action name="actionHighlight_2">
-   <property name="text">
-    <string>Highlight</string>
    </property>
   </action>
   <action name="actionFontBlack">
@@ -713,6 +725,16 @@ p, li { white-space: pre-wrap; }
   <action name="actionViewAverageAccuracies">
    <property name="text">
     <string>ViewAverageAccuracies</string>
+   </property>
+  </action>
+  <action name="actionSubscript">
+   <property name="text">
+    <string>Subscript</string>
+   </property>
+  </action>
+  <action name="actionSuperscript">
+   <property name="text">
+    <string>Superscript</string>
    </property>
   </action>
  </widget>

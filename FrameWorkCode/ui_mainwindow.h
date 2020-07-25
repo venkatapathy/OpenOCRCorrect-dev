@@ -20,6 +20,7 @@
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QProgressBar>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QTextBrowser>
 #include <QtWidgets/QTextEdit>
@@ -78,11 +79,10 @@ public:
     QAction *actionJusitfiedAlign;
     QAction *actionAccuracyLog;
     QAction *actionHighlight;
-    QAction *actionSave_As_HTML;
-    QAction *actionSave_As_2;
-    QAction *actionHighlight_2;
     QAction *actionFontBlack;
     QAction *actionViewAverageAccuracies;
+    QAction *actionSubscript;
+    QAction *actionSuperscript;
     QWidget *centralWidget;
     QWidget *layoutWidget;
     QHBoxLayout *horizontalLayout;
@@ -93,7 +93,11 @@ public:
     QVBoxLayout *verticalLayout_2;
     QProgressBar *progressBar;
     QLineEdit *lineEdit;
+    QWidget *layoutWidget2;
+    QHBoxLayout *horizontalLayout_2;
     QPushButton *pushButton_3;
+    QSpacerItem *horizontalSpacer;
+    QPushButton *pushButton_2;
     QPushButton *viewallcomments;
     QMenuBar *menuBar;
     QMenu *menuOCR_Correction_Window;
@@ -110,7 +114,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(1296, 708);
+        MainWindow->resize(1386, 733);
         MainWindow->setMouseTracking(true);
         actionOpen = new QAction(MainWindow);
         actionOpen->setObjectName(QString::fromUtf8("actionOpen"));
@@ -255,16 +259,14 @@ public:
         QIcon icon15;
         icon15.addFile(QString::fromUtf8(":/Images/highlight-icon.png"), QSize(), QIcon::Normal, QIcon::On);
         actionHighlight->setIcon(icon15);
-        actionSave_As_HTML = new QAction(MainWindow);
-        actionSave_As_HTML->setObjectName(QString::fromUtf8("actionSave_As_HTML"));
-        actionSave_As_2 = new QAction(MainWindow);
-        actionSave_As_2->setObjectName(QString::fromUtf8("actionSave_As_2"));
-        actionHighlight_2 = new QAction(MainWindow);
-        actionHighlight_2->setObjectName(QString::fromUtf8("actionHighlight_2"));
         actionFontBlack = new QAction(MainWindow);
         actionFontBlack->setObjectName(QString::fromUtf8("actionFontBlack"));
         actionViewAverageAccuracies = new QAction(MainWindow);
         actionViewAverageAccuracies->setObjectName(QString::fromUtf8("actionViewAverageAccuracies"));
+        actionSubscript = new QAction(MainWindow);
+        actionSubscript->setObjectName(QString::fromUtf8("actionSubscript"));
+        actionSuperscript = new QAction(MainWindow);
+        actionSuperscript->setObjectName(QString::fromUtf8("actionSuperscript"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         layoutWidget = new QWidget(centralWidget);
@@ -338,16 +340,35 @@ public:
 
         verticalLayout_2->addWidget(lineEdit);
 
-        pushButton_3 = new QPushButton(centralWidget);
+        layoutWidget2 = new QWidget(centralWidget);
+        layoutWidget2->setObjectName(QString::fromUtf8("layoutWidget2"));
+        layoutWidget2->setGeometry(QRect(670, 10, 421, 27));
+        horizontalLayout_2 = new QHBoxLayout(layoutWidget2);
+        horizontalLayout_2->setSpacing(6);
+        horizontalLayout_2->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
+        horizontalLayout_2->setContentsMargins(0, 0, 0, 0);
+        pushButton_3 = new QPushButton(layoutWidget2);
         pushButton_3->setObjectName(QString::fromUtf8("pushButton_3"));
-        pushButton_3->setGeometry(QRect(671, 11, 171, 25));
+
+        horizontalLayout_2->addWidget(pushButton_3);
+
+        horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_2->addItem(horizontalSpacer);
+
+        pushButton_2 = new QPushButton(layoutWidget2);
+        pushButton_2->setObjectName(QString::fromUtf8("pushButton_2"));
+
+        horizontalLayout_2->addWidget(pushButton_2);
+
         viewallcomments = new QPushButton(centralWidget);
         viewallcomments->setObjectName(QString::fromUtf8("viewallcomments"));
-        viewallcomments->setGeometry(QRect(670, 40, 171, 25));
+        viewallcomments->setGeometry(QRect(671, 41, 201, 25));
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 1296, 22));
+        menuBar->setGeometry(QRect(0, 0, 1386, 21));
         menuOCR_Correction_Window = new QMenu(menuBar);
         menuOCR_Correction_Window->setObjectName(QString::fromUtf8("menuOCR_Correction_Window"));
         menuCreateReports = new QMenu(menuBar);
@@ -382,8 +403,8 @@ public:
         menuOCR_Correction_Window->addAction(actionNew);
         menuOCR_Correction_Window->addAction(actionOpen);
         menuOCR_Correction_Window->addAction(actionSave);
-        menuOCR_Correction_Window->addAction(actionSave_As_2);
-        menuOCR_Correction_Window->addAction(actionHighlight);
+        menuOCR_Correction_Window->addAction(actionSave_As);
+        menuOCR_Correction_Window->addAction(actionSpell_Check);
         menuOCR_Correction_Window->addAction(actionLoad_Next_Page);
         menuOCR_Correction_Window->addAction(actionLoad_Prev_Page);
         menuOCR_Correction_Window->addSeparator();
@@ -429,13 +450,13 @@ public:
         menuFontAndLayout->addAction(actionJusitfiedAlign);
         menuFontAndLayout->addAction(actionHighlight);
         menuFontAndLayout->addAction(actionFontBlack);
+        menuFontAndLayout->addAction(actionSubscript);
+        menuFontAndLayout->addAction(actionSuperscript);
         mainToolBar->addAction(actionNew);
         mainToolBar->addAction(actionOpen);
         mainToolBar->addAction(actionSave);
         mainToolBar->addAction(actionSave_As);
         mainToolBar->addAction(actionLoadData);
-        mainToolBar->addSeparator();
-        mainToolBar->addAction(actionHighlight);
         mainToolBar->addSeparator();
         mainToolBar->addAction(actionLoad_Prev_Page);
         mainToolBar->addAction(actionLoad_Next_Page);
@@ -451,10 +472,11 @@ public:
         mainToolBar->addAction(actionAllFontProperties);
         mainToolBar->addAction(actionBold);
         mainToolBar->addAction(actionUnBold);
+        mainToolBar->addAction(actionJusitfiedAlign);
         mainToolBar->addAction(actionLeftAlign);
         mainToolBar->addAction(actionCentreAlign);
         mainToolBar->addAction(actionRightAlign);
-        mainToolBar->addAction(actionJusitfiedAlign);
+        mainToolBar->addAction(actionHighlight);
         mainToolBar->addAction(actionFontBlack);
 
         retranslateUi(MainWindow);
@@ -555,27 +577,27 @@ public:
         actionCentreAlign->setText(QCoreApplication::translate("MainWindow", "CentreAlign", nullptr));
         actionJusitfiedAlign->setText(QCoreApplication::translate("MainWindow", "JusitfiedAlign", nullptr));
         actionAccuracyLog->setText(QCoreApplication::translate("MainWindow", "AccuracyLog", nullptr));
-        actionHighlight->setText(QCoreApplication::translate("MainWindow", "Highlight", nullptr));
+        actionHighlight->setText(QCoreApplication::translate("MainWindow", "Highlight (Ctrl+H)", nullptr));
+#if QT_CONFIG(tooltip)
+        actionHighlight->setToolTip(QCoreApplication::translate("MainWindow", "<html><head/><body><p>Highlight<span style=\" font-weight:600;\">(Ctrl+H)</span></p></body></html>", nullptr));
+#endif // QT_CONFIG(tooltip)
 #if QT_CONFIG(shortcut)
         actionHighlight->setShortcut(QCoreApplication::translate("MainWindow", "Ctrl+H", nullptr));
 #endif // QT_CONFIG(shortcut)
-        actionSave_As_HTML->setText(QCoreApplication::translate("MainWindow", "Save As HTML", nullptr));
-        actionSave_As_2->setText(QCoreApplication::translate("MainWindow", "Save As", nullptr));
-        actionHighlight_2->setText(QCoreApplication::translate("MainWindow", "Highlight", nullptr));
         actionFontBlack->setText(QCoreApplication::translate("MainWindow", "FontBlack", nullptr));
         actionViewAverageAccuracies->setText(QCoreApplication::translate("MainWindow", "ViewAverageAccuracies", nullptr));
+        actionSubscript->setText(QCoreApplication::translate("MainWindow", "Subscript", nullptr));
+        actionSuperscript->setText(QCoreApplication::translate("MainWindow", "Superscript", nullptr));
         textBrowser->setHtml(QCoreApplication::translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'Shobhika'; font-size:16pt; font-weight:400; font-style:normal;\">\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:'Ubuntu'; font-size:11pt;\">Please Select the Language from top left menu before loading any document.</span></p></body></html>", nullptr));
-#if QT_CONFIG(tooltip)
-        pushButton_3->setToolTip(QCoreApplication::translate("MainWindow", "<html><head/><body><p><span style=\" font-weight:600;\">Open any file in CorrectorOutput Folder to view Changes made.</span></p></body></html>", nullptr));
-#endif // QT_CONFIG(tooltip)
-        pushButton_3->setText(QCoreApplication::translate("MainWindow", "Compare Output", nullptr));
-        viewallcomments->setText(QCoreApplication::translate("MainWindow", "View All Comments", nullptr));
+        pushButton_3->setText(QCoreApplication::translate("MainWindow", "Compare Corrector's Output", nullptr));
+        pushButton_2->setText(QCoreApplication::translate("MainWindow", "Compare Verifier's Output", nullptr));
+        viewallcomments->setText(QCoreApplication::translate("MainWindow", "Comments and Accuracy", nullptr));
         menuOCR_Correction_Window->setTitle(QCoreApplication::translate("MainWindow", "File", nullptr));
-        menuCreateReports->setTitle(QCoreApplication::translate("MainWindow", "Reports", nullptr));
+        menuCreateReports->setTitle(QCoreApplication::translate("MainWindow", "CreateReports", nullptr));
         menuSaveVariables->setTitle(QCoreApplication::translate("MainWindow", "SaveVariables", nullptr));
         menuConvertFiles->setTitle(QCoreApplication::translate("MainWindow", "ConvertFiles", nullptr));
         menuFeatureExtraction->setTitle(QCoreApplication::translate("MainWindow", "FeatureExtraction", nullptr));
