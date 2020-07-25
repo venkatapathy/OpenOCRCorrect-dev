@@ -3152,3 +3152,7 @@ void MainWindow::on_actionSubscript_triggered() {
 	auto newfrag = selected.fromHtml(sel);
 	cursor.insertFragment(newfrag);
 }
+void MainWindow::on_actionInsert_Horizontal_Line_triggered()
+{
+    ui->textBrowser->insertHtml("<hr>");
+}

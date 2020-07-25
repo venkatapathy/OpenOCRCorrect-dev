@@ -185,8 +185,13 @@ private slots:
     void on_actionFontBlack_triggered();
     
     void on_actionViewAverageAccuracies_triggered();
+
 	void on_actionSuperscript_triggered();
-	void on_actionSubscript_triggered();
+
+    void on_actionSubscript_triggered();
+
+    void on_actionInsert_Horizontal_Line_triggered();
+
 private:
     Ui::MainWindow *ui;
 	QGraphicsScene * graphic=nullptr;
