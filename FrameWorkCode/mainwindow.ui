@@ -218,7 +218,7 @@ p, li { white-space: pre-wrap; }
      <x>0</x>
      <y>0</y>
      <width>1386</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuOCR_Correction_Window">
@@ -305,6 +305,8 @@ p, li { white-space: pre-wrap; }
     <addaction name="actionJusitfiedAlign"/>
     <addaction name="actionHighlight"/>
     <addaction name="actionFontBlack"/>
+    <addaction name="actionSubscript"/>
+    <addaction name="actionSuperscript"/>
    </widget>
    <addaction name="menuSelectLanguage"/>
    <addaction name="menuOCR_Correction_Window"/>
@@ -723,6 +725,16 @@ p, li { white-space: pre-wrap; }
   <action name="actionViewAverageAccuracies">
    <property name="text">
     <string>ViewAverageAccuracies</string>
+   </property>
+  </action>
+  <action name="actionSubscript">
+   <property name="text">
+    <string>Subscript</string>
+   </property>
+  </action>
+  <action name="actionSuperscript">
+   <property name="text">
+    <string>Superscript</string>
    </property>
   </action>
  </widget>

@@ -3596,5 +3596,23 @@ void MainWindow::on_viewallcomments_clicked()
 }
 */
 
+void MainWindow::on_actionSuperscript_triggered() {
+	auto cursor = ui->textBrowser->textCursor();
+	auto selected = cursor.selection();
+	QString sel = selected.toPlainText();
+	cursor.removeSelectedText();
+	sel = "<sup>" + sel + "</sup>";
+	auto newfrag = selected.fromHtml(sel);
+	cursor.insertFragment(newfrag);
+}
+void MainWindow::on_actionSubscript_triggered() {
+	auto cursor = ui->textBrowser->textCursor();
+	auto selected = cursor.selection();
+	cursor.removeSelectedText();
+	QString sel = selected.toPlainText();
+	sel = "<sub>" + sel + "</sub>";
+	auto newfrag = selected.fromHtml(sel);
+	cursor.insertFragment(newfrag);
+}
 
 

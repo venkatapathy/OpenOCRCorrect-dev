@@ -188,6 +188,8 @@ private slots:
 
     void LogHighlights(QString word);
 
+	void on_actionSuperscript_triggered();
+	void on_actionSubscript_triggered();
 private:
     Ui::MainWindow *ui;
 
