@@ -359,16 +359,19 @@ void MainWindow::on_actionOpen_triggered()
 
                         string str1 = text.toUtf8().constData();
                         istringstream iss(str1);
-                        string strHtml = "<html><body>"; string line;
+                        string strHtml = "<html><body><div style=\"width: 21cm; height: 29.7cm; margin: 30mm 45mm 30mm 45mm;\"><p>"; string line;
                         while (getline(iss, line)) {
-
-                            strHtml += "<p align=" + alignment+ ">" + line + "</p>";
-
-
+                            if(line=="\n" | line == "") strHtml+="</p><p>";
+                            else strHtml += line + "<br />";
                        }
-                       strHtml += "</body></html>";
-                       ui->textBrowser->setHtml(QString::fromStdString(strHtml));//modified
-
+                       strHtml += "</p></div></body></html>";
+                       QString qstrHtml = QString::fromStdString(strHtml);
+                       qstrHtml.replace("<br /></p>", "</p>");
+                       QTextDocument *doc = new QTextDocument();
+                       doc->setDefaultStyleSheet("div { font-color:green; }");
+                       doc->setHtml(qstrHtml);
+                       ui->textBrowser->setDocument(doc);//modified
+                       ui->textBrowser->setHtml(qstrHtml);
 
 
                     } else {
@@ -384,15 +387,20 @@ void MainWindow::on_actionOpen_triggered()
 
                         string str1 = text.toUtf8().constData();
                         istringstream iss(str1);
-                        string strHtml = "<html><body>"; string line;
+                        string strHtml = "<html><body><div style=\"width: 21cm; height: 29.7cm; margin: 30mm 45mm 30mm 45mm;\"><p>"; string line;
                         while (getline(iss, line)) {
-
-                            strHtml += "<p>" + line + "</p> ";
-
-
+                            if(line=="\n" | line == "") strHtml+="</p><p>";
+                            else strHtml += line + "<br />";
                        }
-                       strHtml += "</body></html>";
-                       ui->textBrowser->setHtml(QString::fromStdString(strHtml));//modified
+                       strHtml += "</p></div></body></html>";
+                       QString qstrHtml = QString::fromStdString(strHtml);
+                       qstrHtml.replace("<br /></p>", "</p>");
+                       QTextDocument *doc = new QTextDocument();
+                       doc->setDefaultStyleSheet("div { font-color:blue; }");
+                       doc->setHtml(qstrHtml);
+                       ui->textBrowser->setDocument(doc);//modified
+                       ui->textBrowser->setHtml(qstrHtml);
+
 
                     }
                 }
@@ -430,57 +438,6 @@ void MainWindow::on_actionOpen_triggered()
                 z = new Graphics_view_zoom(ui->graphicsView);
                 z->set_modifiers(Qt::NoModifier);
                 // fill indexes according to Tesseract
-
-                commentdict.clear();
-                commentederrors.clear();
-
-                QString commentFilename = dir2levelup + "/Comments/" + currentpagename;
-                commentFilename.replace(".txt",".json");
-                commentFilename.replace(".html",".json");
-                QFile jsonFile(commentFilename);
-                jsonFile.open(QIODevice::ReadOnly | QIODevice::Text);
-                QByteArray data = jsonFile.readAll();
-
-                QJsonParseError errorPtr;
-                QJsonDocument document = QJsonDocument::fromJson(data, &errorPtr);
-                QJsonObject page = document.object();
-                if(document.isNull())
-                {
-                    //qDebug()<<"empty json/parse error";
-                }
-
-                QJsonArray comments = page.value("comments").toArray();
-                QJsonArray charerrors = page.value("charerrors").toArray();
-                QJsonArray worderrors = page.value("worderrors").toArray();
-
-                foreach(const QJsonValue &val, comments)
-                {
-                    int key = val.toObject().value("key").toInt();
-                    QString value = val.toObject().value("value").toString();
-                    commentdict[key] = value;
-                }
-
-                QJsonArray::iterator it1;
-                QJsonArray::iterator it2;
-                vector<int> v;
-                for(auto it1 = charerrors.begin(), it2 = worderrors.begin(); it1!=comments.end();it1++,it2++)
-                {
-                    QJsonObject val1 = it1->toObject();
-                    int key1 = val1.value("key").toInt();
-                    int value1 = val1.value("value").toInt();
-                    v.push_back(value1);
-                    QJsonObject val2 = it1->toObject();
-                    int key2 = val2.value("key").toInt();
-                    int value2 = val2.value("value").toInt();
-                    v.push_back(value2);
-                    if(key1==key2)
-                    {
-                        commentederrors[key1] = v;
-                        //qDebug()<<key1<<"key1"<<v<<"v";
-                    }
-
-
-                }
 
 
             } //if(sFile.open(QFile::ReadOnly | QFile::Text))
@@ -2706,30 +2663,16 @@ void MainWindow::on_actionUnBold_triggered() //modified
 
 void MainWindow::on_actionLeftAlign_triggered() //modified
 {
-//    QTextCursor cursor = ui->textBrowser->textCursor();
-//    QTextBlockFormat textBlockFormat = cursor.blockFormat();
-//    QTextBlockFormat textBlockFormat;
-//    textBlockFormat.setAlignment(Qt::AlignLeft);
-//    ui->textBrowser->textCursor().mergeBlockFormat(textBlockFormat);
     ui->textBrowser->setAlignment(Qt::AlignLeft);
 }
 
 void MainWindow::on_actionRightAlign_triggered() //modified
 {
-    //    QTextCursor cursor = ui->textBrowser->textCursor();
-    //    QTextBlockFormat textBlockFormat = cursor.blockFormat();
-//    QTextBlockFormat textBlockFormat;
-//    textBlockFormat.setAlignment(Qt::AlignRight);
-//    ui->textBrowser->textCursor().mergeBlockFormat(textBlockFormat);
-        ui->textBrowser->setAlignment(Qt::AlignRight);
+    ui->textBrowser->setAlignment(Qt::AlignRight);
 }
 
 void MainWindow::on_actionCentreAlign_triggered()
 {
-//    QTextCursor cursor = ui->textBrowser->textCursor();
-//    QTextBlockFormat textBlockFormat = cursor.blockFormat();
-//    textBlockFormat.setAlignment(Qt::AlignCenter);
-//    ui->textBrowser->textCursor().mergeBlockFormat(textBlockFormat);
     ui->textBrowser->setAlignment(Qt::AlignCenter);
 }
 void MainWindow::on_actionJusitfiedAlign_triggered()
