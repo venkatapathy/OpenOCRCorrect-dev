@@ -13,6 +13,8 @@
 #include "lg2_common.h"
 #include <QObject>
 #include <git2.h>
+#include <QMessageBox>
+#include <QProcess>
 void Project::parse_project_xml(rapidxml::xml_document<>& pDoc)
 {
 	
@@ -322,6 +324,8 @@ void Project::push() {
 	check_lg2(git_remote_lookup(&remote, repo, "origin"),"Unable to lookup remote","");
 	check_lg2(git_remote_push(remote, &refspecs, &options), "Error Pushing", "");
 	git_remote_free(remote);
+	QMessageBox * mbox = new QMessageBox("Push","Successfully Pushed",QMessageBox::Icon::Information,QMessageBox::StandardButton::Ok,0,0);
+	mbox->show();
 	return;
 }
 static int progress_cb(const char *str, int len, void *data)
@@ -361,18 +365,9 @@ static int transfer_progress_cb(const git_indexer_progress *stats, void *payload
 	return 0;
 }
 void Project::fetch() {
-	git_remote *remote = NULL;
-	const git_indexer_progress *stats;
-	git_fetch_options fetch_opts = GIT_FETCH_OPTIONS_INIT;
-	int error = git_remote_lookup(&remote, repo, "origin");
-	check_lg2(error, "Couldn't find remote: origin", "");
-	fetch_opts.callbacks.update_tips = &update_cb;
-	fetch_opts.callbacks.sideband_progress = &progress_cb;
-	fetch_opts.callbacks.transfer_progress = transfer_progress_cb;
-	fetch_opts.callbacks.credentials = credentials_cb;
-	error = git_remote_fetch(remote, NULL, &fetch_opts, "fetch");
-	check_lg2(error, "Couldn't fetch from remote", "");
-	git_remote_free(remote);
+	QDir::setCurrent(mProjectDir.absolutePath());
+	QProcess::execute("git pull -Xtheirs");
+	commit("Pulled from remote");
 }
 
 
@@ -462,7 +457,6 @@ void Project::open_git_repo() {
 	QDir gitdir(gitpath);
 	git_signature * out;
 	
-	
 	if (gitdir.exists())
 	{
 		check_lg2(git_repository_open(&repo, dir.c_str()), "Failed to Open", "");
@@ -470,10 +464,11 @@ void Project::open_git_repo() {
 	}
 	else
 	{
+		
 		check_lg2(git_repository_init(&repo, dir.c_str(),0), "Failed to Open", "");
 		add_config();
-
-		commit("Initial Commit");
 		lg2_add();
+		commit("Initial Commit");
+		
 	}
 }

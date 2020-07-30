@@ -31,6 +31,7 @@ public:
 		}
 		if(repo)
 		git_repository_free(repo);
+		git_libgit2_shutdown();
 	}
 	void add_and_commit();
 private:
