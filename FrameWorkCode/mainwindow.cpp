@@ -368,7 +368,7 @@ void MainWindow::on_actionOpen_triggered()
                        QString qstrHtml = QString::fromStdString(strHtml);
                        qstrHtml.replace("<br /></p>", "</p>");
                        QTextDocument *doc = new QTextDocument();
-                       doc->setDefaultStyleSheet("div { font-color:green; }");
+                       //doc->setDefaultStyleSheet("div { font-color:green; }");
                        doc->setHtml(qstrHtml);
                        ui->textBrowser->setDocument(doc);//modified
                        ui->textBrowser->setHtml(qstrHtml);
@@ -396,7 +396,7 @@ void MainWindow::on_actionOpen_triggered()
                        QString qstrHtml = QString::fromStdString(strHtml);
                        qstrHtml.replace("<br /></p>", "</p>");
                        QTextDocument *doc = new QTextDocument();
-                       doc->setDefaultStyleSheet("div { font-color:blue; }");
+                       //doc->setDefaultStyleSheet("div { font-color:blue; }");
                        doc->setHtml(qstrHtml);
                        ui->textBrowser->setDocument(doc);//modified
                        ui->textBrowser->setHtml(qstrHtml);
