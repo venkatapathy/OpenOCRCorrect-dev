@@ -1052,7 +1052,7 @@ void MainWindow::on_actionLoadData_triggered()
         // loading Dictionary locally
         string localmFilename1n = localmFilename1.toUtf8().constData();
         localmFilename1n = localmFilename1n.substr(0,localmFilename1n.find("page"));
-
+		QString str = ui->textBrowser->toHtml();
         localmFilename1 = QString::fromStdString(localmFilename1n);
         mFilename1 = localmFilename1;
 
@@ -1116,10 +1116,10 @@ void MainWindow::on_actionLoadData_triggered()
         qDebug() << ConfPmap.size() << "Confusions Loaded " << endl;
 
         */
-        FirstFlag = 0;
-        on_actionLoad_Next_Page_triggered();
-        on_actionLoad_Prev_Page_triggered();
-
+        //FirstFlag = 0;
+        /*on_actionLoad_Next_Page_triggered();
+        on_actionLoad_Prev_Page_triggered();*/
+			ui->textBrowser->setHtml(str);
         // Plotting Graph for Black and Gray Words
         //cout<< " Loading Graph values and performing Significance test on Word Length" << endl;
         /*
