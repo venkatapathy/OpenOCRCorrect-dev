@@ -460,7 +460,7 @@ void MainWindow::on_actionOpen_triggered()
                 else
                 {
                     //if(sFile1.open(QFile::ReadOnly | QFile::Text))
-                    if(sFile1.open(QFile::ReadOnly)) //Sanoj
+                    if(sFile1.open(QFile::ReadOnly)) //modified
                     {
                         QTextStream in(&sFile);
                         in.setCodec("UTF-8");
@@ -469,20 +469,22 @@ void MainWindow::on_actionOpen_triggered()
                         QString  simplifiedtext = text.simplified();
                         openedFileWords = simplifiedtext.count(" ");
                         sFile.close();
-                        //ui->textBrowser->setPlainText(text);
+
                         string str1 = text.toUtf8().constData();
                         istringstream iss(str1);
-                        string strHtml = "<html><body>"; string line;
+                        string strHtml = "<html><body><div style=\"width: 21cm; height: 29.7cm; margin: 30mm 45mm 30mm 45mm;\"><p>"; string line;
                         while (getline(iss, line)) {
-
-                            strHtml += "<p align=" + alignment+ ">" + line + "</p>";
-                            //strHtml +="<br>"; // To add new line
-
+                            if(line=="\n" | line == "") strHtml+="</p><p>";
+                            else strHtml += line + "<br />";
                        }
-                       strHtml += "</body></html>";
-                       ui->textBrowser->setHtml(QString::fromStdString(strHtml));//Sanoj
-
-
+                       strHtml += "</p></div></body></html>";
+                       QString qstrHtml = QString::fromStdString(strHtml);
+                       qstrHtml.replace("<br /></p>", "</p>");
+                       QTextDocument *doc = new QTextDocument();
+                       //doc->setDefaultStyleSheet("div { font-color:green; }");
+                       doc->setHtml(qstrHtml);
+                       ui->textBrowser->setDocument(doc);//modified
+                       ui->textBrowser->setHtml(qstrHtml);
 
 
                     } else {
@@ -495,18 +497,23 @@ void MainWindow::on_actionOpen_triggered()
                         QString  simplifiedtext = text.simplified();
                         openedFileWords = simplifiedtext.count(" ");
                         sFile.close();
-                        //ui->textBrowser->setPlainText(text);
+
                         string str1 = text.toUtf8().constData();
                         istringstream iss(str1);
-                        string strHtml = "<html><body>"; string line;
+                        string strHtml = "<html><body><div style=\"width: 21cm; height: 29.7cm; margin: 30mm 45mm 30mm 45mm;\"><p>"; string line;
                         while (getline(iss, line)) {
-
-                            strHtml += "<p>" + line + "</p> ";
-                            //strHtml +="<br>"; // To add new line
-
+                            if(line=="\n" | line == "") strHtml+="</p><p>";
+                            else strHtml += line + "<br />";
                        }
-                       strHtml += "</body></html>";
-                       ui->textBrowser->setHtml(QString::fromStdString(strHtml));//Sanoj
+                       strHtml += "</p></div></body></html>";
+                       QString qstrHtml = QString::fromStdString(strHtml);
+                       qstrHtml.replace("<br /></p>", "</p>");
+                       QTextDocument *doc = new QTextDocument();
+                       //doc->setDefaultStyleSheet("div { font-color:blue; }");
+                       doc->setHtml(qstrHtml);
+                       ui->textBrowser->setDocument(doc);//modified
+                       ui->textBrowser->setHtml(qstrHtml);
+
 
                     }
                 }
