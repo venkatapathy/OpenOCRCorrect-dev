@@ -14,6 +14,7 @@
 #include <string>
 #include <fstream>
 #include <vector>
+#include <QMessageBox>
 #include <utility> // std::pair
 #include "averageaccuracies.h"
 
@@ -139,7 +140,10 @@ bool fileFlag = 0;
 QTime myTimer;
 int secs;
 void MainWindow::on_actionLoad_Next_Page_triggered()
-{   if(mFilename.size()>0){
+{   
+	bool ok = false;
+	int btn = QMessageBox::question(this, "Save?", "Do you want to save this file?", QMessageBox::StandardButton::Ok, QMessageBox::StandardButton::No);
+	if(btn == QMessageBox::StandardButton::Ok){
         on_actionSave_triggered();
     string localFilename = mFilename.toUtf8().constData();
     int nMilliseconds = myTimer.elapsed();
