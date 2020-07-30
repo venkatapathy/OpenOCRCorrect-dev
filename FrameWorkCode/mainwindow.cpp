@@ -143,8 +143,9 @@ void MainWindow::on_actionLoad_Next_Page_triggered()
 {   
 	bool ok = false;
 	int btn = QMessageBox::question(this, "Save?", "Do you want to save this file?", QMessageBox::StandardButton::Ok, QMessageBox::StandardButton::No);
-	if(btn == QMessageBox::StandardButton::Ok){
-        on_actionSave_triggered();
+	if (btn == QMessageBox::StandardButton::Ok) 
+		on_actionSave_triggered();
+	
     string localFilename = mFilename.toUtf8().constData();
     int nMilliseconds = myTimer.elapsed();
     secs = nMilliseconds/1000;
@@ -183,16 +184,18 @@ void MainWindow::on_actionLoad_Next_Page_triggered()
     //OPENSPELLFLAG = 1;
     on_actionOpen_triggered();
     fileFlag = false;
-    }
+   }
     //imageOrig.load(localFilename.replace(QString("txt"),QString("jpeg")));
 
-}
+
 
 
 void MainWindow::on_actionLoad_Prev_Page_triggered()
-{   if(mFilename.size() >0 ){
-        on_actionSave_triggered();
-
+{
+	bool ok = false;
+	int btn = QMessageBox::question(this, "Save?", "Do you want to save this file?", QMessageBox::StandardButton::Ok, QMessageBox::StandardButton::No);
+	if (btn == QMessageBox::StandardButton::Ok)
+		on_actionSave_triggered();
     string localFilename = mFilename.toUtf8().constData();
     int nMilliseconds = myTimer.elapsed();
     secs = nMilliseconds/1000;
@@ -231,10 +234,8 @@ void MainWindow::on_actionLoad_Prev_Page_triggered()
     on_actionOpen_triggered();
     fileFlag = false;
     prevTRig =0;
-    }
-
-    //imageOrig.load(localFilename.replace(QString("txt"),QString("jpeg")));
 }
+
 
 
 bool FirstFlag = 1;
