@@ -43,6 +43,7 @@ map<int,  vector<int>> commentederrors;
 int openedFileChars;
 int openedFileWords;
 bool save_triggered = 0;
+QString initialtexthtml;
 QString dir1levelup,dir2levelup,currentpagename, currentdirname;
 map<QString, QString> filestructure_fw = {{"Inds","CorrectorOutput"},
                                      {"CorrectorOutput","VerifierOutput",},
@@ -138,7 +139,15 @@ bool fileFlag = 0;
 QTime myTimer;
 int secs;
 void MainWindow::on_actionLoad_Next_Page_triggered()
-{   if(mFilename.size()>0){
+{
+    if(initialtexthtml.compare(ui->textBrowser->toHtml()))
+    {
+        int btn = QMessageBox::question(this, "Save?", "Do you want to save this file?", QMessageBox::StandardButton::Ok, QMessageBox::StandardButton::No);
+        if (btn == QMessageBox::StandardButton::Ok)
+            on_actionSave_triggered();
+    }
+
+    if(mFilename.size()>0){
     string localFilename = mFilename.toUtf8().constData();
     int nMilliseconds = myTimer.elapsed();
     secs = nMilliseconds/1000;
@@ -185,7 +194,15 @@ void MainWindow::on_actionLoad_Next_Page_triggered()
 
 
 void MainWindow::on_actionLoad_Prev_Page_triggered()
-{   if(mFilename.size() >0 ){
+{
+    if(initialtexthtml.compare(ui->textBrowser->toHtml()))
+    {
+        int btn = QMessageBox::question(this, "Save?", "Do you want to save this file?", QMessageBox::StandardButton::Ok, QMessageBox::StandardButton::No);
+        if (btn == QMessageBox::StandardButton::Ok)
+            on_actionSave_triggered();
+    }
+
+    if(mFilename.size() >0 ){
     string localFilename = mFilename.toUtf8().constData();
     int nMilliseconds = myTimer.elapsed();
     secs = nMilliseconds/1000;
@@ -480,10 +497,6 @@ void MainWindow::on_actionOpen_triggered()
                        strHtml += "</p></div></body></html>";
                        QString qstrHtml = QString::fromStdString(strHtml);
                        qstrHtml.replace("<br /></p>", "</p>");
-                       QTextDocument *doc = new QTextDocument();
-                       //doc->setDefaultStyleSheet("div { font-color:green; }");
-                       doc->setHtml(qstrHtml);
-                       ui->textBrowser->setDocument(doc);//modified
                        ui->textBrowser->setHtml(qstrHtml);
 
 
@@ -508,15 +521,12 @@ void MainWindow::on_actionOpen_triggered()
                        strHtml += "</p></div></body></html>";
                        QString qstrHtml = QString::fromStdString(strHtml);
                        qstrHtml.replace("<br /></p>", "</p>");
-                       QTextDocument *doc = new QTextDocument();
-                       //doc->setDefaultStyleSheet("div { font-color:blue; }");
-                       doc->setHtml(qstrHtml);
-                       ui->textBrowser->setDocument(doc);//modified
                        ui->textBrowser->setHtml(qstrHtml);
 
 
                     }
                 }
+                initialtexthtml = ui->textBrowser->toHtml();
 
                     // load and show image:
                     setWindowTitle(mFilename);
@@ -2738,34 +2748,28 @@ void MainWindow::on_actionUnBold_triggered() //Sanoj
 
 void MainWindow::on_actionLeftAlign_triggered() //Sanoj
 {
-//    QTextCursor cursor = ui->textBrowser->textCursor();
-//    QTextBlockFormat textBlockFormat = cursor.blockFormat();
-//    QTextBlockFormat textBlockFormat;
-//    textBlockFormat.setAlignment(Qt::AlignLeft);
-//    ui->textBrowser->textCursor().mergeBlockFormat(textBlockFormat);
     ui->textBrowser->setAlignment(Qt::AlignLeft);
 }
 
 void MainWindow::on_actionRightAlign_triggered() //Sanoj
 {
-    //    QTextCursor cursor = ui->textBrowser->textCursor();
-    //    QTextBlockFormat textBlockFormat = cursor.blockFormat();
-//    QTextBlockFormat textBlockFormat;
-//    textBlockFormat.setAlignment(Qt::AlignRight);
-//    ui->textBrowser->textCursor().mergeBlockFormat(textBlockFormat);
         ui->textBrowser->setAlignment(Qt::AlignRight);
 }
 
 void MainWindow::on_actionCentreAlign_triggered() //Sanoj
 {
-//    QTextCursor cursor = ui->textBrowser->textCursor();
-//    QTextBlockFormat textBlockFormat = cursor.blockFormat();
-//    textBlockFormat.setAlignment(Qt::AlignCenter);
-//    ui->textBrowser->textCursor().mergeBlockFormat(textBlockFormat);
     ui->textBrowser->setAlignment(Qt::AlignCenter);
 }
 void MainWindow::on_actionJusitfiedAlign_triggered()
 {
+    auto cursor = ui->textBrowser->textCursor();
+    auto selected = cursor.selection();
+    cursor.removeSelectedText();
+    QString sel = selected.toHtml();
+    sel.replace("<br />" ," ");
+    sel = "</p><p>" + sel + "</p><p>";
+    auto newfrag = selected.fromHtml(sel);
+    cursor.insertFragment(newfrag);
     ui->textBrowser->setAlignment(Qt::AlignJustify);
 }
 
