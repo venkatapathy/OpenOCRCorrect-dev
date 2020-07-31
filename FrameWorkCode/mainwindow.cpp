@@ -41,6 +41,7 @@ map<int,  vector<int>> commentederrors;
 int openedFileChars;
 int openedFileWords;
 QString dir1levelup,dir2levelup,currentpagename, currentdirname;
+QString initialtexthtml;
 map<QString, QString> filestructure_fw = {
                                             {"Inds","CorrectorOutput"},
                                             {"CorrectorOutput","CorrectorOutput"},
@@ -139,12 +140,18 @@ QString file = "";
 bool fileFlag = 0;
 QTime myTimer;
 int secs;
+
+
+
 void MainWindow::on_actionLoad_Next_Page_triggered()
 {   
 	bool ok = false;
-	int btn = QMessageBox::question(this, "Save?", "Do you want to save this file?", QMessageBox::StandardButton::Ok, QMessageBox::StandardButton::No);
-	if (btn == QMessageBox::StandardButton::Ok) 
-		on_actionSave_triggered();
+    if(initialtexthtml.compare(ui->textBrowser->toHtml()))
+    {
+        int btn = QMessageBox::question(this, "Save?", "Do you want to save this file?", QMessageBox::StandardButton::Ok, QMessageBox::StandardButton::No);
+        if (btn == QMessageBox::StandardButton::Ok)
+            on_actionSave_triggered();
+    }
 	
     string localFilename = mFilename.toUtf8().constData();
     int nMilliseconds = myTimer.elapsed();
@@ -193,9 +200,12 @@ void MainWindow::on_actionLoad_Next_Page_triggered()
 void MainWindow::on_actionLoad_Prev_Page_triggered()
 {
 	bool ok = false;
-	int btn = QMessageBox::question(this, "Save?", "Do you want to save this file?", QMessageBox::StandardButton::Ok, QMessageBox::StandardButton::No);
-	if (btn == QMessageBox::StandardButton::Ok)
-		on_actionSave_triggered();
+    if(initialtexthtml.compare(ui->textBrowser->toHtml()))
+    {
+        int btn = QMessageBox::question(this, "Save?", "Do you want to save this file?", QMessageBox::StandardButton::Ok, QMessageBox::StandardButton::No);
+        if (btn == QMessageBox::StandardButton::Ok)
+            on_actionSave_triggered();
+    }
     string localFilename = mFilename.toUtf8().constData();
     int nMilliseconds = myTimer.elapsed();
     secs = nMilliseconds/1000;
@@ -372,10 +382,6 @@ void MainWindow::on_actionOpen_triggered()
                        strHtml += "</p></div></body></html>";
                        QString qstrHtml = QString::fromStdString(strHtml);
                        qstrHtml.replace("<br /></p>", "</p>");
-                       QTextDocument *doc = new QTextDocument();
-                       //doc->setDefaultStyleSheet("div { font-color:green; }");
-                       doc->setHtml(qstrHtml);
-                       ui->textBrowser->setDocument(doc);//modified
                        ui->textBrowser->setHtml(qstrHtml);
 
 
@@ -400,15 +406,13 @@ void MainWindow::on_actionOpen_triggered()
                        strHtml += "</p></div></body></html>";
                        QString qstrHtml = QString::fromStdString(strHtml);
                        qstrHtml.replace("<br /></p>", "</p>");
-                       QTextDocument *doc = new QTextDocument();
-                       //doc->setDefaultStyleSheet("div { font-color:blue; }");
-                       doc->setHtml(qstrHtml);
-                       ui->textBrowser->setDocument(doc);//modified
                        ui->textBrowser->setHtml(qstrHtml);
 
 
                     }
                 }
+                initialtexthtml = ui->textBrowser->toHtml();
+
                 // load and show image:
                 setWindowTitle(mFilename);
                 QString localmFilename = dir2levelup + "/Images/" + currentpagename;
@@ -457,7 +461,7 @@ bool ConvertSlpDevFlag =0;
 void MainWindow::on_actionSpell_Check_triggered()
 {
 
-	on_actionSave_triggered();
+    on_actionSave_triggered();
 
 	QString textBrowserText = ui->textBrowser->toPlainText();
 	//QChar ch;
@@ -942,7 +946,9 @@ void MainWindow::on_actionSave_triggered()
 		{
             QTextStream out(&sFile);
 			out.setCodec("UTF-8");
-			out << ui->textBrowser->toHtml();//toPlainText()
+            QString output = ui->textBrowser->toHtml();
+            output = "<style> body{ width: 21cm; height: 29.7cm; margin: 30mm 45mm 30mm 45mm; } </style>" + output;
+            out << output;
 			sFile.flush();
 			sFile.close();
         }
@@ -1116,10 +1122,13 @@ void MainWindow::on_actionLoadData_triggered()
         qDebug() << ConfPmap.size() << "Confusions Loaded " << endl;
 
         */
-        //FirstFlag = 0;
+
         /*on_actionLoad_Next_Page_triggered();
         on_actionLoad_Prev_Page_triggered();*/
+
+            FirstFlag = 0;
 			ui->textBrowser->setHtml(str);
+
         // Plotting Graph for Black and Gray Words
         //cout<< " Loading Graph values and performing Significance test on Word Length" << endl;
         /*
@@ -2682,13 +2691,22 @@ void MainWindow::on_actionCentreAlign_triggered()
 }
 void MainWindow::on_actionJusitfiedAlign_triggered()
 {
+    auto cursor = ui->textBrowser->textCursor();
+    auto selected = cursor.selection();
+    cursor.removeSelectedText();
+    QString sel = selected.toHtml();
+    sel.replace("<br />" ," ");
+    sel = "</p><p>" + sel + "</p><p>";
+    auto newfrag = selected.fromHtml(sel);
+    cursor.insertFragment(newfrag);
     ui->textBrowser->setAlignment(Qt::AlignJustify);
 }
 
 void MainWindow::on_actionAllFontProperties_triggered()
 {
     QFont initialfont = ui->textBrowser->font();
-    initialfont.setPointSize(ui->textBrowser->fontPointSize());
+    auto pointsize = ui->textBrowser->fontPointSize();
+    if(pointsize) initialfont.setPointSize(pointsize);
     bool ok;
     QFont font = QFontDialog::getFont(&ok, initialfont, this);
     if(ok)
@@ -2709,7 +2727,7 @@ void MainWindow::on_actionFontBlack_triggered()
     ui->textBrowser->setTextColor(Qt::black);
 }
 
-
+/*
 void MainWindow::on_pushButton_2_clicked() //VERIFER
 {
 
@@ -2807,7 +2825,7 @@ void MainWindow::on_pushButton_2_clicked() //VERIFER
     DiffView *dv = new DiffView(qs1,qs2,qs3,qcorrectorChangesPerc,qverifierChangesPerc,qocrErrorAcc);
     dv->show();
 }
-
+*/
 
 
 void MainWindow::on_pushButton_3_clicked() //Corrector

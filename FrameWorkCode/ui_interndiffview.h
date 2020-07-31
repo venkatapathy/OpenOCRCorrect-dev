@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'interndiffview.ui'
 **
-** Created by: Qt User Interface Compiler version 5.14.2
+** Created by: Qt User Interface Compiler version 5.9.9
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -10,9 +10,12 @@
 #define UI_INTERNDIFFVIEW_H
 
 #include <QtCore/QVariant>
+#include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QGraphicsView>
 #include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
@@ -45,27 +48,27 @@ public:
     void setupUi(QMainWindow *InternDiffView)
     {
         if (InternDiffView->objectName().isEmpty())
-            InternDiffView->setObjectName(QString::fromUtf8("InternDiffView"));
+            InternDiffView->setObjectName(QStringLiteral("InternDiffView"));
         InternDiffView->resize(1175, 576);
         centralWidget = new QWidget(InternDiffView);
-        centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
+        centralWidget->setObjectName(QStringLiteral("centralWidget"));
         horizontalLayout = new QHBoxLayout(centralWidget);
         horizontalLayout->setSpacing(6);
         horizontalLayout->setContentsMargins(11, 11, 11, 11);
-        horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
+        horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
         verticalLayout_3 = new QVBoxLayout();
         verticalLayout_3->setSpacing(6);
-        verticalLayout_3->setObjectName(QString::fromUtf8("verticalLayout_3"));
+        verticalLayout_3->setObjectName(QStringLiteral("verticalLayout_3"));
         InternLabel = new QLabel(centralWidget);
-        InternLabel->setObjectName(QString::fromUtf8("InternLabel"));
+        InternLabel->setObjectName(QStringLiteral("InternLabel"));
         InternLabel->setAlignment(Qt::AlignCenter);
 
         verticalLayout_3->addWidget(InternLabel);
 
         current = new QTextBrowser(centralWidget);
-        current->setObjectName(QString::fromUtf8("current"));
+        current->setObjectName(QStringLiteral("current"));
         QFont font;
-        font.setFamily(QString::fromUtf8("Shobhika"));
+        font.setFamily(QStringLiteral("Shobhika"));
         font.setPointSize(11);
         font.setBold(true);
         font.setWeight(75);
@@ -78,15 +81,15 @@ public:
 
         verticalLayout = new QVBoxLayout();
         verticalLayout->setSpacing(6);
-        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
+        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
         OCRtextLabel = new QLabel(centralWidget);
-        OCRtextLabel->setObjectName(QString::fromUtf8("OCRtextLabel"));
+        OCRtextLabel->setObjectName(QStringLiteral("OCRtextLabel"));
         OCRtextLabel->setAlignment(Qt::AlignCenter);
 
         verticalLayout->addWidget(OCRtextLabel);
 
         ocroutput = new QTextBrowser(centralWidget);
-        ocroutput->setObjectName(QString::fromUtf8("ocroutput"));
+        ocroutput->setObjectName(QStringLiteral("ocroutput"));
         ocroutput->setFont(font);
 
         verticalLayout->addWidget(ocroutput);
@@ -96,17 +99,17 @@ public:
 
         verticalLayout_2 = new QVBoxLayout();
         verticalLayout_2->setSpacing(6);
-        verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
+        verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
         label = new QLabel(centralWidget);
-        label->setObjectName(QString::fromUtf8("label"));
+        label->setObjectName(QStringLiteral("label"));
         label->setAlignment(Qt::AlignCenter);
 
         verticalLayout_2->addWidget(label);
 
         graphicsView = new QGraphicsView(centralWidget);
-        graphicsView->setObjectName(QString::fromUtf8("graphicsView"));
+        graphicsView->setObjectName(QStringLiteral("graphicsView"));
         QFont font1;
-        font1.setFamily(QString::fromUtf8("Shobhika"));
+        font1.setFamily(QStringLiteral("Shobhika"));
         font1.setPointSize(10);
         font1.setBold(true);
         font1.setWeight(75);
@@ -121,14 +124,14 @@ public:
 
         InternDiffView->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(InternDiffView);
-        menuBar->setObjectName(QString::fromUtf8("menuBar"));
+        menuBar->setObjectName(QStringLiteral("menuBar"));
         menuBar->setGeometry(QRect(0, 0, 1175, 22));
         InternDiffView->setMenuBar(menuBar);
         mainToolBar = new QToolBar(InternDiffView);
-        mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
+        mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
         InternDiffView->addToolBar(Qt::TopToolBarArea, mainToolBar);
         statusBar = new QStatusBar(InternDiffView);
-        statusBar->setObjectName(QString::fromUtf8("statusBar"));
+        statusBar->setObjectName(QStringLiteral("statusBar"));
         InternDiffView->setStatusBar(statusBar);
 
         retranslateUi(InternDiffView);
@@ -138,22 +141,22 @@ public:
 
     void retranslateUi(QMainWindow *InternDiffView)
     {
-        InternDiffView->setWindowTitle(QCoreApplication::translate("InternDiffView", "InternDiffView", nullptr));
-        InternLabel->setText(QCoreApplication::translate("InternDiffView", "<p><b>Corrector's Output Text</b></p>Changes made by Corrector: ", nullptr));
-        current->setHtml(QCoreApplication::translate("InternDiffView", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        InternDiffView->setWindowTitle(QApplication::translate("InternDiffView", "InternDiffView", Q_NULLPTR));
+        InternLabel->setText(QApplication::translate("InternDiffView", "<p><b>Corrector's Output Text</b></p>Changes made by Corrector: ", Q_NULLPTR));
+        current->setHtml(QApplication::translate("InternDiffView", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'Shobhika'; font-size:11pt; font-weight:600; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-weight:400;\"><br /></p></body></html>", nullptr));
-        OCRtextLabel->setText(QCoreApplication::translate("InternDiffView", "<p><b>OCR Text<b></p>\n"
-"<p> </p>", nullptr));
-        ocroutput->setHtml(QCoreApplication::translate("InternDiffView", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-weight:400;\"><br /></p></body></html>", Q_NULLPTR));
+        OCRtextLabel->setText(QApplication::translate("InternDiffView", "<p><b>OCR Text<b></p>\n"
+"<p> </p>", Q_NULLPTR));
+        ocroutput->setHtml(QApplication::translate("InternDiffView", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'Shobhika'; font-size:11pt; font-weight:600; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-weight:400;\"><br /></p></body></html>", nullptr));
-        label->setText(QCoreApplication::translate("InternDiffView", "<p><b>OCR Image<b></p>\n"
-"<p> </p>", nullptr));
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-weight:400;\"><br /></p></body></html>", Q_NULLPTR));
+        label->setText(QApplication::translate("InternDiffView", "<p><b>OCR Image<b></p>\n"
+"<p> </p>", Q_NULLPTR));
     } // retranslateUi
 
 };
