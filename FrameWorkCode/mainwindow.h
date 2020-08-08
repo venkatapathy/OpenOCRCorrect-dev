@@ -34,8 +34,8 @@
 #include<QTime>
 //#include"staticDict.h"
 //#include "lcsqt.h"
-
-
+#include "HOCRDocument.hpp"
+#include "HOCRRenderer.h"
 //#include <set>
 using namespace std;
 
@@ -191,10 +191,14 @@ private slots:
 	void on_actionSuperscript_triggered();
 	void on_actionSubscript_triggered();
     void on_actionInsert_Horizontal_Line_triggered();
-
+	void on_actionOpen_2_triggered();
 private:
     Ui::MainWindow *ui;
 
+    QGraphicsScene* graphic = nullptr;
+    Graphics_view_zoom* z = nullptr;
+    HOCRDocument doc;
+    HOCRRenderer renderer;
     QString mFilename;
     QString mFilenamejpeg;
 };

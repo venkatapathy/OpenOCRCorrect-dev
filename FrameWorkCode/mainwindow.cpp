@@ -16,8 +16,8 @@
 #include <fstream>
 #include <vector>
 #include <utility> // std::pair
-
-
+#include <tesseract/baseapi.h>
+#include "HOCRGraphicView.h"
 //# include <QTask>
 
 //gs -dNOPAUSE -dBATCH -sDEVICE=jpeg -r300 -sOutputFile='page-%00d.jpeg' Book.pdf
@@ -69,6 +69,7 @@ MainWindow::MainWindow(QWidget *parent) :
     str.replace(",, ", "\n");
    // str.replace(", ","\t");
     ui->textEdit->setText(str);
+    ui->graphicsView->setCursor(Qt::CursorShape::ArrowCursor);
 }
 
 MainWindow::~MainWindow()
@@ -78,58 +79,6 @@ MainWindow::~MainWindow()
 
 
 
-/*
-
-bool fileFlag = 0;
-void MainWindow::on_actionLoad_Next_Page_triggered()
-{   QString file = "";
-    string localFilename = mFilenamejpeg.toUtf8().constData();
-    string nos = "0123456789";
-    size_t loc = localFilename.find(".jpeg");
-    string s = localFilename.substr(loc-1,1);
-    string no;
-    while(nos.find(s) != string::npos) { no = s + no; loc--; s = localFilename.substr(loc-1,1);  }
-    //cout << stoi(no) + 1 << endl;
-    localFilename.replace(loc,no.size(),to_string(stoi(no) + 1));
-
-    mFilenamejpeg = QString::fromStdString(localFilename); fileFlag = 1;
-    imageOrig.load(mFilenamejpeg);
-    QGraphicsScene *graphic = new QGraphicsScene(this);
-    graphic->addPixmap(QPixmap::fromImage(imageOrig));
-    ui->graphicsView->setScene(graphic);
-    ui->graphicsView->adjustSize();
-    ui->graphicsView->fitInView(graphic->itemsBoundingRect(),Qt::KeepAspectRatio);
-    //localmFilename = mFilename;
-    //on_actionOpen_triggered();
-
-    //imageOrig.load(localFilename.replace(QString("txt"),QString("jpeg")));
-
-}
-
-
-
-void MainWindow::on_actionLoad_Prev_Page_triggered()
-{   QString file = "";
-    string localFilename = mFilenamejpeg.toUtf8().constData();
-    string nos = "0123456789";
-    size_t loc = localFilename.find(".txt");
-    string s = localFilename.substr(loc-1,1);
-    string no;
-    while(nos.find(s) != string::npos) { no = s + no; loc--; s = localFilename.substr(loc-1,1);  }
-    //cout << stoi(no) + 1 << endl;
-    localFilename.replace(loc,no.size(),to_string(stoi(no) - 1));
-    mFilenamejpeg = QString::fromStdString(localFilename); fileFlag = 1;
-    imageOrig.load(mFilenamejpeg);
-    QGraphicsScene *graphic = new QGraphicsScene(this);
-    graphic->addPixmap(QPixmap::fromImage(imageOrig));
-    ui->graphicsView->setScene(graphic);
-    ui->graphicsView->adjustSize();
-    ui->graphicsView->fitInView(graphic->itemsBoundingRect(),Qt::KeepAspectRatio);
-    //localmFilename = mFilename;
-    //on_actionOpen_triggered();
-
-    //imageOrig.load(localFilename.replace(QString("txt"),QString("jpeg")));
-}*/
 
 
 //bool OPENSPELLFLAG = 1;// TO NOT CONVERT ASCII STRINGS TO DEVANAGARI ON OPENING WHEN SPELLCHECK IS CLICKED
@@ -527,8 +476,8 @@ void MainWindow::on_actionOpen_triggered()
                     //mFilenamejpeg = "page-1.jpeg";
                     imageOrig.load(localmFilename);
                     localmFilename = mFilename;
-
-                    QGraphicsScene *graphic = new QGraphicsScene(this);
+                    if(graphic) delete graphic;
+                    graphic = new QGraphicsScene(this);
                     graphic->addPixmap(QPixmap::fromImage(imageOrig));
                     ui->graphicsView->setScene(graphic);
                     //ui->graphicsView->adjustSize();
@@ -545,8 +494,8 @@ void MainWindow::on_actionOpen_triggered()
 //                    if (!prevTRig) on_actionSpell_Check_triggered(); //Sanoj
 
                     //OPENSPELLFLAG = 0;
-
-                    Graphics_view_zoom* z = new Graphics_view_zoom(ui->graphicsView);
+                    if (z) delete z;
+                    z = new Graphics_view_zoom(ui->graphicsView);
                     z->set_modifiers(Qt::NoModifier);
                     // fill indexes according to Tesseract
 
@@ -3393,4 +3342,36 @@ void MainWindow::on_actionSubscript_triggered() {
 void MainWindow::on_actionInsert_Horizontal_Line_triggered()
 {
     ui->textBrowser->insertHtml("<hr>");
+}
+
+void MainWindow::on_actionOpen_2_triggered()
+{
+	QString fileName = QFileDialog::getOpenFileName(this,"Open File");
+    if (fileName.isEmpty()) return;
+    
+	QString hocrDoc=doc.openFile(fileName);
+    auto root = doc.getRootItem();
+    QImage imageOrig;
+    imageOrig.load(fileName);
+    if (graphic) delete graphic;
+    graphic = new QGraphicsScene();
+    renderer.setRootItem(root);
+    renderer.setOutputScene(graphic);
+    graphic->addPixmap(QPixmap::fromImage(imageOrig));
+
+    renderer.render();
+    if (z) delete z;
+    z = new Graphics_view_zoom(ui->graphicsView);
+    z->set_modifiers(Qt::NoModifier);
+    ui->textBrowser->setHtml(hocrDoc);
+    ui->graphicsView->setScene(graphic);
+
+    fileName.replace(".jpeg", ".html");
+    fileName.replace(".jpg", ".html");
+    QFile file(fileName);
+    file.open(QFile::WriteOnly);
+    QTextStream stream(&file);
+    stream.setCodec("UTF-8");
+    stream << hocrDoc;
+
 }

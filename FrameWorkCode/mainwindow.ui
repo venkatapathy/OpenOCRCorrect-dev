@@ -172,7 +172,7 @@ p, li { white-space: pre-wrap; }
        </widget>
       </item>
       <item>
-       <widget class="QGraphicsView" name="graphicsView">
+       <widget class="HOCRGraphicView" name="graphicsView">
         <property name="minimumSize">
          <size>
           <width>608</width>
@@ -215,7 +215,7 @@ p, li { white-space: pre-wrap; }
      <x>0</x>
      <y>0</y>
      <width>1386</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuOCR_Correction_Window">
@@ -306,6 +306,12 @@ p, li { white-space: pre-wrap; }
     <addaction name="actionSuperscript"/>
     <addaction name="actionInsert_Horizontal_Line"/>
    </widget>
+   <widget class="QMenu" name="menuTesseract">
+    <property name="title">
+     <string>Tesseract</string>
+    </property>
+    <addaction name="actionOpen_2"/>
+   </widget>
    <addaction name="menuSelectLanguage"/>
    <addaction name="menuOCR_Correction_Window"/>
    <addaction name="menuCreateReports"/>
@@ -313,6 +319,7 @@ p, li { white-space: pre-wrap; }
    <addaction name="menuFontAndLayout"/>
    <addaction name="menuConvertFiles"/>
    <addaction name="menuFeatureExtraction"/>
+   <addaction name="menuTesseract"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <property name="enabled">
@@ -743,8 +750,20 @@ p, li { white-space: pre-wrap; }
     <string>Insert Horizontal Line</string>
    </property>
   </action>
+  <action name="actionOpen_2">
+   <property name="text">
+    <string>Open</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>HOCRGraphicView</class>
+   <extends>QGraphicsView</extends>
+   <header>HOCRGraphicView.h</header>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>textBrowser</tabstop>
   <tabstop>graphicsView</tabstop>
