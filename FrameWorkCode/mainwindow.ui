@@ -119,8 +119,8 @@
         </property>
         <property name="font">
          <font>
-          <family>FreeSans</family>
-          <italic>true</italic>
+          <family>Shobhika</family>
+          <pointsize>12</pointsize>
          </font>
         </property>
         <property name="sizeAdjustPolicy">
@@ -157,7 +157,9 @@
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Shobhika'; font-size:16pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-size:11pt;&quot;&gt;Please Select the Language from top left menu before loading any document.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-size:11pt;&quot;&gt;Please Select the Language from top left menu before loading any document.&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Ubuntu'; font-size:11pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-size:11pt;&quot;&gt;To use characters from Hindi SLP Guide&lt;br /&gt;Please click &amp;quot;Hindi/Marathi&amp;quot; button&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="acceptRichText">
          <bool>true</bool>
@@ -301,6 +303,8 @@ p, li { white-space: pre-wrap; }
     <addaction name="actionSuperscript"/>
     <addaction name="actionSubscript"/>
     <addaction name="actionInsert_Horizontal_Line"/>
+    <addaction name="actionLineSpace"/>
+    <addaction name="actionInset_Tab_Space"/>
    </widget>
    <addaction name="menuSelectLanguage"/>
    <addaction name="menuOCR_Correction_Window"/>
@@ -340,12 +344,16 @@ p, li { white-space: pre-wrap; }
    <addaction name="actionToDevanagari"/>
    <addaction name="separator"/>
    <addaction name="actionAllFontProperties"/>
+   <addaction name="separator"/>
    <addaction name="actionBold"/>
    <addaction name="actionUnBold"/>
+   <addaction name="separator"/>
    <addaction name="actionLeftAlign"/>
    <addaction name="actionCentreAlign"/>
    <addaction name="actionRightAlign"/>
    <addaction name="actionJusitfiedAlign"/>
+   <addaction name="actionLineSpace"/>
+   <addaction name="separator"/>
    <addaction name="actionFontBlack"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
@@ -747,6 +755,27 @@ p, li { white-space: pre-wrap; }
   <action name="actionInsert_Horizontal_Line">
    <property name="text">
     <string>Insert Horizontal Line</string>
+   </property>
+  </action>
+  <action name="actionLineSpace">
+   <property name="icon">
+    <iconset>
+     <normalon>:/Images/linespacing.png</normalon>
+    </iconset>
+   </property>
+   <property name="text">
+    <string>LineSpace</string>
+   </property>
+  </action>
+  <action name="actionInset_Tab_Space">
+   <property name="text">
+    <string>Insert Tab Space</string>
+   </property>
+   <property name="toolTip">
+    <string>Insert Tab Space(Ctrl+T)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+T</string>
    </property>
   </action>
  </widget>

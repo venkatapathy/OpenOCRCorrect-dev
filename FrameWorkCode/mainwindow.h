@@ -32,7 +32,6 @@
 #include "zoom.h"
 #include<QMessageBox>
 #include<QTime>
-#include <QDomDocument>
 //#include"staticDict.h"
 //#include "lcsqt.h"
 
@@ -192,6 +191,12 @@ private slots:
     void on_actionSubscript_triggered();
 
     void on_actionInsert_Horizontal_Line_triggered();
+
+    void savetimelog();
+
+    void on_actionLineSpace_triggered();
+
+    void on_actionInset_Tab_Space_triggered();
 
 private:
     Ui::MainWindow *ui;

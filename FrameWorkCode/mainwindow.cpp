@@ -28,8 +28,8 @@ vector<QString> vs; vector<int> vx,vy,vw,vh,vright;
 map<string, vector<string>> SRules;
 map<string, string> TopConfusions;
 map<string, int> TopConfusionsMask;
-map<string, int> TimeLog;
-string TimeLogLocation = "../Logs/log.txt";
+map<QString, int> TimeLog;
+QString TimeLogLocation;
 string alignment = "left";
 bool prevTRig = 0;
 //map<string, int> GPage; trie TGPage;
@@ -56,6 +56,7 @@ map<QString, QString> fileversion_fw = {
                                             {"V2_","V3_"}
                                          };
 
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -67,11 +68,18 @@ MainWindow::MainWindow(QWidget *parent) :
     //QObject::connect(ui->textBrowser,SIGNAL(textChanged()),this,SLOT(textChangedSlot()));
     QString str = "SLP1 Guide:";
     str += "\n";
-    str += "डॉ,, ड़,, ढ़,, अ   - a,, आ/ ा   - A,, इ/ ि   - i,, ई/ ी   - I,, उ/ ु   - u,, ऊ/ ू   - U,, ऋ/ ृ   - f,, ॠ/ ॄ   - F,, ऌ/ ॢ   - x,, ॡ/ \"ॣ\”   - X,, ए/ े   - e,, ऐ/ ै   - E,, ओ/ ो   - o,, औ/ ौ   - O,, ं   - M,, ः   - H,, ँ    - ~,, ऽ   - $,, ॐ   - %,, ज्ञ   - jYa ,, ळ ,, त्र   - tra,, श्र   - Sra,, क्ष्/क्ष   - kz/kza,, द्य्/द्य   - dy/dya,, क्/क   - k/ka,, ख्/ख   - K/Ka,, ग्/ग   - g/ga,, घ्/घ   - G/Ga,, ङ्/ङ   - N/Na,, च्/च   - c/ca,, छ्/छ   - C/Ca,, ज्/ज   - j/ja,, झ्/झ   - J/Ja,, ञ्/ञ   - Y/Ya,, ट्/ट   - w/wa,, ठ्/ठ   - W/Wa,, ड्/ड   - q/qa,, ढ्/ढ   - Q/Qa,, ण्/ण   - R/Ra,, त्/त   - t/ta,, थ्/थ   - T/Ta,, द्/द   - d/da,, ध्/ध   - D/Da,, न्/न   - n/na,, प्/प   - p/pa,, फ्/फ   - P/Pa,, ब्/ब   - b/ba,, भ्/भ   - B/Ba,, म्/म   - m/ma,, य्/य   - y/ya,, र्/र   - r/ra,, ल्/ल   - l/la,, व्/व   - v/va,, श्/श   - S/Sa,, ष्/ष   - z/za,, स्/स   - s/sa,, ह्/ह   - h/ha,, ळ्/ळ   - &/&a,, ऩ्  -%,, फ़्  - ^,, य़्  - L,, ऱ्  - V,,१   - 1,, २   - 2,, ३   - 3,, ४   - 4,, ५   - 5,, ६   - 6,, ७   - 7,, ८   - 8,, ९   - 9,, ०   - 0,, ।   - |,, ॥   - ||";
+    str += "डॉ,, ड़  - xa,, ढ़  -Xa,, अ  - a,, आ/ ा  - A,, इ/ ि  - i,, ई/ ी  - I,, उ/ ु  - u,, ऊ/ ू  - U,, ऋ/ ृ  - f,, ॠ/ ॄ  - F,, ऌ/ ॢ  - x,, ॡ/ \"ॣ\”  - X,, ए/ े  - e,, ऐ/ ै  - E,, ओ/ ो  - o,, औ/ ौ  - O,, ं  - M,, ः  - H,, ँ   - ~,, ऽ  - $,, ॐ  - %,, ज्ञ  - jYa ,, ळ ,, त्र  - tra,, श्र  - Sra,, क्ष्/क्ष  - kz/kza,, द्य्/द्य  - dy/dya,, क्/क  - k/ka,, ख्/ख  - K/Ka,, ग्/ग  - g/ga,, घ्/घ  - G/Ga,, ङ्/ङ  - N/Na,, च्/च  - c/ca,, छ्/छ  - C/Ca,, ज्/ज  - j/ja,, झ्/झ  - J/Ja,, ञ्/ञ  - Y/Ya,, ट्/ट  - w/wa,, ठ्/ठ  - W/Wa,, ड्/ड  - q/qa,, ढ्/ढ  - Q/Qa,, ण्/ण  - R/Ra,, त्/त  - t/ta,, थ्/थ  - T/Ta,, द्/द  - d/da,, ध्/ध  - D/Da,, न्/न  - n/na,, प्/प  - p/pa,, फ्/फ  - P/Pa,, ब्/ब  - b/ba,, भ्/भ  - B/Ba,, म्/म  - m/ma,, य्/य  - y/ya,, र्/र  - r/ra,, ल्/ल  - l/la,, व्/व  - v/va,, श्/श  - S/Sa,, ष्/ष  - z/za,, स्/स  - s/sa,, ह्/ह  - h/ha,, ळ्/ळ  - L/La,, ऩ्  -%,, फ़्  - ^,, य़्  - &,, ऱ्  - V,,१  - 1,, २  - 2,, ३  - 3,, ४  - 4,, ५  - 5,, ६  - 6,, ७  - 7,, ८  - 8,, ९  - 9,, ०  - 0,, ।  - |,, ॥  - ||";
 
     str.replace(",, ", "\n");
    // str.replace(", ","\t");
+    QFont font("Shobhika-Regular");
+    font.setFamily("Shobhika");
+    font.setWeight(14);
+    font.setPointSize(12);
+    ui->textEdit->setFont(font);
     ui->textEdit->setText(str);
+    ui->textEdit->setFont(font);
+
 }
 
 MainWindow::~MainWindow()
@@ -133,7 +141,12 @@ void MainWindow::on_actionLoad_Prev_Page_triggered()
 
     //imageOrig.load(localFilename.replace(QString("txt"),QString("jpeg")));
 }*/
-
+void DisplayError(QString error)
+{
+    QMessageBox msgBox;
+    msgBox.setText(error);
+    msgBox.exec();
+}
 
 //bool OPENSPELLFLAG = 1;// TO NOT CONVERT ASCII STRINGS TO DEVANAGARI ON OPENING WHEN SPELLCHECK IS CLICKED
 QString file = "";
@@ -143,38 +156,39 @@ int secs;
 
 
 
+void MainWindow::savetimelog()
+{
+    QJsonObject mainObj;
+    QJsonObject page;
+    QJsonDocument document;
+    for (auto i = TimeLog.begin(); i!=TimeLog.end(); i++ )
+    {
+        page["directory"] = i->first;
+        page["seconds"] = i->second;
+        mainObj.insert(i->first, page);
+    }
+    document.setObject(mainObj);
+
+    QFile jsonFile(TimeLogLocation);
+    jsonFile.open(QIODevice::WriteOnly);
+    jsonFile.write(document.toJson());
+}
+
 void MainWindow::on_actionLoad_Next_Page_triggered()
-{   
-	bool ok = false;
+{
     if(initialtexthtml.compare(ui->textBrowser->toHtml()))
     {
         int btn = QMessageBox::question(this, "Save?", "Do you want to save this file?", QMessageBox::StandardButton::Ok, QMessageBox::StandardButton::No);
         if (btn == QMessageBox::StandardButton::Ok)
             on_actionSave_triggered();
     }
-	
+
     string localFilename = mFilename.toUtf8().constData();
     int nMilliseconds = myTimer.elapsed();
     secs = nMilliseconds/1000;
-//    int mins = secs/60;
-//    secs = secs - mins*60;
-    TimeLog[localFilename] += secs;
-    QString TimeLogLoc = QString::fromStdString(TimeLogLocation);
-    QFile sFile(TimeLogLoc);
-        if(sFile.open(QFile::WriteOnly))
-      {
-          QString timelogstring = "";
-          QTextStream out(&sFile);
+    TimeLog[mFilename] += secs;
+    savetimelog();
 
-          for (auto i = TimeLog.begin(); i!=TimeLog.end(); i++ )
-          {
-              timelogstring+= QString::fromStdString(i->first) + " ";
-              timelogstring+= QString::fromStdString(to_string(i->second)) + "\n";
-          }
-          out << timelogstring;
-          sFile.flush();
-          sFile.close();
-      }
     string nos = "0123456789";
     size_t loc = localFilename.find(".txt");
     if(loc == string::npos)
@@ -199,9 +213,7 @@ void MainWindow::on_actionLoad_Next_Page_triggered()
 
 void MainWindow::on_actionLoad_Prev_Page_triggered()
 {
-	bool ok = false;
-    if(initialtexthtml.compare(ui->textBrowser->toHtml()))
-    {
+    if(initialtexthtml.compare(ui->textBrowser->toHtml())) {
         int btn = QMessageBox::question(this, "Save?", "Do you want to save this file?", QMessageBox::StandardButton::Ok, QMessageBox::StandardButton::No);
         if (btn == QMessageBox::StandardButton::Ok)
             on_actionSave_triggered();
@@ -209,28 +221,13 @@ void MainWindow::on_actionLoad_Prev_Page_triggered()
     string localFilename = mFilename.toUtf8().constData();
     int nMilliseconds = myTimer.elapsed();
     secs = nMilliseconds/1000;
-//    int mins = secs/60;
-//    secs = secs - mins*60;
-    TimeLog[localFilename] += secs;
-    QString TimeLogLoc = QString::fromStdString(TimeLogLocation);
-    QFile sFile(TimeLogLoc);
-        if(sFile.open(QFile::WriteOnly))
-      {
-          QString timelogstring = "";
-          QTextStream out(&sFile);
-          for (auto i = TimeLog.begin(); i!=TimeLog.end(); i++ )
-          {
-              timelogstring+= QString::fromStdString(i->first) + " ";
-              timelogstring+= QString::fromStdString(to_string(i->second)) + "\n";
-          }
-          out << timelogstring;
-          sFile.flush();
-          sFile.close();
-        }
+    TimeLog[mFilename] += secs;
+
+    savetimelog();
+
     string nos = "0123456789";
     size_t loc = localFilename.find(".txt");
-    if(loc == string::npos)
-    {
+    if(loc == string::npos) {
         loc = localFilename.find(".html");
     }
     string s = localFilename.substr(loc-1,1);
@@ -298,20 +295,9 @@ void MainWindow::on_actionCreateBest2OCR_triggered()
 
 void MainWindow::on_actionOpen_triggered()
 {
-
+    ui->textBrowser->setTabChangesFocus(false);
     if(!fileFlag)
     {
-        string key;
-        int value;
-        ifstream timefile(TimeLogLocation);
-        string fileline;
-        while(getline(timefile, fileline))
-        {
-            istringstream words(fileline);
-            words>>key>>value;
-            TimeLog[key] = value;
-        }
-        timefile.close();
         file = QFileDialog::getOpenFileName(this, "Open a File");
     }
 
@@ -334,16 +320,123 @@ void MainWindow::on_actionOpen_triggered()
                 localmFilename1 = mFilename;
                 string localFilename =  localmFilename1.toUtf8().constData();
 
+                TimeLogLocation = dir2levelup + "/Comments/Timelog.json";
+                if(!fileFlag)
+                {
+                    QFile jsonFile(TimeLogLocation);
+                    jsonFile.open(QIODevice::ReadOnly | QIODevice::Text);
+                    QByteArray data = jsonFile.readAll();
+
+                    QJsonParseError errorPtr;
+                    QJsonDocument document = QJsonDocument::fromJson(data, &errorPtr);
+                    QJsonObject mainObj = document.object();
+                    jsonFile.close();
+
+                    foreach(const QJsonValue &val, mainObj)
+                    {
+                        QString directory = val.toObject().value("directory").toString();
+                        int seconds    = val.toObject().value("seconds").toInt();
+                        TimeLog[directory] = seconds;
+                    }
+                }
+
+
+                // load vIPage and vCPage for calculating WER if corresponding CPage exist
+                /*vIPage.clear(); vCPage.clear();
+                //QString localmFilename1 = mFilename;
+                std::ifstream ssIPage(localmFilename1.toUtf8().constData());
+                string localstr;
+                while(ssIPage >> localstr) vIPage.push_back(localstr); ssIPage.close();
+                localmFilename1.replace("Inds","Correct");
+                std::ifstream ssCPage(localmFilename1.toUtf8().constData()); localmFilename1 = mFilename;
+
+                vCPage.clear();
+                if (ssCPage.is_open()){
+                 while(ssCPage >> localstr) {vCPage.push_back(localstr); } ssCPage.close();
+                    int vGsz = vCPage.size(), vIsz =  vIPage.size();
+                    cout << vGsz << " " << vIsz << endl;
+                    int win = vGsz  - vIsz;
+                    if(win<0) win = -1*win;
+                    win = maxIG(win,5);
+                    cout << win << endl;
+                    float WER = 0;
+                    // search for a word(pre space, post space as well) in Indsenz within win sized window in GDocs and if found then add to PWords
+                    for(int t = 0; t < vIsz;t++){
+                        string s1 = vIPage[t]; //(vGBook[t1].find(s1) != string::npos) || (vGBook[t1] == s1)
+                        for(int t1 = maxIG(t-win,0); t1 < min(t+win,vGsz); t1++){
+                            if (vCPage[t1] == s1) {WER++; break;}
+                        }
+                    }
+                    cout << vIsz - WER << endl;
+                    ui->lineEdit->setText("Page WER = " + QString::number((vIsz-WER)*100/vIsz));
+                }
+                */
+
+
+                // load and set data in Browzer
+                // if file exist in corrected open that else open file in Indz
+//                QString tesslocalmFilename = localmFilename1;
+//                Pix * image1;
+//                image1 = pixRead((tesslocalmFilename.replace(QString("txt"),QString("jpeg"))).toUtf8().constData());//phototest.tif
+//
+//                tesseract::TessBaseAPI *api = new tesseract::TessBaseAPI();
+//                api->Init(NULL, "hin+san");
+//                api->SetImage(image1);
+//                Boxa* boxes = api->GetComponentImages(tesseract::RIL_TEXTLINE, true, NULL, NULL);//RIL_SYMBOL
+//                printf("Found %d textline image components.\n", boxes->n);
+//                vs.clear();vx.clear();vy.clear();vw.clear();vh.clear();
+//                vs.push_back(""); vx.push_back(1); vy.push_back(1); vw.push_back(1); vh.push_back(1); vright.push_back(1);
+//                int n = boxes->n;
+//                for(int i = 0; i < n; i++){
+//                    BOX* box = boxaGetBox(boxes, i, L_CLONE);
+//                    api->SetRectangle(box->x, box->y, box->w, box->h);
+//                    string ocrResult = api->GetUTF8Text(); //string ocrResultstr = ocrResult;
+//                    QString qstr = QString::fromStdString(ocrResult);
+//                    vs.push_back(qstr); vx.push_back(box->x); vy.push_back(box->y); vw.push_back(box->w); vh.push_back(box->h); vright.push_back(box->w + box->x);
+//                    qDebug() << qstr << vx << vy << vw << vh << vright << endl;
+//                  }
+//                float leftmean = accumulate(vx.begin(),vx.end(),0)/n;
+//                float leftdiff = 0;
+//                float rightmean = accumulate(vright.begin(),vright.end(),0)/n;
+//                float rightdiff = 0;
+//                 for(int i=0; i<n; i++)
+//                 {
+//                     leftdiff += abs(vx[i]-leftmean);
+//                     rightdiff += abs(vright[i]-rightmean);
+//
+//                 }
+//                 float leftvariance = leftdiff/n;
+//                 float rightvariance = rightdiff/n;
+//                 qDebug() << leftvariance<< "-" <<leftmean << "   " << rightvariance << "-" << rightmean << endl;
+//                 if((leftvariance/leftmean)<0.1)
+//                 {
+//                    ui->textBrowser->setAlignment(Qt::AlignLeft);
+//                    alignment = "\"left\"";
+//                 }
+//                 else if((rightvariance/rightmean)<0.1)
+//                 {
+//                     ui->textBrowser->setAlignment(Qt::AlignRight);
+//                     alignment = "\"right\"";
+//                 }
+//                 else
+//                 {
+//                    ui->textBrowser->setAlignment(Qt::AlignCenter);
+//                    alignment = "\"center\"";
+//                 }
+
+
                 myTimer.start();
                 //int nMilliseconds = myTimer.elapsed();
                 // do something..
-                secs = TimeLog[localFilename];
+                secs = TimeLog[mFilename];
                 int mins = secs/60;
                 secs = secs - mins*60;
                 ui->lineEdit->setText(QString::number(mins) + "mins " + QString::number(secs) + " secs elapsed on this page(Right Click to update)");
-                QString newFile = mFilename;
-                newFile.replace("Inds","CorrectorOutput");
+                //QString newFile = mFilename; //Filechange
+                //newFile.replace("Inds","CorrectorOutput"); //Filechange
+                QString newFile = dir2levelup + "/CorrectorOutput/" +currentpagename;
                 QFile sFile1(newFile);
+
                 QFileInfo filetype(mFilename);
                 QString suffix = filetype.suffix();
                 if(suffix == "html")
@@ -361,55 +454,35 @@ void MainWindow::on_actionOpen_triggered()
                 }
                 else
                 {
-                    //if(sFile1.open(QFile::ReadOnly | QFile::Text))
-                    if(sFile1.open(QFile::ReadOnly)) //modified
-                    {
-                        QTextStream in(&sFile);
-                        in.setCodec("UTF-8");
-                        QString text = in.readAll();
-                        openedFileChars = text.length();
-                        QString  simplifiedtext = text.simplified();
-                        openedFileWords = simplifiedtext.count(" ");
-                        sFile.close();
+                    QTextStream in(&sFile);
+                    in.setCodec("UTF-8");
+                    QString text = in.readAll();
+                    openedFileChars = text.length();
+                    QString  simplifiedtext = text.simplified();
+                    openedFileWords = simplifiedtext.count(" ");
+                    sFile.close();
 
-                        string str1 = text.toUtf8().constData();
-                        istringstream iss(str1);
-                        string strHtml = "<html><body><div style=\"width: 21cm; height: 29.7cm; margin: 30mm 45mm 30mm 45mm;\"><p>"; string line;
-                        while (getline(iss, line)) {
-                            if(line=="\n" | line == "") strHtml+="</p><p>";
-                            else strHtml += line + "<br />";
-                       }
-                       strHtml += "</p></div></body></html>";
-                       QString qstrHtml = QString::fromStdString(strHtml);
-                       qstrHtml.replace("<br /></p>", "</p>");
-                       ui->textBrowser->setHtml(qstrHtml);
+                    string str1 = text.toUtf8().constData();
+                    istringstream iss(str1);
+                    string strHtml = "<html><body><p>"; string line;
+                    while (getline(iss, line)) {
+                        QString qline = QString::fromStdString(line);
+                        if(line == "\n" | line == "" | qline.contains("\r") )
+                            strHtml+="</p><p>";
+                        else strHtml += line + "<br />";
+                   }
+                   strHtml += "</p></body></html>";
+                   QString qstrHtml = QString::fromStdString(strHtml);
+                   qstrHtml.replace("<br /></p>", "</p>");
 
+                   QFont font("Shobhika-Regular");
+                   font.setWeight(14);
+                   font.setPointSize(14);
+                   font.setFamily("Shobhika");
+                   ui->textBrowser->setFont(font);
+                   ui->textBrowser->setHtml(qstrHtml);
+                   ui->textBrowser->setFont(font);
 
-                    } else {
-
-
-                        QTextStream in(&sFile);
-                        in.setCodec("UTF-8");
-                        QString text = in.readAll();
-                        openedFileChars = text.length();
-                        QString  simplifiedtext = text.simplified();
-                        openedFileWords = simplifiedtext.count(" ");
-                        sFile.close();
-
-                        string str1 = text.toUtf8().constData();
-                        istringstream iss(str1);
-                        string strHtml = "<html><body><div style=\"width: 21cm; height: 29.7cm; margin: 30mm 45mm 30mm 45mm;\"><p>"; string line;
-                        while (getline(iss, line)) {
-                            if(line=="\n" | line == "") strHtml+="</p><p>";
-                            else strHtml += line + "<br />";
-                       }
-                       strHtml += "</p></div></body></html>";
-                       QString qstrHtml = QString::fromStdString(strHtml);
-                       qstrHtml.replace("<br /></p>", "</p>");
-                       ui->textBrowser->setHtml(qstrHtml);
-
-
-                    }
                 }
                 initialtexthtml = ui->textBrowser->toHtml();
 
@@ -463,107 +536,107 @@ void MainWindow::on_actionSpell_Check_triggered()
 
     on_actionSave_triggered();
 
-	QString textBrowserText = ui->textBrowser->toPlainText();
-	//QChar ch;
-	//ch = textBrowserText[1];
-	textBrowserText += " ";
-	string str1 = textBrowserText.toUtf8().constData();
+    QString textBrowserText = ui->textBrowser->toPlainText();
+    //QChar ch;
+    //ch = textBrowserText[1];
+    textBrowserText += " ";
+    string str1 = textBrowserText.toUtf8().constData();
 
-	// load no of words
-	istringstream iss1(str1);
-	size_t WordCount = 0; string word1;
-	while (iss1 >> word1) WordCount++;
+    // load no of words
+    istringstream iss1(str1);
+    size_t WordCount = 0; string word1;
+    while (iss1 >> word1) WordCount++;
 
-	//str1 = toslp1(str1);
-	istringstream iss(str1);
-	string strHtml = "<html><body>"; string line;
-	QTextDocument doc;
-	
-
-	int value = 0;
-	while (getline(iss, line)) {
-		istringstream issw(line);
-		string word;
-		strHtml += "<p>";
-		while (issw >> word) {
-			if (ConvertSlpDevFlag) {
-				string word1 = word;
-				word = toslp1(word);
-				string wordNext;
-				if (hasM40PerAsci(word1)) { wordNext = word1; }
-				else { wordNext = toDev(word); }
-				strHtml += wordNext; strHtml += " "; //cout << strHtml << endl;
-				value++;
-			}
-			else {
-				string word1 = word;
-				word = toslp1(word);
-				string wordNext;
-				//cout << GPage.size() <<  word << " " << GPage[word] << endl;
-				if (hasM40PerAsci(word1)) { wordNext = word1; }
-
-				else if (GBook[(word)] > 0) { 
-					wordNext = toDev(word); 
-					PWords[word]++; // Updating domain dictionary
-				}//Checks in seccondary OCR (GBook) vocab
-				//else if(CPairRight[word] >0) {wordNext = "<font color=\'purple\'>" + toDev(CPair[word]) + "</font>";}
-				else if (PWords[word] > 0) { 
-					wordNext = "<font color=\'gray\'>" + toDev(word) + "</font>";//if it's found in domain dictionary mark it gray 
-				}
-				else if ((Dict[word] == 0) && (PWords[word] == 0) && (CPair[word].size() > 0)) {//Dict is general Dictionary, CPair is pair of word corrections
-					wordNext = "<font color=\'purple\'>" + toDev(CPair[word]) + "</font>";//Purple correct using CPair
-				}
-				else {
-					//removed toslp1 conversion
-					wordNext = findDictEntries(word, Dict, PWords, word.size());//replace m1 with m2,m1 for combined search
-					
-					wordNext = find_and_replace_oddInstancesblue(wordNext);
-					wordNext = find_and_replace_oddInstancesorange(wordNext);
-				}
-				strHtml += wordNext; strHtml += " "; //cout << strHtml << endl;
-				value++;
-			}
-
-			//cout << GPage[(word)] << endl;
-			//Ui -> Dialog -> progressBar -> setValue(value);
-		}
-		strHtml += "</p>"; // To add new line
-
-	}
-	strHtml += "</body></html>";
-	doc.setHtml(QString::fromStdString(strHtml));
-	QTextCursor texcursor1(&doc);
-	auto texcursor2 = ui->textBrowser->textCursor();
-	texcursor2.setPosition(0);
-	QTextCharFormat fmt;
-	fmt.setForeground(QColor(255, 0, 0, 255));
-	auto len = doc.toPlainText().length();
-	while (!texcursor1.atEnd() && !texcursor2.atEnd()) {		
-
-		auto fmt1 =  texcursor1.charFormat();
-		auto color = fmt1.foreground().color();
-		//texcursor2.select(QTextCursor::SelectionType::WordUnderCursor);
-		texcursor2.mergeCharFormat(fmt1);
-		texcursor1.movePosition(QTextCursor::WordRight, QTextCursor::KeepAnchor);
-		texcursor2.movePosition(QTextCursor::WordRight, QTextCursor::KeepAnchor);
-		if (texcursor1.position() > len)break;
-	}
-
-	//dialog->progressBar-> setValue(WordCount);
-
-	//secdialog.progressBar.setValue(WordCount);
+    //str1 = toslp1(str1);
+    istringstream iss(str1);
+    string strHtml = "<html><body>"; string line;
+    QTextDocument doc;
 
 
-	// load wordLineIndex map for pairing with WordImages
-	str1 = textBrowserText.toUtf8().constData();
-	// str1 = clean(str1);
-	istringstream iss2(str1);
-	size_t WordCount2 = 0;
-	while (getline(iss2, line)) {
-		istringstream issw(line);
-		string word;
-		while (issw >> word) { wordLineIndex[(word + "###" + line)] = WordCount2; WordCount2++; } // clean(word) instead of word
-	}
+    int value = 0;
+    while (getline(iss, line)) {
+        istringstream issw(line);
+        string word;
+        strHtml += "<p>";
+        while (issw >> word) {
+            if (ConvertSlpDevFlag) {
+                string word1 = word;
+                word = toslp1(word);
+                string wordNext;
+                if (hasM40PerAsci(word1)) { wordNext = word1; }
+                else { wordNext = toDev(word); }
+                strHtml += wordNext; strHtml += " "; //cout << strHtml << endl;
+                value++;
+            }
+            else {
+                string word1 = word;
+                word = toslp1(word);
+                string wordNext;
+                //cout << GPage.size() <<  word << " " << GPage[word] << endl;
+                if (hasM40PerAsci(word1)) { wordNext = word1; }
+
+                else if (GBook[(word)] > 0) {
+                    wordNext = toDev(word);
+                    PWords[word]++; // Updating domain dictionary
+                }//Checks in seccondary OCR (GBook) vocab
+                //else if(CPairRight[word] >0) {wordNext = "<font color=\'purple\'>" + toDev(CPair[word]) + "</font>";}
+                else if (PWords[word] > 0) {
+                    wordNext = "<font color=\'gray\'>" + toDev(word) + "</font>";//if it's found in domain dictionary mark it gray
+                }
+                else if ((Dict[word] == 0) && (PWords[word] == 0) && (CPair[word].size() > 0)) {//Dict is general Dictionary, CPair is pair of word corrections
+                    wordNext = "<font color=\'purple\'>" + toDev(CPair[word]) + "</font>";//Purple correct using CPair
+                }
+                else {
+                    //removed toslp1 conversion
+                    wordNext = findDictEntries(word, Dict, PWords, word.size());//replace m1 with m2,m1 for combined search
+
+                    wordNext = find_and_replace_oddInstancesblue(wordNext);
+                    wordNext = find_and_replace_oddInstancesorange(wordNext);
+                }
+                strHtml += wordNext; strHtml += " "; //cout << strHtml << endl;
+                value++;
+            }
+
+            //cout << GPage[(word)] << endl;
+            //Ui -> Dialog -> progressBar -> setValue(value);
+        }
+        strHtml += "</p>"; // To add new line
+
+    }
+    strHtml += "</body></html>";
+    doc.setHtml(QString::fromStdString(strHtml));
+    QTextCursor texcursor1(&doc);
+    auto texcursor2 = ui->textBrowser->textCursor();
+    texcursor2.setPosition(0);
+    QTextCharFormat fmt;
+    fmt.setForeground(QColor(255, 0, 0, 255));
+    auto len = doc.toPlainText().length();
+    while (!texcursor1.atEnd() && !texcursor2.atEnd()) {
+
+        auto fmt1 =  texcursor1.charFormat();
+        auto color = fmt1.foreground().color();
+        //texcursor2.select(QTextCursor::SelectionType::WordUnderCursor);
+        texcursor2.mergeCharFormat(fmt1);
+        texcursor1.movePosition(QTextCursor::WordRight, QTextCursor::KeepAnchor);
+        texcursor2.movePosition(QTextCursor::WordRight, QTextCursor::KeepAnchor);
+        if (texcursor1.position() > len)break;
+    }
+
+    //dialog->progressBar-> setValue(WordCount);
+
+    //secdialog.progressBar.setValue(WordCount);
+
+
+    // load wordLineIndex map for pairing with WordImages
+    str1 = textBrowserText.toUtf8().constData();
+    // str1 = clean(str1);
+    istringstream iss2(str1);
+    size_t WordCount2 = 0;
+    while (getline(iss2, line)) {
+        istringstream issw(line);
+        string word;
+        while (issw >> word) { wordLineIndex[(word + "###" + line)] = WordCount2; WordCount2++; } // clean(word) instead of word
+    }
 
 }
 
@@ -637,153 +710,174 @@ bool MainWindow::eventFilter(QObject *object, QEvent *event)
 
 bool RightclickFlag = 0;
 string selectedStr;
-//GIVE EVENT TO TEXT BROWZER INSTEAD OF MAINWINDOW
 void MainWindow::mousePressEvent(QMouseEvent *ev)
 {
-    on_actionLoadData_triggered();
+	//on_actionLoadData_triggered();
+	if (!FirstFlag) {
+        ui->textBrowser->cursorForPosition(ev->pos());
+        secs = TimeLog[mFilename];
+        int nMilliseconds = myTimer.elapsed();
+        secs += nMilliseconds / 1000;
+        int mins = secs / 60;
+        secs = secs - mins * 60;
+        ui->lineEdit->setText(QString::number(mins) + "mins " + QString::number(secs) + " secs elapsed on this page(Right Click to update)");
+
+        if ((ev->button() == Qt::RightButton) || (RightclickFlag))
+		{
+			QTextCursor cursor1 = ui->textBrowser->cursorForPosition(ev->pos());
+			QTextCursor cursor = ui->textBrowser->textCursor();
+			cursor.select(QTextCursor::WordUnderCursor);
+			// code to copy selected string:-
+			QString str1 = cursor.selectedText();
+			selectedStr = str1.toUtf8().constData();
+
+		}
+		if (selectedStr != "") {
+			// code to display options on rightclick
+			ui->textBrowser->setContextMenuPolicy(Qt::CustomContextMenu);//IMP TO AVOID UNDO ETC AFTER SELECTING A SUGGESTION
+			QMenu* popup_menu = ui->textBrowser->createStandardContextMenu();
+			QMenu* spell_menu;
+			spell_menu = new QMenu("suggestions", this);
+			//QAction* action = tr("tihor");
+			QAction* act;
+			//vector<string> Words =  print5NearestEntries(TGPage,selectedStr);
+			vector<string>  Words1 = print5NearestEntries(TGBook, selectedStr);
+			vector<string> Alligned = print5NearestEntries(TGBookP, selectedStr);
+			vector<string> PWords1 = print5NearestEntries(TPWords, selectedStr);
+			string PairSugg = print2OCRSugg(selectedStr, Alligned[0], ConfPmap, Dict); // map<string,int>&
+			vector<string>  Words = print1OCRNearestEntries(toslp1(selectedStr), vIBook);
+			//cout <<" here " << toDev(Words[0]) << endl;
 
 
-    ui->textBrowser->cursorForPosition(ev->pos());
+			// find nearest confirming to OCR Sugg from Book
+			string nearestCOnfconfirmingSuggvec;
+			vector<string> vec = Words1;
+			int min = 100;
+			for (size_t t = 0; t < vec.size(); t++) {
+				vector<string> wordConfusions; vector<int> wCindex;
+				int minFactor = loadWConfusionsNindex1(selectedStr, vec[t], ConfPmap, wordConfusions, wCindex);
+				wordConfusions.clear(); wCindex.clear();
+				if (minFactor < min) { min = minFactor; nearestCOnfconfirmingSuggvec = vec[t]; }
+			}
 
-    int nMilliseconds = myTimer.elapsed();
-    // do something..
-    secs = nMilliseconds/1000;
-    int mins = secs/60;
-    secs = secs - mins*60;
-    ui->lineEdit->setText(QString::number(mins) + "mins " + QString::number(secs) + " secs elapsed on this page(Right Click to update)");
-    if ((ev->button() == Qt::RightButton) || (RightclickFlag))
-    {
-        QTextCursor cursor1 = ui->textBrowser->cursorForPosition(ev->pos());
-        QTextCursor cursor = ui->textBrowser->textCursor();
-        cursor.select(QTextCursor::WordUnderCursor);
-        // code to copy selected string:-
-        QString str1 = cursor.selectedText();
-        selectedStr = str1.toUtf8().constData();
+			// find nearest confirming to OCR Sugg from PWords
+			string nearestCOnfconfirmingSuggvec1;
+			vector<string> vec1 = PWords1;
+			min = 100;
+			for (size_t t = 0; t < vec1.size(); t++) {
+				vector<string> wordConfusions; vector<int> wCindex;
+				int minFactor = loadWConfusionsNindex1(selectedStr, vec1[t], ConfPmap, wordConfusions, wCindex);
+				wordConfusions.clear(); wCindex.clear();
+				if (minFactor < min) { min = minFactor; nearestCOnfconfirmingSuggvec1 = vec1[t]; }
+			}
 
-    }
-    if(ui->textBrowser->textCursor().hasSelection()){
-    // code to display options on rightclick
-    ui->textBrowser->setContextMenuPolicy(Qt::CustomContextMenu);//IMP TO AVOID UNDO ETC AFTER SELECTING A SUGGESTION
-    QMenu* popup_menu = ui->textBrowser->createStandardContextMenu();
-    QMenu* spell_menu;
-    spell_menu = new QMenu("suggestions",this);
-    //QAction* action = tr("tihor");
-    QAction* act;
-    //vector<string> Words =  print5NearestEntries(TGPage,selectedStr);
-    vector<string>  Words1 =  print5NearestEntries(TGBook,selectedStr);
-    vector<string> Alligned =  print5NearestEntries(TGBookP,selectedStr);
-    vector<string> PWords1 =  print5NearestEntries(TPWords,selectedStr);
-    string PairSugg = print2OCRSugg(selectedStr, Alligned[0], ConfPmap,Dict); // map<string,int>&
-    vector<string>  Words = print1OCRNearestEntries(toslp1(selectedStr),vIBook);
-    //cout <<" here " << toDev(Words[0]) << endl;
+			vector<pair<int, string>> vecSugg, vecSugg1;
+			map<string, int> mapSugg;
+			string CSugg = CPair[toslp1(selectedStr)];
+			if (CSugg.size() > 0) mapSugg[toslp1(CSugg)]++;
+			if (Words.size() > 0)  mapSugg[toslp1(Words[0])]++;
+			if (Words1.size() > 0) mapSugg[toslp1(nearestCOnfconfirmingSuggvec)]++;
+			if (PWords1.size() > 0) mapSugg[toslp1(nearestCOnfconfirmingSuggvec1)]++;
+			if (PairSugg.size() > 0) mapSugg[toslp1(PairSugg)]++;
+			mapSugg[SamasBreakLRCorrect(toslp1(selectedStr), Dict, PWords, TPWords, TPWordsP)]++;
+			string s1 = toslp1(selectedStr);
+			string nearestCOnfconfirmingSuggvecFont = "";
+			min = 100;
+			for (size_t t = 0; t < vec.size(); t++) {
+				vector<string> wordConfusions; vector<int> wCindex;
+				int minFactor = loadWConfusionsNindex1(s1, vec[t], ConfPmapFont, wordConfusions, wCindex);
+				wordConfusions.clear(); wCindex.clear();
+				if (minFactor < min) { min = minFactor; nearestCOnfconfirmingSuggvecFont = vec[t]; }
+			}
+			if (nearestCOnfconfirmingSuggvecFont.size() > 0) mapSugg[nearestCOnfconfirmingSuggvecFont]++;
 
+			string PairSuggFont = "";
+			if (Alligned.size() > 0) PairSuggFont = print2OCRSugg(s1, Alligned[0], ConfPmap, Dict);
+			if (PairSuggFont.size() > 0) mapSugg[PairSuggFont]++;
 
-    // find nearest confirming to OCR Sugg from Book
-    string nearestCOnfconfirmingSuggvec;
-    vector<string> vec = Words1;
-    int min= 100;
-        for (size_t t=0;t<vec.size();t++){
-        vector<string> wordConfusions; vector<int> wCindex;
-        int minFactor = loadWConfusionsNindex1(selectedStr,vec[t],ConfPmap,wordConfusions,wCindex);
-        wordConfusions.clear(); wCindex.clear();
-        if(minFactor < min) {min = minFactor; nearestCOnfconfirmingSuggvec = vec[t];}
-        }
+			string sugg9 = "";
+			sugg9 = generatePossibilitesNsuggest(s1, TopConfusions, TopConfusionsMask, Dict, SRules);
+			if (sugg9.size() > 0) mapSugg[sugg9]++;
 
-    // find nearest confirming to OCR Sugg from PWords
-    string nearestCOnfconfirmingSuggvec1;
-        vector<string> vec1 = PWords1;
-        min= 100;
-            for (size_t t=0;t<vec1.size();t++){
-            vector<string> wordConfusions; vector<int> wCindex;
-            int minFactor = loadWConfusionsNindex1(selectedStr,vec1[t],ConfPmap,wordConfusions,wCindex);
-            wordConfusions.clear(); wCindex.clear();
-            if(minFactor < min) {min = minFactor; nearestCOnfconfirmingSuggvec1 = vec1[t];}
-            }
-
-    vector<pair<int,string>> vecSugg,vecSugg1;
-    map<string, int> mapSugg;
-    string CSugg = CPair[toslp1(selectedStr)];
-    if(CSugg.size() > 0) mapSugg[toslp1(CSugg)]++;
-    if(Words.size() > 0)  mapSugg[toslp1(Words[0])]++;
-    if(Words1.size() > 0) mapSugg[toslp1(nearestCOnfconfirmingSuggvec)]++;
-    if(PWords1.size() > 0) mapSugg[toslp1(nearestCOnfconfirmingSuggvec1)]++;
-    if(PairSugg.size() > 0) mapSugg[toslp1(PairSugg)]++;
-    mapSugg[SamasBreakLRCorrect(toslp1(selectedStr),Dict,PWords,TPWords,TPWordsP)]++;
-    string s1 = toslp1(selectedStr);
-    string nearestCOnfconfirmingSuggvecFont = "";
-    min= 100;
-    for (size_t t=0;t<vec.size();t++){
-        vector<string> wordConfusions; vector<int> wCindex;
-        int minFactor = loadWConfusionsNindex1(s1,vec[t],ConfPmapFont,wordConfusions,wCindex);
-        wordConfusions.clear(); wCindex.clear();
-        if(minFactor < min) {min = minFactor; nearestCOnfconfirmingSuggvecFont = vec[t];}
-    }
-    if(nearestCOnfconfirmingSuggvecFont.size() >0 ) mapSugg[nearestCOnfconfirmingSuggvecFont]++;
-
-    string PairSuggFont = "";
-    if(Alligned.size() > 0) PairSuggFont = print2OCRSugg(s1, Alligned[0], ConfPmap,Dict);
-    if(PairSuggFont.size() >0 ) mapSugg[PairSuggFont]++;
-
-    string sugg9 = "";
-    sugg9 = generatePossibilitesNsuggest(s1,TopConfusions,TopConfusionsMask,Dict,SRules);
-    if(sugg9.size() >0 ) mapSugg[sugg9]++;
-
-    map<string, int> mapSugg1;
-    for(size_t ksugg1 = 0; ksugg1 < 5; ksugg1++) {
-    if(Words.size() > ksugg1)  mapSugg1[toslp1(Words[ksugg1])]++;
-    if(Words1.size() > ksugg1) mapSugg1[toslp1(Words1[ksugg1])]++;
-    if(PWords1.size() > ksugg1) mapSugg1[toslp1(PWords1[ksugg1])]++;
-    }
+			map<string, int> mapSugg1;
+			for (size_t ksugg1 = 0; ksugg1 < 5; ksugg1++) {
+				if (Words.size() > ksugg1)  mapSugg1[toslp1(Words[ksugg1])]++;
+				if (Words1.size() > ksugg1) mapSugg1[toslp1(Words1[ksugg1])]++;
+				if (PWords1.size() > ksugg1) mapSugg1[toslp1(PWords1[ksugg1])]++;
+			}
 
 
-    for( map<string,int>::const_iterator eptr=mapSugg.begin(); eptr!=mapSugg.end(); eptr++){
-        vecSugg.push_back(make_pair(editDist(toslp1(eptr->first),toslp1(selectedStr)),eptr->first));
-    }
+			for (map<string, int>::const_iterator eptr = mapSugg.begin(); eptr != mapSugg.end(); eptr++) {
+				vecSugg.push_back(make_pair(editDist(toslp1(eptr->first), toslp1(selectedStr)), eptr->first));
+			}
 
-    for( map<string,int>::const_iterator eptr=mapSugg1.begin(); eptr!=mapSugg1.end(); eptr++){
-        vecSugg1.push_back(make_pair(editDist(toslp1(eptr->first),toslp1(selectedStr)),eptr->first));
-    }
+			for (map<string, int>::const_iterator eptr = mapSugg1.begin(); eptr != mapSugg1.end(); eptr++) {
+				vecSugg1.push_back(make_pair(editDist(toslp1(eptr->first), toslp1(selectedStr)), eptr->first));
+			}
 
 
-    //vecSugg.push_back(make_pair(editDist(toslp1(selectedStr),selectedStr),selectedStr));
-    //if(Words.size() > 0) vecSugg.push_back(make_pair(editDist(toslp1(selectedStr),toslp1(Words[0])),Words[0]));
-    //vecSugg.push_back(make_pair(editDist(toslp1(selectedStr),toslp1(Words1[0])),Words1[0]));
-    //vecSugg.push_back(make_pair(editDist(toslp1(selectedStr),toslp1(PairSugg)),PairSugg));
-    sort(vecSugg.begin(), vecSugg.end()); sort(vecSugg1.begin(), vecSugg1.end());
-    //cout << vec[0]  << " " << vec[1]  << " " << vec[2]  << " " << newtrie.next.size() << endl;
-    //Words = suggestions((selectedStr));
-    for ( uint bitarrayi = 0; bitarrayi < vecSugg.size(); bitarrayi++) {
-        act = new QAction( QString::fromStdString(toDev(vecSugg[bitarrayi].second)) , spell_menu);
-        //cout<<vecSugg[bitarrayi].first<<endl;
-        spell_menu->addAction(act);
-        }
+			//vecSugg.push_back(make_pair(editDist(toslp1(selectedStr),selectedStr),selectedStr));
+			//if(Words.size() > 0) vecSugg.push_back(make_pair(editDist(toslp1(selectedStr),toslp1(Words[0])),Words[0]));
+			//vecSugg.push_back(make_pair(editDist(toslp1(selectedStr),toslp1(Words1[0])),Words1[0]));
+			//vecSugg.push_back(make_pair(editDist(toslp1(selectedStr),toslp1(PairSugg)),PairSugg));
+			sort(vecSugg.begin(), vecSugg.end()); sort(vecSugg1.begin(), vecSugg1.end());
+			//cout << vec[0]  << " " << vec[1]  << " " << vec[2]  << " " << newtrie.next.size() << endl;
+			//Words = suggestions((selectedStr));
+			for (uint bitarrayi = 0; bitarrayi < vecSugg.size(); bitarrayi++) {
+				act = new QAction(QString::fromStdString(toDev(vecSugg[bitarrayi].second)), spell_menu);
+				//cout<<vecSugg[bitarrayi].first<<endl;
+				spell_menu->addAction(act);
+			}
 
-    for ( uint bitarrayi = 0; bitarrayi < vecSugg1.size(); bitarrayi++) {
-        if(mapSugg[vecSugg1[bitarrayi].second] < 1){
-        act = new QAction(QString::fromStdString(toDev(vecSugg1[bitarrayi].second)), spell_menu);
-        //cout<<vecSugg1[bitarrayi].first<<endl;
-        spell_menu->addAction(act);
-        }
-        }
-    /*Words =  print5NearestEntries(TDict,selectedStr);
-    if (Words.size() > 0) {
-        act = new QAction(QString::fromStdString(toDev(Words[0])), spell_menu);
+			for (uint bitarrayi = 0; bitarrayi < vecSugg1.size(); bitarrayi++) {
+				if (mapSugg[vecSugg1[bitarrayi].second] < 1) {
+					act = new QAction(QString::fromStdString(toDev(vecSugg1[bitarrayi].second)), spell_menu);
+					//cout<<vecSugg1[bitarrayi].first<<endl;
+					spell_menu->addAction(act);
+				}
+			}
+			/*Words =  print5NearestEntries(TDict,selectedStr);
+			if (Words.size() > 0) {
+				act = new QAction(QString::fromStdString(toDev(Words[0])), spell_menu);
 
-        spell_menu->addAction(act);
+				spell_menu->addAction(act);
 
-    }*/
+			}*/
 
-    popup_menu->insertSeparator(popup_menu->actions()[0]);
-    popup_menu->insertMenu(popup_menu->actions()[0],spell_menu);
-    connect(spell_menu, SIGNAL(triggered(QAction*)), this, SLOT(menuSelection(QAction*)));
-    popup_menu->exec(ev->globalPos());
-    popup_menu->close(); popup_menu->clear();
-    //ui->textBrowser->createStandardContextMenu()->clear();
-    //cursor.select(QTextCursor::WordUnderCursor);
-    vecSugg.clear(); Words1.clear(); Words.clear(); Alligned.clear(); PairSugg.clear();
-    } // if right click
-
+			popup_menu->insertSeparator(popup_menu->actions()[0]);
+			popup_menu->insertMenu(popup_menu->actions()[0], spell_menu);
+			connect(spell_menu, SIGNAL(triggered(QAction*)), this, SLOT(menuSelection(QAction*)));
+			popup_menu->exec(ev->globalPos());
+			popup_menu->close(); popup_menu->clear();
+			//ui->textBrowser->createStandardContextMenu()->clear();
+			//cursor.select(QTextCursor::WordUnderCursor);
+			vecSugg.clear(); Words1.clear(); Words.clear(); Alligned.clear(); PairSugg.clear();
+		} // if right click
+		else {
+			if ((ev->button() == Qt::RightButton) || (RightclickFlag))
+			{
+                secs = TimeLog[mFilename];
+                int nMilliseconds = myTimer.elapsed();
+                secs += nMilliseconds / 1000;
+                int mins = secs / 60;
+                secs = secs - mins * 60;
+                ui->lineEdit->setText(QString::number(mins) + "mins " + QString::number(secs) + " secs elapsed on this page(Right Click to update)");
+                QMenu* popup_menu = ui->textBrowser->createStandardContextMenu();
+				popup_menu->exec(ev->globalPos());
+				popup_menu->close(); popup_menu->clear();
+			}
+		}
+	}
+	else {
+		if ((ev->button() == Qt::RightButton) || (RightclickFlag))
+		{
+			QMenu* popup_menu = ui->textBrowser->createStandardContextMenu();
+			popup_menu->exec(ev->globalPos());
+			popup_menu->close(); popup_menu->clear();
+		}
+	}
 }// if mouse event
+
 
 /*
 QString strPrev = "";
@@ -910,10 +1004,14 @@ void MainWindow::on_actionNew_triggered()
 }
 
 void MainWindow::on_actionSave_triggered()
-{   int nMilliseconds = myTimer.elapsed();
-    secs = nMilliseconds/1000;
-    int mins = secs/60;
-    secs = secs - mins*60;
+{
+    savetimelog();
+
+    secs = TimeLog[mFilename];
+    int nMilliseconds = myTimer.elapsed();
+    secs += nMilliseconds / 1000;
+    int mins = secs / 60;
+    secs = secs - mins * 60;
     ui->lineEdit->setText(QString::number(mins) + "mins " + QString::number(secs) + " secs elapsed on this page(Right Click to update)");
     ConvertSlpDevFlag =1;
     //on_actionSpell_Check_triggered();
@@ -933,7 +1031,7 @@ void MainWindow::on_actionSave_triggered()
         if(currentdirname == "VerifierOutput")
         {
             temp_currentpagename.replace("V2_","V3_");
-			temp_currentpagename.replace("V1_","V2_");
+            temp_currentpagename.replace("V1_","V2_");
         }
         QString changefiledir = filestructure_fw[currentdirname];
         QString localFilename = dir2levelup + "/" +changefiledir +"/" + temp_currentpagename;
@@ -942,15 +1040,15 @@ void MainWindow::on_actionSave_triggered()
 
         QFile sFile(localFilename);
         //if(sFile.open(QFile::WriteOnly | QFile::Text))
-		if(sFile.open(QFile::WriteOnly))
-		{
+        if(sFile.open(QFile::WriteOnly))
+        {
             QTextStream out(&sFile);
-			out.setCodec("UTF-8");
+            out.setCodec("UTF-8");
             QString output = ui->textBrowser->toHtml();
             output = "<style> body{ width: 21cm; height: 29.7cm; margin: 30mm 45mm 30mm 45mm; } </style>" + output;
             out << output;
-			sFile.flush();
-			sFile.close();
+            sFile.flush();
+            sFile.close();
         }
 //		localFilename.replace("html","txt");
 //		QFile sfile2(localFilename);
@@ -1012,18 +1110,18 @@ void MainWindow::on_actionLoadGDocPage_triggered()
 
 void MainWindow::on_actionSave_As_triggered()
 {
-	QString file = QFileDialog::getSaveFileName(this, "Open a File");
-	if (!file.isEmpty())
-	{
-		mFilename = file;
-		int pos1 = mFilename.lastIndexOf("/");
-		dir1levelup = mFilename.mid(0, pos1);
-		currentpagename = mFilename.mid(pos1 + 1, mFilename.length() - pos1);
-		int pos2 = dir1levelup.lastIndexOf("/");
-		dir2levelup = dir1levelup.mid(0, pos2);
-		currentdirname = dir1levelup.mid(pos2 + 1, dir1levelup.length() - pos2);
-		on_actionSave_triggered();
-	}
+    QString file = QFileDialog::getSaveFileName(this, "Open a File");
+    if (!file.isEmpty())
+    {
+        mFilename = file;
+        int pos1 = mFilename.lastIndexOf("/");
+        dir1levelup = mFilename.mid(0, pos1);
+        currentpagename = mFilename.mid(pos1 + 1, mFilename.length() - pos1);
+        int pos2 = dir1levelup.lastIndexOf("/");
+        dir2levelup = dir1levelup.mid(0, pos2);
+        currentdirname = dir1levelup.mid(pos2 + 1, dir1levelup.length() - pos2);
+        on_actionSave_triggered();
+    }
 }
 
 
@@ -1058,7 +1156,7 @@ void MainWindow::on_actionLoadData_triggered()
         // loading Dictionary locally
         string localmFilename1n = localmFilename1.toUtf8().constData();
         localmFilename1n = localmFilename1n.substr(0,localmFilename1n.find("page"));
-		QString str = ui->textBrowser->toHtml();
+        QString str = ui->textBrowser->toHtml();
         localmFilename1 = QString::fromStdString(localmFilename1n);
         mFilename1 = localmFilename1;
 
@@ -1127,7 +1225,7 @@ void MainWindow::on_actionLoadData_triggered()
         on_actionLoad_Prev_Page_triggered();*/
 
             FirstFlag = 0;
-			ui->textBrowser->setHtml(str);
+            ui->textBrowser->setHtml(str);
 
         // Plotting Graph for Black and Gray Words
         //cout<< " Loading Graph values and performing Significance test on Word Length" << endl;
@@ -2727,13 +2825,59 @@ void MainWindow::on_actionFontBlack_triggered()
     ui->textBrowser->setTextColor(Qt::black);
 }
 
+void MainWindow::on_actionSuperscript_triggered() {
+    auto cursor = ui->textBrowser->textCursor();
+    auto selected = cursor.selection();
+    QString sel = selected.toPlainText();
+    cursor.removeSelectedText();
+    sel = "<sup>" + sel + "</sup>";
+    auto newfrag = selected.fromHtml(sel);
+    cursor.insertFragment(newfrag);
+}
+void MainWindow::on_actionSubscript_triggered() {
+    auto cursor = ui->textBrowser->textCursor();
+    auto selected = cursor.selection();
+    cursor.removeSelectedText();
+    QString sel = selected.toPlainText();
+    sel = "<sub>" + sel + "</sub>";
+    auto newfrag = selected.fromHtml(sel);
+    cursor.insertFragment(newfrag);
+}
+void MainWindow::on_actionInsert_Horizontal_Line_triggered()
+{
+    ui->textBrowser->insertHtml("<hr>");
+}
+
+void MainWindow::on_actionLineSpace_triggered()
+{
+    QTextCursor cursor = ui->textBrowser->textCursor();
+    cursor.select(QTextCursor::LineUnderCursor);    
+    QTextBlockFormat f = cursor.blockFormat();
+    int lineheight = f.lineHeight()/100;
+
+    if(lineheight == 0)
+        lineheight = 1;
+
+    double d = QInputDialog::getDouble(this, "Custom Line Space", "Line Space", lineheight);
+    f.setLineHeight(d*100, 1);
+    cursor.select(QTextCursor::LineUnderCursor);
+    cursor.setBlockFormat(f);
+}
+
+void MainWindow::on_actionInset_Tab_Space_triggered()
+{
+    ui->textBrowser->insertPlainText("    ");
+}
+
 /*
 void MainWindow::on_pushButton_2_clicked() //VERIFER
 {
 
     string s1 = "",s2 = "", s3 = ""; QString qs1="", qs2="",qs3="";
     file = QFileDialog::getOpenFileName(this,"Open Verifier's Output File");
-    QString verifiertext = file;
+if(!file.isEmpty())
+    {
+QString verifiertext = file;
     QString correctortext = file.replace("VerifierOutput","CorrectorOutput"); //CAN CHANGE ACCORDING TO FILE STRUCTURE
     QString ocrtext = file.replace("CorrectorOutput","Inds"); //CAN CHANGE ACCORDING TO FILE STRUCTURE
     ocrtext.replace(".html",".txt");
@@ -2825,81 +2969,80 @@ void MainWindow::on_pushButton_2_clicked() //VERIFER
     DiffView *dv = new DiffView(qs1,qs2,qs3,qcorrectorChangesPerc,qverifierChangesPerc,qocrErrorAcc);
     dv->show();
 }
+}
 */
 
 
 void MainWindow::on_pushButton_3_clicked() //Corrector
 {
-    string s1 = "",s2 = ""; QString qs1="", qs2="",qs3="";
+    QString qs1="", qs2="";
     file = QFileDialog::getOpenFileName(this,"Open Corrector's Output File");
-    QString correctortext = file;
-    QString ocrtext = file;
-    ocrtext.replace("CorrectorOutput","Inds"); //CAN CHANGE ACCORDING TO FILE STRUCTURE
-    ocrtext.replace(".html",".txt");
-    ocrtext.replace("V1_","");
-    ocrtext.replace("V2_","");
-    ocrtext.replace("V3_","");
-    QString ocrimage = ocrtext;
-    ocrimage.replace("Inds", "Images");
-    ocrimage.replace(".txt", ".jpeg");
-    ocrimage.replace(".html",".jpeg");
-
-    //ocrtext.replace(".html",".txt");
-    if(!ocrtext.isEmpty())
+    if(!file.isEmpty())
     {
-        QFile sFile(ocrtext);
-        if(sFile.open(QFile::ReadOnly | QFile::Text))
+        QString correctortext = file;
+        QString ocrtext = file;
+        ocrtext.replace("CorrectorOutput","Inds"); //CAN CHANGE ACCORDING TO FILE STRUCTURE
+        ocrtext.replace(".html",".txt");
+        ocrtext.replace("V1_","");
+        ocrtext.replace("V2_","");
+        ocrtext.replace("V3_","");
+        QString ocrimage = ocrtext;
+        ocrimage.replace("Inds", "Images");
+        ocrimage.replace(".txt", ".jpeg");
+        ocrimage.replace(".html",".jpeg");
+
+        //ocrtext.replace(".html",".txt");
+        if(!ocrtext.isEmpty())
         {
-            QTextStream in(&sFile);
-            in.setCodec("UTF-8");
-            QString t = in.readAll();
-            t= t.replace(" \n","\n");
-            qs1=t;
-            sFile.close();
+            QFile sFile(ocrtext);
+            if(sFile.open(QFile::ReadOnly | QFile::Text))
+            {
+                QTextStream in(&sFile);
+                in.setCodec("UTF-8");
+                qs1 = in.readAll().replace(" \n","\n");
+                if(qs1=="") {
+                    DisplayError("Error in Displaying File: "+ ocrtext+ "is Empty");
+                    return;      }
+                sFile.close();
+            }
+
         }
+        if(!correctortext.isEmpty())
+        {
+            QFile sFile(correctortext);
+            if(sFile.open(QFile::ReadOnly | QFile::Text))
+            {
+                QTextStream in(&sFile);
+                in.setCodec("UTF-8");
+                qs2 = in.readAll();
+                if(qs2=="") {
+                    DisplayError("Error in Displaying File: "+ correctortext + "is Empty");
+                    return;      }
+                sFile.close();
+            }
+
+        }
+        QTextDocument doc;
+        doc.setHtml(qs2);
+        qs2 = doc.toPlainText().replace(" \n", "\n");
+
+        int l1,l2, DiffOcr_Corrector; float correctorChangesPerc;
+
+        l1 = qs1.length(); l2 = qs2.length();
+
+        diff_match_patch dmp;
+        auto diffs1 = dmp.diff_main(qs1,qs2);
+        DiffOcr_Corrector = dmp.diff_levenshtein(diffs1);
+        correctorChangesPerc = ((float)(DiffOcr_Corrector)/(float)l2)*100;
+        if(correctorChangesPerc>100) correctorChangesPerc = ((float)(DiffOcr_Corrector)/(float)l1)*100;
+        correctorChangesPerc = (((float)lround(correctorChangesPerc*100))/100);
+
+        InternDiffView *dv = new InternDiffView(qs1,qs2,ocrimage,QString::number(correctorChangesPerc)); //Fetch OCR Image in DiffView2 and Set
+        dv->show();
 
     }
-    if(!correctortext.isEmpty())
-    {
-        QFile sFile(correctortext);
-        if(sFile.open(QFile::ReadOnly | QFile::Text))
-        {
-            QTextStream in(&sFile);
-            in.setCodec("UTF-8");
-            QString t = in.readAll();
-            t= t.replace(" \n","\n");
-            qs2=t;
-            sFile.close();
-        }
-
-    }
-    QTextDocument doc;
-    QString t;
-
-    doc.setHtml(qs1);
-    qs1 = doc.toPlainText();
-    t = qs1;  t.replace(" ", "");
-    s1 = t.toUtf8().constData();
-
-    doc.setHtml(qs2);
-    qs2 = doc.toPlainText();
-    t = qs2; t.replace(" ", "");
-    s2 = t.toUtf8().constData();
-
-    int l1,l2, levenshtein; float accuracy;
-    l1 = s1.length();
-    l2= s2.length();
-
-    levenshtein = editDist(s2,s1);
-    //qDebug() <<levenshtein << "levenshtein";
-    accuracy = ((float)(levenshtein)/(float)l1)*100;
-    if(accuracy<0) accuracy = ((float)(levenshtein)/(float)l2)*100;
-    //qDebug() <<accuracy << "accuracy";
-    //ui->lineEdit_2->setText(QString::number(accuracy) + "% Similar");
-    QString diff = QString::number(((float)lround(accuracy*100))/100);
-    InternDiffView *dv = new InternDiffView(qs1,qs2,ocrimage,diff); //Fetch OCR Image in DiffView2 and Set
-    dv->show();
 }
+
 
 void MainWindow::on_actionAccuracyLog_triggered()
 {
@@ -2928,11 +3071,6 @@ void MainWindow::on_actionAccuracyLog_triggered()
         QString verifiertext = filename;
         QString ocrtext = filename.replace("VerifierOutput","Inds"); //CAN CHANGE ACCORDING TO FILE STRUCTURE
         QString correctortext = filename.replace("Inds","CorrectorOutput"); //CAN CHANGE ACCORDING TO FILE STRUCTURE
-
-        ocrtext.replace(".html",".txt");
-        ocrtext.replace("V1_","");
-        ocrtext.replace("V2_","");
-        ocrtext.replace("V3_","");
 
         if(!ocrtext.isEmpty())
         {
@@ -2971,6 +3109,10 @@ void MainWindow::on_actionAccuracyLog_triggered()
        int l1,l2,l3, DiffOcr_Corrector,DiffCorrector_Verifier,DiffOcr_Verifier; float correctorChangesPerc,verifierChangesPerc,ocrErrorPerc;
 
        l1 = qs1.length(); l2 = qs2.length(); l3 = qs3.length();
+       if(qs1=="" | qs2 == "" | qs3 == "")
+       {
+           continue;
+       }
 
        diff_match_patch dmp;
 
@@ -2997,7 +3139,6 @@ void MainWindow::on_actionAccuracyLog_triggered()
         auto lineText1 = a[0].toString();
         auto lineText2 = a[1].toString();
         auto lineArray = a[2].toStringList();
-
         int wordcount = lineArray.count();
         auto diffs = dmp.diff_main(lineText1, lineText2);
         int worderrors = dmp.diff_levenshtein(diffs);
@@ -3046,22 +3187,22 @@ void MainWindow::on_viewallcomments_clicked()
         pagename.replace(".txt", "");
         pagename.replace(".html", "");
         int totalcharerr = 0, totalworderr = 0, rating = 0; QString comments = ""; float wordacc,characc;
-    
+
         QFile jsonFile(commentFilename);
         jsonFile.open(QIODevice::ReadOnly | QIODevice::Text);
         QByteArray data = jsonFile.readAll();
-    
+
         QJsonParseError errorPtr;
         QJsonDocument document = QJsonDocument::fromJson(data, &errorPtr);
         QJsonObject mainObj = document.object();
         QJsonObject pages = mainObj.value("pages").toObject();
         QJsonObject page = pages.value(pagename).toObject();
-    
+
         if(document.isNull())
         {
             //qDebug()<<"empty json/parse error";
         }
-    
+
         comments = page.value("comments").toString();
         rating = page.value("rating").toInt();
         totalcharerr = page.value("charerrors").toInt();
@@ -3069,7 +3210,7 @@ void MainWindow::on_viewallcomments_clicked()
         wordacc = page.value("wordaccuracy").toDouble();
         characc = page.value("characcuracy").toDouble();
 
-    
+
         jsonFile.close();
 
         CommentsView *cv = new CommentsView(totalworderr,totalcharerr,wordacc,characc,comments,commentFilename, rating);
@@ -3099,26 +3240,4 @@ void MainWindow::on_actionViewAverageAccuracies_triggered()
 
     AverageAccuracies *aa = new AverageAccuracies(csvfile, avgwordacc, avgcharacc, avgworderrors, avgcharerrors);
     aa->show();
-}
-void MainWindow::on_actionSuperscript_triggered() {
-	auto cursor = ui->textBrowser->textCursor();
-	auto selected = cursor.selection();
-	QString sel = selected.toPlainText();
-	cursor.removeSelectedText();
-	sel = "<sup>" + sel + "</sup>";
-	auto newfrag = selected.fromHtml(sel);
-	cursor.insertFragment(newfrag);
-}
-void MainWindow::on_actionSubscript_triggered() {
-	auto cursor = ui->textBrowser->textCursor();
-	auto selected = cursor.selection();
-	cursor.removeSelectedText();
-	QString sel = selected.toPlainText();
-	sel = "<sub>" + sel + "</sub>";
-	auto newfrag = selected.fromHtml(sel);
-	cursor.insertFragment(newfrag);
-}
-void MainWindow::on_actionInsert_Horizontal_Line_triggered()
-{
-    ui->textBrowser->insertHtml("<hr>");
 }

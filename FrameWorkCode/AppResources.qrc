@@ -22,5 +22,6 @@
         <file>toDevangari.png</file>
         <file>JustifiedAlign.png</file>
         <file>highlight-icon.png</file>
+        <file>linespacing.png</file>
     </qresource>
 </RCC>
