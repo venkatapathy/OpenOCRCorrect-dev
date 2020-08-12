@@ -194,6 +194,10 @@ private slots:
 
     void savetimelog();
 
+	void on_actionZoom_In_triggered();
+
+	void on_actionZoom_Out_triggered();
+
     void on_actionLineSpace_triggered();
 
     void on_actionInset_Tab_Space_triggered();

@@ -108,9 +108,15 @@
      </layout>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout">
+     <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,1,1">
       <item>
        <widget class="QTextEdit" name="textEdit">
+        <property name="minimumSize">
+         <size>
+          <width>120</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="maximumSize">
          <size>
           <width>120</width>
@@ -133,6 +139,18 @@
       </item>
       <item>
        <widget class="QTextBrowser" name="textBrowser">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>600</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="font">
          <font>
           <family>Shobhika</family>
@@ -171,15 +189,21 @@ p, li { white-space: pre-wrap; }
       </item>
       <item>
        <widget class="QGraphicsView" name="graphicsView">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="minimumSize">
          <size>
-          <width>608</width>
+          <width>500</width>
           <height>0</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>608</width>
+          <width>700</width>
           <height>16777215</height>
          </size>
         </property>
@@ -213,7 +237,7 @@ p, li { white-space: pre-wrap; }
      <x>0</x>
      <y>0</y>
      <width>1296</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuOCR_Correction_Window">
@@ -352,9 +376,13 @@ p, li { white-space: pre-wrap; }
    <addaction name="actionCentreAlign"/>
    <addaction name="actionRightAlign"/>
    <addaction name="actionJusitfiedAlign"/>
+   <addaction name="separator"/>
    <addaction name="actionLineSpace"/>
    <addaction name="separator"/>
    <addaction name="actionFontBlack"/>
+   <addaction name="separator"/>
+   <addaction name="actionZoom_In"/>
+   <addaction name="actionZoom_Out"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionOpen">
@@ -778,6 +806,24 @@ p, li { white-space: pre-wrap; }
     <string>Ctrl+T</string>
    </property>
   </action>
+  <action name="actionZoom_In">
+   <property name="icon">
+    <iconset resource="AppResources.qrc">
+     <normaloff>:/Images/Zoom-In-icon.png</normaloff>:/Images/Zoom-In-icon.png</iconset>
+   </property>
+   <property name="text">
+    <string>Zoom In</string>
+   </property>
+  </action>
+  <action name="actionZoom_Out">
+   <property name="icon">
+    <iconset resource="AppResources.qrc">
+     <normaloff>:/Images/Zoom-Out-icon.png</normaloff>:/Images/Zoom-Out-icon.png</iconset>
+   </property>
+   <property name="text">
+    <string>Zoom Out</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <tabstops>
@@ -785,8 +831,6 @@ p, li { white-space: pre-wrap; }
   <tabstop>graphicsView</tabstop>
  </tabstops>
  <resources>
-  <include location="AppResources.qrc"/>
-  <include location="AppResources.qrc"/>
   <include location="AppResources.qrc"/>
  </resources>
  <connections/>

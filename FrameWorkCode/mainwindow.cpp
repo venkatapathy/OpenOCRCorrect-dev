@@ -79,7 +79,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->textEdit->setFont(font);
     ui->textEdit->setText(str);
     ui->textEdit->setFont(font);
-
 }
 
 MainWindow::~MainWindow()
@@ -172,6 +171,18 @@ void MainWindow::savetimelog()
     QFile jsonFile(TimeLogLocation);
     jsonFile.open(QIODevice::WriteOnly);
     jsonFile.write(document.toJson());
+}
+
+void MainWindow::on_actionZoom_In_triggered()
+{
+    if (z)
+        z->gentle_zoom(1.1);
+}
+
+void MainWindow::on_actionZoom_Out_triggered()
+{
+    if (z)
+        z->gentle_zoom(0.9);
 }
 
 void MainWindow::on_actionLoad_Next_Page_triggered()
@@ -482,7 +493,6 @@ void MainWindow::on_actionOpen_triggered()
                    ui->textBrowser->setFont(font);
                    ui->textBrowser->setHtml(qstrHtml);
                    ui->textBrowser->setFont(font);
-
                 }
                 initialtexthtml = ui->textBrowser->toHtml();
 
@@ -2851,17 +2861,20 @@ void MainWindow::on_actionInsert_Horizontal_Line_triggered()
 void MainWindow::on_actionLineSpace_triggered()
 {
     QTextCursor cursor = ui->textBrowser->textCursor();
-    cursor.select(QTextCursor::LineUnderCursor);    
-    QTextBlockFormat f = cursor.blockFormat();
-    int lineheight = f.lineHeight()/100;
-
-    if(lineheight == 0)
-        lineheight = 1;
-
-    double d = QInputDialog::getDouble(this, "Custom Line Space", "Line Space", lineheight);
-    f.setLineHeight(d*100, 1);
-    cursor.select(QTextCursor::LineUnderCursor);
-    cursor.setBlockFormat(f);
+    QTextBlockFormat format = cursor.blockFormat();
+    int pointSize = format.FontPointSize;
+    double lineHeight = format.lineHeight()/100;
+    bool False = false;
+    bool *ok = &False;
+    if(lineHeight == 0)
+        lineHeight = 1;
+    double inputLineSpace = QInputDialog::getDouble(this, "Custom Line Space", "Line Space", lineHeight, 0, 10, 2,ok);
+    if(*ok) {
+        // LineHeight(x,1) sets x as a percentage with base as 100
+        //200 is Double LineSpace and 50 is half LineSpace
+        format.setLineHeight(inputLineSpace*100, 1);
+        cursor.setBlockFormat(format);
+    }
 }
 
 void MainWindow::on_actionInset_Tab_Space_triggered()

@@ -1,5 +1,7 @@
 <RCC>
     <qresource prefix="/Images">
+        <file>Zoom-In-icon.png</file>
+        <file>Zoom-Out-icon.png</file>
         <file>undo.png</file>
         <file>save.png</file>
         <file>save-as.png</file>
