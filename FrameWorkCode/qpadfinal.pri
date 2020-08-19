@@ -4,7 +4,7 @@
 
 # This is a reminder that you are using a generated .pro file.
 # Remove it when you are finished editing this file.
-message("You are running qmake on a generated .pro file. This may not work!")
+#message("You are running qmake on a generated .pro file. This may not work!")
 
 
 HEADERS += ./3rdParty/RapidXML/rapidxml.hpp \
@@ -45,7 +45,30 @@ HEADERS += ./3rdParty/RapidXML/rapidxml.hpp \
     ./TreeModel.h \
     ./zoom.h \
     ./commentsview.h \
-    ./averageaccuracies.h
+    ./averageaccuracies.h\
+    ./SimpleMail/emailaddress.h \
+    ./SimpleMail/emailaddress_p.h \
+    ./SimpleMail/mimeattachment.h \
+    ./SimpleMail/mimecontentformatter.h \
+    ./SimpleMail/mimefile.h \
+    ./SimpleMail/mimehtml.h \
+    ./SimpleMail/mimeinlinefile.h \
+    ./SimpleMail/mimemessage.h \
+    ./SimpleMail/mimemessage_p.h \
+    ./SimpleMail/mimemultipart.h \
+    ./SimpleMail/mimemultipart_p.h \
+    ./SimpleMail/mimepart.h \
+    ./SimpleMail/mimepart_p.h \
+    ./SimpleMail/mimetext.h \
+    ./SimpleMail/quotedprintable.h \
+    ./SimpleMail/sender.h \
+    ./SimpleMail/sender_p.h \
+    ./SimpleMail/server.h \
+    ./SimpleMail/server_p.h \
+    ./SimpleMail/serverreply.h \
+    ./SimpleMail/serverreply_p.h \
+    ./SimpleMail/SimpleMail \
+    ./SimpleMail/smtpexports.h
 SOURCES += ./Filters.cpp \
     ./Project.cpp \
     ./ProjectHierarchyWindow.cpp \
@@ -59,11 +82,32 @@ SOURCES += ./Filters.cpp \
     ./qcustomplot.cpp \
     ./zoom.cpp \
     ./commentsview.cpp \
-    ./averageaccuracies.cpp
+    ./averageaccuracies.cpp \
+    ./SimpleMail/emailaddress.cpp \
+    ./SimpleMail/mimeattachment.cpp \
+    ./SimpleMail/mimecontentformatter.cpp \
+    ./SimpleMail/mimefile.cpp \
+    ./SimpleMail/mimehtml.cpp \
+    ./SimpleMail/mimeinlinefile.cpp \
+    ./SimpleMail/mimemessage.cpp \
+    ./SimpleMail/mimemultipart.cpp \
+    ./SimpleMail/mimepart.cpp \
+    ./SimpleMail/mimetext.cpp \
+    ./SimpleMail/quotedprintable.cpp \
+    ./SimpleMail/sender.cpp \
+    ./SimpleMail/server.cpp \
+    ./SimpleMail/serverreply.cpp \
+    $$PWD/lg2_common.cpp
+
 FORMS += ./DiffView.ui \
     ./interndiffview.ui \
     ./mainwindow.ui \
     ./ProjectHierarchyWindow.ui \
     ./commentsview.ui \
     ./averageaccuracies.ui
+
+DISTFILES += \
+    SimpleMail/simplemail-qt5.pc.in \
+    SimpleMail/CMakeLists.txt
+
 RESOURCES += AppResources.qrc

@@ -43,7 +43,7 @@ public:
 	Filter * GetFilter() {
 		return mFilter;
 	}
-	TreeItem * FindFileNode(QFile*f,TreeItem * item) {
+    TreeItem *FindFileNode(QFile *f,TreeItem *item) {
 		if (!item->file) {
 			if (f->fileName() == item->file->fileName())
 			{
@@ -53,8 +53,8 @@ public:
 		if (item->mChildItems.size() == 0) return nullptr;
 		else
 		{
-			TreeItem * retnVal = nullptr;
-			for (TreeItem * n : mChildItems) {
+            TreeItem *retnVal = nullptr;
+            for (TreeItem *n : mChildItems) {
 				retnVal = FindFileNode(f, item);
 				if (retnVal) return retnVal;
 			}
@@ -62,7 +62,7 @@ public:
 		}
 	}
 
-	void RemoveNode(TreeItem * item) {
+    void RemoveNode(TreeItem *item) {
 		int id = mChildItems.indexOf(item);
 		if (id < mChildItems.size()) {
 			mChildItems.remove(id);

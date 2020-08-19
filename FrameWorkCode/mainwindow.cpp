@@ -26,6 +26,7 @@
 #include <set>
 #include <algorithm>
 #include <QSet>
+#include<SimpleMail/SimpleMail>
 //# include <QTask>
 
 //gs -dNOPAUSE -dBATCH -sDEVICE=jpeg -r300 -sOutputFile='page-%00d.jpeg' Book.pdf
@@ -3019,15 +3020,16 @@ void MainWindow::on_actionCommit_triggered() {
 	mProject.commit(text.toStdString());
 }
 void MainWindow::on_actionTurn_In_triggered() {
-	mProject.push();
-	mProject.disable_push();
-	auto list = ui->menuGit->actions();
-	for (auto a : list) {
-		QString name = a->text();
-		if (name == "Turn In") {
-			a->setEnabled(false);
-		}
-	}
+    mProject.push();
+    mProject.disable_push();
+    auto list = ui->menuGit->actions();
+    for (auto a : list) {
+        QString name = a->text();
+        if (name == "Turn In") {
+            a->setEnabled(false);
+        }
+    }
+    //on_actionSend_Email_triggered();
 }
 void MainWindow::on_actionFetch_2_triggered() {
 	mProject.fetch();
@@ -3300,4 +3302,75 @@ void MainWindow::directoryChanged(const QString &path) {
 			verifier_set.insert(f);
 		}
 	}
+}
+void MainWindow::on_actionSend_Email_triggered()
+{
+             //json file
+            QString projectId = "B0001"; //should be added in project.xml file and fetched from there
+            QString userId = "U0001";    //fetch on sign in
+            QString userRole = "Corrector";  //fetch on sign in
+            QString projectJsonFilePath = "ProjectJson.json";   //add location
+            QString userJsonFilePath = "UserJson.json";  //add location
+
+            QFile projectJsonFile(projectJsonFilePath);
+            projectJsonFile.open(QIODevice::ReadOnly | QIODevice::Text);
+            QByteArray projectData = projectJsonFile.readAll();
+
+            QJsonDocument projectDocument = QJsonDocument::fromJson(projectData);
+            QJsonObject projectObj = projectDocument.object();
+            QJsonObject project = projectObj.value(projectId).toObject();
+
+            //Project or Book JSON
+            QString projectName = project["Name"].toString();
+            QString correctorId = project["Corrector"].toString();
+            QString verifierId = project["Verifier"].toString();
+            QString projectManagerId = project["Project Manager"].toString();
+            QString sanityCheckerId = project["Sanity Checker"].toString();
+            QString repositoryLink = project["Repository Link"].toString();
+
+            projectJsonFile.close();
+
+            //User JSON
+            QFile userJsonFile(userJsonFilePath);
+            userJsonFile.open(QIODevice::ReadOnly | QIODevice::Text);
+            QByteArray userData = userJsonFile.readAll();
+
+            QJsonDocument userDocument = QJsonDocument::fromJson(userData);
+            QJsonObject userObj = userDocument.object();
+
+            QJsonObject corrector = userObj.value(correctorId).toObject();
+            QString correctorMail = corrector["Mail"].toString();
+
+            QJsonObject verifier = userObj.value(verifierId).toObject();
+            QString verifierMail = verifier["Mail"].toString();
+
+            QJsonObject projectManager = userObj.value(projectManagerId).toObject();
+            QString projectManagerMail = projectManager["Mail"].toString();
+
+            QJsonObject sanityChecker = userObj.value(sanityCheckerId).toObject();
+            QString sanityCheckerMail = sanityChecker["Mail"].toString();
+            qDebug()<< sanityCheckerMail;
+            userJsonFile.close();
+
+            SimpleMail::Sender sender ("smtp.gmail.com", 465, SimpleMail::Sender::SslConnection);
+            sender.setUser("xiesecomps1@gmail.com");
+            sender.setPassword("omkar17897");
+            SimpleMail::MimeMessage message;
+            message.setSender(SimpleMail::EmailAddress("aksharanveshini.iitb@gmail.com", "Akshar Anveshini"));
+
+            QList <SimpleMail::EmailAddress> listRecipients;
+            if(userRole=="Corrector"){
+                listRecipients.append(verifierMail);
+                listRecipients.append(projectManagerMail);
+                listRecipients.append(sanityCheckerMail);
+               }
+                message.setToRecipients(listRecipients);
+                message.setSubject("Testing Subject");
+                SimpleMail::MimeText *text = new SimpleMail::MimeText();
+                text->setText("Hi,\nThis is a simple email message.\n");
+                message.addPart(text);
+                if(!sender.sendMail(message))
+                    QMessageBox::about(this,"Network-Connection Error!","Turn-In Unsuccessful!,Please Check your Internet Connection");
+                else
+                    QMessageBox::about(this,"Succesful","Succefully Turned-in!");
 }

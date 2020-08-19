@@ -6,7 +6,7 @@ class TreeModel : public QAbstractItemModel
 	Q_OBJECT
 public:
 	
-	explicit TreeModel( QObject *pParent = nullptr){}
+    explicit TreeModel(QObject *pParent = nullptr){}
 	~TreeModel();
 	QVariant data(const QModelIndex & pIndex, int pRole) const override;
 	Qt::ItemFlags flags(const QModelIndex &pIndex) const override;
