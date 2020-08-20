@@ -3044,6 +3044,7 @@ void MainWindow::on_actionVerifier_Turn_In_triggered() {
 			a->setEnabled(true);
 		}
 	}
+    //on_actionSend_Email_triggered();
 }
 QString GetFilter(QString & Name, const QStringList &list) {
 
@@ -3309,8 +3310,8 @@ void MainWindow::on_actionSend_Email_triggered()
             QString projectId = "B0001"; //should be added in project.xml file and fetched from there
             QString userId = "U0001";    //fetch on sign in
             QString userRole = "Corrector";  //fetch on sign in
-            QString projectJsonFilePath = "ProjectJson.json";   //add location
-            QString userJsonFilePath = "UserJson.json";  //add location
+            QString projectJsonFilePath = "/ProjectJson.json";   //add location
+            QString userJsonFilePath = "/UserJson.json";  //add location
 
             QFile projectJsonFile(projectJsonFilePath);
             projectJsonFile.open(QIODevice::ReadOnly | QIODevice::Text);
