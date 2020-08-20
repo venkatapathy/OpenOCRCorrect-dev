@@ -11,6 +11,7 @@
 #include "diff_match_patch.h"
 #include "interndiffview.h"
 #include "commentsview.h"
+#include "diacriticsview.h"
 #include <string>
 #include <fstream>
 #include <vector>
@@ -28,20 +29,15 @@ vector<QString> vs; vector<int> vx,vy,vw,vh,vright;
 map<string, vector<string>> SRules;
 map<string, string> TopConfusions;
 map<string, int> TopConfusionsMask;
-map<QString, int> TimeLog;
-QString TimeLogLocation;
+map<QString, int> timeLog;
+QString gTimeLogLocation;
 string alignment = "left";
-bool prevTRig = 0;
+bool gPrevTRig = 0;
 //map<string, int> GPage; trie TGPage;
 //map<string, int> PWords;//Common/Possitive OCR Words // already defined before
 map<string, string> CPair;//Correction Pairs
-bool highlightchecked = false;
-map<int, QString> commentdict;
-map<int,  vector<int>> commentederrors;
-int openedFileChars;
-int openedFileWords;
-QString dir1levelup,dir2levelup,currentpagename, currentdirname;
-QString initialtexthtml;
+QString gDirOneLevelUp,gDirTwoLevelUp,gCurrentPageName, gCurrentDirName;
+QString gInitialTextHtml;
 map<QString, QString> filestructure_fw = {
                                             {"Inds","CorrectorOutput"},
                                             {"CorrectorOutput","CorrectorOutput"},
@@ -55,7 +51,6 @@ map<QString, QString> fileversion_fw = {
                                             {"V1_","V2_"},
                                             {"V2_","V3_"}
                                          };
-
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -150,17 +145,17 @@ void DisplayError(QString error)
 //bool OPENSPELLFLAG = 1;// TO NOT CONVERT ASCII STRINGS TO DEVANAGARI ON OPENING WHEN SPELLCHECK IS CLICKED
 QString file = "";
 bool fileFlag = 0;
-QTime myTimer;
-int secs;
+QElapsedTimer myTimer;
+int gSeconds;
 
 
 
-void MainWindow::savetimelog()
+void MainWindow::SaveTimeLog()
 {
     QJsonObject mainObj;
     QJsonObject page;
     QJsonDocument document;
-    for (auto i = TimeLog.begin(); i!=TimeLog.end(); i++ )
+    for (auto i = timeLog.begin(); i!=timeLog.end(); i++ )
     {
         page["directory"] = i->first;
         page["seconds"] = i->second;
@@ -168,7 +163,7 @@ void MainWindow::savetimelog()
     }
     document.setObject(mainObj);
 
-    QFile jsonFile(TimeLogLocation);
+    QFile jsonFile(gTimeLogLocation);
     jsonFile.open(QIODevice::WriteOnly);
     jsonFile.write(document.toJson());
 }
@@ -187,18 +182,19 @@ void MainWindow::on_actionZoom_Out_triggered()
 
 void MainWindow::on_actionLoad_Next_Page_triggered()
 {
-    if(initialtexthtml.compare(ui->textBrowser->toHtml()))
+    if(gInitialTextHtml.compare(ui->textBrowser->toHtml()))
     {
-        int btn = QMessageBox::question(this, "Save?", "Do you want to save this file?", QMessageBox::StandardButton::Ok, QMessageBox::StandardButton::No);
+        int btn = QMessageBox::question(this, "Save?", "Do you want to save this file?",
+                                        QMessageBox::StandardButton::Ok, QMessageBox::StandardButton::No);
         if (btn == QMessageBox::StandardButton::Ok)
             on_actionSave_triggered();
     }
 
     string localFilename = mFilename.toUtf8().constData();
     int nMilliseconds = myTimer.elapsed();
-    secs = nMilliseconds/1000;
-    TimeLog[mFilename] += secs;
-    savetimelog();
+    gSeconds = nMilliseconds/1000;
+    timeLog[mFilename] += gSeconds;
+    SaveTimeLog();
 
     string nos = "0123456789";
     size_t loc = localFilename.find(".txt");
@@ -224,17 +220,18 @@ void MainWindow::on_actionLoad_Next_Page_triggered()
 
 void MainWindow::on_actionLoad_Prev_Page_triggered()
 {
-    if(initialtexthtml.compare(ui->textBrowser->toHtml())) {
-        int btn = QMessageBox::question(this, "Save?", "Do you want to save this file?", QMessageBox::StandardButton::Ok, QMessageBox::StandardButton::No);
+    if(gInitialTextHtml.compare(ui->textBrowser->toHtml())) {
+        int btn = QMessageBox::question(this, "Save?", "Do you want to save this file?",
+                                        QMessageBox::StandardButton::Ok, QMessageBox::StandardButton::No);
         if (btn == QMessageBox::StandardButton::Ok)
             on_actionSave_triggered();
     }
     string localFilename = mFilename.toUtf8().constData();
     int nMilliseconds = myTimer.elapsed();
-    secs = nMilliseconds/1000;
-    TimeLog[mFilename] += secs;
+    gSeconds = nMilliseconds/1000;
+    timeLog[mFilename] += gSeconds;
 
-    savetimelog();
+    SaveTimeLog();
 
     string nos = "0123456789";
     size_t loc = localFilename.find(".txt");
@@ -248,10 +245,10 @@ void MainWindow::on_actionLoad_Prev_Page_triggered()
     localFilename.replace(loc,no.size(),to_string(stoi(no) - 1));
     file = QString::fromStdString(localFilename); fileFlag = 1;
     //OPENSPELLFLAG = 1;
-    prevTRig =1;
+    gPrevTRig =1;
     on_actionOpen_triggered();
     fileFlag = false;
-    prevTRig =0;
+    gPrevTRig =0;
 }
 
 
@@ -311,81 +308,80 @@ void MainWindow::on_actionOpen_triggered()
     {
         file = QFileDialog::getOpenFileName(this, "Open a File");
     }
+    QString localmFilename1;
 
+    if(!file.isEmpty()) {
+        QFile sFile(file);
 
-        QString localmFilename1;
-        if(!file.isEmpty()){
-            QFile sFile(file);
-            if(sFile.open(QFile::ReadOnly)) //modified
+        if(sFile.open(QFile::ReadOnly)) {
+            mFilename = file;
+
+            //FILE STRUCTURE BREAKDOWN
+            int pos1 = mFilename.lastIndexOf("/");
+            gDirOneLevelUp = mFilename.mid(0,pos1);
+            gCurrentPageName = mFilename.mid(pos1+1,mFilename.length()-pos1);
+            int pos2 = gDirOneLevelUp.lastIndexOf("/");
+            gDirTwoLevelUp = gDirOneLevelUp.mid(0,pos2);
+            gCurrentDirName = gDirOneLevelUp.mid(pos2+1,gDirOneLevelUp.length()-pos2);
+
+            localmFilename1 = mFilename;
+            string localFilename =  localmFilename1.toUtf8().constData();
+
+            gTimeLogLocation = gDirTwoLevelUp + "/Comments/Timelog.json";
+            if(!fileFlag)
             {
-                mFilename = file;
-                //FILE STRUCTURE BREAKDOWN
+                QFile jsonFile(gTimeLogLocation);
+                jsonFile.open(QIODevice::ReadOnly | QIODevice::Text);
+                QByteArray data = jsonFile.readAll();
 
-                int pos1 = mFilename.lastIndexOf("/");
-                dir1levelup = mFilename.mid(0,pos1);
-                currentpagename = mFilename.mid(pos1+1,mFilename.length()-pos1);
-                int pos2 = dir1levelup.lastIndexOf("/");
-                dir2levelup = dir1levelup.mid(0,pos2);
-                currentdirname = dir1levelup.mid(pos2+1,dir1levelup.length()-pos2);
+                QJsonParseError errorPtr;
+                QJsonDocument document = QJsonDocument::fromJson(data, &errorPtr);
+                QJsonObject mainObj = document.object();
+                jsonFile.close();
 
-                localmFilename1 = mFilename;
-                string localFilename =  localmFilename1.toUtf8().constData();
-
-                TimeLogLocation = dir2levelup + "/Comments/Timelog.json";
-                if(!fileFlag)
+                foreach(const QJsonValue &val, mainObj)
                 {
-                    QFile jsonFile(TimeLogLocation);
-                    jsonFile.open(QIODevice::ReadOnly | QIODevice::Text);
-                    QByteArray data = jsonFile.readAll();
+                    QString directory = val.toObject().value("directory").toString();
+                    int seconds    = val.toObject().value("seconds").toInt();
+                    timeLog[directory] = seconds;
+                }
+            }
 
-                    QJsonParseError errorPtr;
-                    QJsonDocument document = QJsonDocument::fromJson(data, &errorPtr);
-                    QJsonObject mainObj = document.object();
-                    jsonFile.close();
 
-                    foreach(const QJsonValue &val, mainObj)
-                    {
-                        QString directory = val.toObject().value("directory").toString();
-                        int seconds    = val.toObject().value("seconds").toInt();
-                        TimeLog[directory] = seconds;
+            // load vIPage and vCPage for calculating WER if corresponding CPage exist
+            /*vIPage.clear(); vCPage.clear();
+            //QString localmFilename1 = mFilename;
+            std::ifstream ssIPage(localmFilename1.toUtf8().constData());
+            string localstr;
+            while(ssIPage >> localstr) vIPage.push_back(localstr); ssIPage.close();
+            localmFilename1.replace("Inds","Correct");
+            std::ifstream ssCPage(localmFilename1.toUtf8().constData()); localmFilename1 = mFilename;
+
+            vCPage.clear();
+            if (ssCPage.is_open()){
+             while(ssCPage >> localstr) {vCPage.push_back(localstr); } ssCPage.close();
+                int vGsz = vCPage.size(), vIsz =  vIPage.size();
+                cout << vGsz << " " << vIsz << endl;
+                int win = vGsz  - vIsz;
+                if(win<0) win = -1*win;
+                win = maxIG(win,5);
+                cout << win << endl;
+                float WER = 0;
+                // search for a word(pre space, post space as well) in Indsenz within win sized window in GDocs and if found then add to PWords
+                for(int t = 0; t < vIsz;t++){
+                    string s1 = vIPage[t]; //(vGBook[t1].find(s1) != string::npos) || (vGBook[t1] == s1)
+                    for(int t1 = maxIG(t-win,0); t1 < min(t+win,vGsz); t1++){
+                        if (vCPage[t1] == s1) {WER++; break;}
                     }
                 }
+                cout << vIsz - WER << endl;
+                ui->lineEdit->setText("Page WER = " + QString::number((vIsz-WER)*100/vIsz));
+            }
+            */
 
 
-                // load vIPage and vCPage for calculating WER if corresponding CPage exist
-                /*vIPage.clear(); vCPage.clear();
-                //QString localmFilename1 = mFilename;
-                std::ifstream ssIPage(localmFilename1.toUtf8().constData());
-                string localstr;
-                while(ssIPage >> localstr) vIPage.push_back(localstr); ssIPage.close();
-                localmFilename1.replace("Inds","Correct");
-                std::ifstream ssCPage(localmFilename1.toUtf8().constData()); localmFilename1 = mFilename;
-
-                vCPage.clear();
-                if (ssCPage.is_open()){
-                 while(ssCPage >> localstr) {vCPage.push_back(localstr); } ssCPage.close();
-                    int vGsz = vCPage.size(), vIsz =  vIPage.size();
-                    cout << vGsz << " " << vIsz << endl;
-                    int win = vGsz  - vIsz;
-                    if(win<0) win = -1*win;
-                    win = maxIG(win,5);
-                    cout << win << endl;
-                    float WER = 0;
-                    // search for a word(pre space, post space as well) in Indsenz within win sized window in GDocs and if found then add to PWords
-                    for(int t = 0; t < vIsz;t++){
-                        string s1 = vIPage[t]; //(vGBook[t1].find(s1) != string::npos) || (vGBook[t1] == s1)
-                        for(int t1 = maxIG(t-win,0); t1 < min(t+win,vGsz); t1++){
-                            if (vCPage[t1] == s1) {WER++; break;}
-                        }
-                    }
-                    cout << vIsz - WER << endl;
-                    ui->lineEdit->setText("Page WER = " + QString::number((vIsz-WER)*100/vIsz));
-                }
-                */
-
-
-                // load and set data in Browzer
-                // if file exist in corrected open that else open file in Indz
+            // load and set data in Browzer
+            // if file exist in corrected open that else open file in Indz
 //                QString tesslocalmFilename = localmFilename1;
 //                Pix * image1;
 //                image1 = pixRead((tesslocalmFilename.replace(QString("txt"),QString("jpeg"))).toUtf8().constData());//phototest.tif
@@ -436,106 +432,95 @@ void MainWindow::on_actionOpen_triggered()
 //                 }
 
 
-                myTimer.start();
-                //int nMilliseconds = myTimer.elapsed();
-                // do something..
-                secs = TimeLog[mFilename];
-                int mins = secs/60;
-                secs = secs - mins*60;
-                ui->lineEdit->setText(QString::number(mins) + "mins " + QString::number(secs) + " secs elapsed on this page(Right Click to update)");
-                //QString newFile = mFilename; //Filechange
-                //newFile.replace("Inds","CorrectorOutput"); //Filechange
-                QString newFile = dir2levelup + "/CorrectorOutput/" +currentpagename;
-                QFile sFile1(newFile);
+            myTimer.start();
+            gSeconds = timeLog[mFilename];
+            int mins = gSeconds/60;
+            int seconds = gSeconds - mins * 60;
+            ui->lineEdit->setText(QString::number(mins) + "mins " + QString::number(seconds) +
+                                  " secs elapsed on this page(Right Click to update)");
+            QString newFile = gDirTwoLevelUp + "/CorrectorOutput/" +gCurrentPageName;
+            QFile sFile1(newFile);
 
-                QFileInfo filetype(mFilename);
-                QString suffix = filetype.suffix();
-                if(suffix == "html")
-                {
-                    QTextStream in(&sFile);
-                    in.setCodec("UTF-8");
-                    QString htmltext = in.readAll();
-                    ui->textBrowser->setHtml(htmltext);
-                    QString text = ui->textBrowser->toPlainText();
-                    openedFileChars = text.length();
-                    QString  simplifiedtext = text.simplified();
-                    openedFileWords = simplifiedtext.count(" ");
-                    sFile.close();
-                    //qDebug()<<"openedHTMlFile";
-                }
-                else
-                {
-                    QTextStream in(&sFile);
-                    in.setCodec("UTF-8");
-                    QString text = in.readAll();
-                    openedFileChars = text.length();
-                    QString  simplifiedtext = text.simplified();
-                    openedFileWords = simplifiedtext.count(" ");
-                    sFile.close();
+            QFileInfo filetype(mFilename);
+            QString suffix = filetype.suffix();
+            if(suffix == "html")
+            {
+                QTextStream in(&sFile);
+                in.setCodec("UTF-8");
+                QString htmltext = in.readAll();
+                ui->textBrowser->setHtml(htmltext);
+                QString text = ui->textBrowser->toPlainText();
+                sFile.close();
+            }
+            else
+            {
+                QTextStream in(&sFile);
+                in.setCodec("UTF-8");
+                string text = in.readAll().toUtf8().constData();
+                sFile.close();
+                istringstream iss(text);
+                string strHtml = "<html><body><p>";
+                string line;
+                while (getline(iss, line)) {
+                    QString qline = QString::fromStdString(line);
+                    if(line == "\n" | line == "" | qline.contains("\r") )
+                        strHtml+="</p><p>";
+                    else strHtml += line + "<br />";
+               }
+               strHtml += "</p></body></html>";
+               QString qstrHtml = QString::fromStdString(strHtml);
+               qstrHtml.replace("<br /></p>", "</p>");
 
-                    string str1 = text.toUtf8().constData();
-                    istringstream iss(str1);
-                    string strHtml = "<html><body><p>"; string line;
-                    while (getline(iss, line)) {
-                        QString qline = QString::fromStdString(line);
-                        if(line == "\n" | line == "" | qline.contains("\r") )
-                            strHtml+="</p><p>";
-                        else strHtml += line + "<br />";
-                   }
-                   strHtml += "</p></body></html>";
-                   QString qstrHtml = QString::fromStdString(strHtml);
-                   qstrHtml.replace("<br /></p>", "</p>");
+               QFont font("Shobhika-Regular");
+               font.setWeight(14);
+               font.setPointSize(14);
+               font.setFamily("Shobhika");
+               ui->textBrowser->setFont(font);
+               ui->textBrowser->setHtml(qstrHtml);
+               ui->textBrowser->setFont(font);
+            }
+            gInitialTextHtml = ui->textBrowser->toHtml();
 
-                   QFont font("Shobhika-Regular");
-                   font.setWeight(14);
-                   font.setPointSize(14);
-                   font.setFamily("Shobhika");
-                   ui->textBrowser->setFont(font);
-                   ui->textBrowser->setHtml(qstrHtml);
-                   ui->textBrowser->setFont(font);
-                }
-                initialtexthtml = ui->textBrowser->toHtml();
+            // load and show image:
+            setWindowTitle(mFilename);
+            QString localmFilename = gDirTwoLevelUp + "/Images/" + gCurrentPageName;
+            localmFilename.replace("V1_","");
+            localmFilename.replace("V2_","");
+            localmFilename.replace("V3_","");
+            localmFilename.replace(".txt",".jpeg");
+            localmFilename.replace(".html",".jpeg");
+            QImage imageOrig;
+            imageOrig.load(localmFilename);
+            localmFilename = mFilename;
+            if (graphic)delete graphic;
+            graphic = new QGraphicsScene(this);
+            graphic->addPixmap(QPixmap::fromImage(imageOrig));
+            //ui->graphicsView->AdjustIgnored
+            graphic->setSceneRect(QRectF());
+            //ui->graphicsView->setFixedSize(ui->graphicsView->size());
+            ui->graphicsView->setScene(graphic);
+            //ui->graphicsView->adjustSize();
+            ui->graphicsView->fitInView(graphic->itemsBoundingRect(),Qt::KeepAspectRatio);
+            localmFilename = mFilename;
+            //mFilename.replace(QString("jpeg"),QString("txt"));*/
 
-                // load and show image:
-                setWindowTitle(mFilename);
-                QString localmFilename = dir2levelup + "/Images/" + currentpagename;
-                localmFilename.replace("V1_","");
-                localmFilename.replace("V2_","");
-                localmFilename.replace("V3_","");
-                localmFilename.replace(".txt",".jpeg");
-                localmFilename.replace(".html",".jpeg");
-                QImage imageOrig;
-                imageOrig.load(localmFilename);
-                localmFilename = mFilename;
-                if (graphic)delete graphic;
-                graphic = new QGraphicsScene(this);
-                graphic->addPixmap(QPixmap::fromImage(imageOrig));
-                //ui->graphicsView->AdjustIgnored
-                graphic->setSceneRect(QRectF());
-                //ui->graphicsView->setFixedSize(ui->graphicsView->size());
-                ui->graphicsView->setScene(graphic);
-                //ui->graphicsView->adjustSize();
-                ui->graphicsView->fitInView(graphic->itemsBoundingRect(),Qt::KeepAspectRatio);
-                localmFilename = mFilename;
-                //mFilename.replace(QString("jpeg"),QString("txt"));*/
+            //GPage.clear(); TGPage.clear();
 
-                //GPage.clear(); TGPage.clear();
-
-                //localmFilename.replace(QString("Inds"),QString("GDoc"));
-                //loadMap(localmFilename.toUtf8().constData(),GPage, "GPage");  localmFilename = mFilename;
-                //loadmaptoTrie(TGPage,GPage);
-                //if (!prevTRig) on_actionSpell_Check_triggered();
-                //OPENSPELLFLAG = 0;
-                if (z) delete z;
-                z = new Graphics_view_zoom(ui->graphicsView);
-                z->set_modifiers(Qt::NoModifier);
-                // fill indexes according to Tesseract
+            //localmFilename.replace(QString("Inds"),QString("GDoc"));
+            //loadMap(localmFilename.toUtf8().constData(),GPage, "GPage");  localmFilename = mFilename;
+            //loadmaptoTrie(TGPage,GPage);
+            //if (!gPrevTRig) on_actionSpell_Check_triggered();
+            //OPENSPELLFLAG = 0;
+            if (z) delete z;
+            z = new Graphics_view_zoom(ui->graphicsView);
+            z->set_modifiers(Qt::NoModifier);
+            // fill indexes according to Tesseract
 
 
-            } //if(sFile.open(QFile::ReadOnly | QFile::Text))
+        } //if(sFile.open(QFile::ReadOnly | QFile::Text))
 
 
-        } // if(!file.isEmpty())
+    } // if(!file.isEmpty())
 
 } //MainWindow::on_actionOpen_triggered()
 
@@ -547,8 +532,6 @@ void MainWindow::on_actionSpell_Check_triggered()
     on_actionSave_triggered();
 
     QString textBrowserText = ui->textBrowser->toPlainText();
-    //QChar ch;
-    //ch = textBrowserText[1];
     textBrowserText += " ";
     string str1 = textBrowserText.toUtf8().constData();
 
@@ -725,12 +708,12 @@ void MainWindow::mousePressEvent(QMouseEvent *ev)
 	//on_actionLoadData_triggered();
 	if (!FirstFlag) {
         ui->textBrowser->cursorForPosition(ev->pos());
-        secs = TimeLog[mFilename];
+        gSeconds = timeLog[mFilename];
         int nMilliseconds = myTimer.elapsed();
-        secs += nMilliseconds / 1000;
-        int mins = secs / 60;
-        secs = secs - mins * 60;
-        ui->lineEdit->setText(QString::number(mins) + "mins " + QString::number(secs) + " secs elapsed on this page(Right Click to update)");
+        gSeconds += nMilliseconds / 1000;
+        int mins = gSeconds / 60;
+        int seconds = gSeconds - mins * 60;
+        ui->lineEdit->setText(QString::number(mins) + "mins " + QString::number(seconds) + " secs elapsed on this page(Right Click to update)");
 
         if ((ev->button() == Qt::RightButton) || (RightclickFlag))
 		{
@@ -866,12 +849,12 @@ void MainWindow::mousePressEvent(QMouseEvent *ev)
 		else {
 			if ((ev->button() == Qt::RightButton) || (RightclickFlag))
 			{
-                secs = TimeLog[mFilename];
+                gSeconds = timeLog[mFilename];
                 int nMilliseconds = myTimer.elapsed();
-                secs += nMilliseconds / 1000;
-                int mins = secs / 60;
-                secs = secs - mins * 60;
-                ui->lineEdit->setText(QString::number(mins) + "mins " + QString::number(secs) + " secs elapsed on this page(Right Click to update)");
+                gSeconds += nMilliseconds / 1000;
+                int mins = gSeconds / 60;
+                int seconds = gSeconds - mins * 60;
+                ui->lineEdit->setText(QString::number(mins) + "mins " + QString::number(seconds) + " secs elapsed on this page(Right Click to update)");
                 QMenu* popup_menu = ui->textBrowser->createStandardContextMenu();
 				popup_menu->exec(ev->globalPos());
 				popup_menu->close(); popup_menu->clear();
@@ -1015,36 +998,33 @@ void MainWindow::on_actionNew_triggered()
 
 void MainWindow::on_actionSave_triggered()
 {
-    savetimelog();
+    SaveTimeLog();
 
-    secs = TimeLog[mFilename];
+    gSeconds = timeLog[mFilename];
     int nMilliseconds = myTimer.elapsed();
-    secs += nMilliseconds / 1000;
-    int mins = secs / 60;
-    secs = secs - mins * 60;
-    ui->lineEdit->setText(QString::number(mins) + "mins " + QString::number(secs) + " secs elapsed on this page(Right Click to update)");
+    gSeconds += nMilliseconds / 1000;
+    int mins = gSeconds / 60;
+    int seconds = gSeconds - mins * 60;
+    ui->lineEdit->setText(QString::number(mins) + "mins " + QString::number(seconds) + " secs elapsed on this page(Right Click to update)");
     ConvertSlpDevFlag =1;
     //on_actionSpell_Check_triggered();
+
     if (mFilename=="Untitled"){
         on_actionSave_As_triggered();
-    }else{
-//        QString localFilename = mFilename;
-//        localFilename.replace("Inds","CorrectorOutput");
-//        localFilename.replace("txt","html");//modified
-//		QFileInfo f(mFilename);
-//		QString ext=f.completeSuffix();
-        QString temp_currentpagename = currentpagename;
-        if(currentdirname == "Inds")
+    } else {
+
+        QString temp_gCurrentPageName = gCurrentPageName;
+        if(gCurrentDirName == "Inds")
         {
-            temp_currentpagename = "V1_" + currentpagename;
+            temp_gCurrentPageName = "V1_" + gCurrentPageName;
         }
-        if(currentdirname == "VerifierOutput")
+        if(gCurrentDirName == "VerifierOutput")
         {
-            temp_currentpagename.replace("V2_","V3_");
-            temp_currentpagename.replace("V1_","V2_");
+            temp_gCurrentPageName.replace("V2_","V3_");
+            temp_gCurrentPageName.replace("V1_","V2_");
         }
-        QString changefiledir = filestructure_fw[currentdirname];
-        QString localFilename = dir2levelup + "/" +changefiledir +"/" + temp_currentpagename;
+        QString changefiledir = filestructure_fw[gCurrentDirName];
+        QString localFilename = gDirTwoLevelUp + "/" +changefiledir +"/" + temp_gCurrentPageName;
         localFilename.replace(".txt",".html");
 
 
@@ -1055,20 +1035,12 @@ void MainWindow::on_actionSave_triggered()
             QTextStream out(&sFile);
             out.setCodec("UTF-8");
             QString output = ui->textBrowser->toHtml();
+            gInitialTextHtml = output;
             output = "<style> body{ width: 21cm; height: 29.7cm; margin: 30mm 45mm 30mm 45mm; } </style>" + output;
             out << output;
             sFile.flush();
             sFile.close();
         }
-//		localFilename.replace("html","txt");
-//		QFile sfile2(localFilename);
-//		if (sfile2.open(QFile::WriteOnly)) {
-//			QTextStream out(&sfile2);
-//			out.setCodec("UTF-8");
-//			out << ui->textBrowser->toPlainText();//toPlainText()
-//			sfile2.flush();
-//			sfile2.close();
-//		}
     }
     ConvertSlpDevFlag =0;
     //on_actionSpell_Check_triggered();
@@ -1077,42 +1049,39 @@ void MainWindow::on_actionSave_triggered()
 
 void MainWindow::on_actionLoadGDocPage_triggered()
 {
-    if (mFilename=="Untitled"){
+    if (mFilename=="Untitled") {
         on_actionSave_As_triggered();
-    }else{
-//                QString str1 = mFilename;
-//                str1.replace("Inds","CorrectorOutput");
+    } else   {
+        QString changefiledir = filestructure_fw[gCurrentDirName];
+        QString str1 = gDirTwoLevelUp + "/" +changefiledir +"/" + gCurrentPageName;
+        str1.replace("txt","html");
 
-                QString changefiledir = filestructure_fw[currentdirname];
-                QString str1 = dir2levelup + "/" +changefiledir +"/" + currentpagename;
-                str1.replace("txt","html");
+        QFile sFile(str1);
+          if(sFile.open(QFile::WriteOnly | QFile::Text))
+          {
+              QTextStream out(&sFile);
+              out.setCodec("UTF-8");
+              out << ui->textBrowser->toHtml(); //toPlainText(); modified
+              sFile.flush();
+              sFile.close();
+          }
+          //qDebug() << str1 << endl;
+          loadMap(str1.toUtf8().constData(),PWords,"PWords");
 
-                QFile sFile(str1);
-                  if(sFile.open(QFile::WriteOnly | QFile::Text))
-                  {
-                      QTextStream out(&sFile);
-                      out.setCodec("UTF-8");
-                      out << ui->textBrowser->toHtml(); //toPlainText(); modified
-                      sFile.flush();
-                      sFile.close();
-                  }
-                  //qDebug() << str1 << endl;
-                  loadMap(str1.toUtf8().constData(),PWords,"PWords");
+          map<string, int> PWordspage;
+          loadMap(str1.toUtf8().constData(),PWordspage,"PWordspage");
+          loadmaptoTrie(TPWords, PWordspage);
 
-                  map<string, int> PWordspage;
-                  loadMap(str1.toUtf8().constData(),PWordspage,"PWordspage");
-                  loadmaptoTrie(TPWords, PWordspage);
+          vector<string> wrong,right;
+          //QString str2 = str1; str2.replace("CorrectorOutput","Inds");
+          QString str2 = mFilename;
+          generateCorrectionPairs(wrong,right,str2.toUtf8().constData(), str1.toUtf8().constData());
+          loadConfusionsFont(wrong,right,ConfPmapFont);
+          loadConfusionsFont(wrong,right,ConfPmap);
+          TopConfusions.clear(); TopConfusionsMask.clear();
+          loadTopConfusions(ConfPmap,TopConfusions,TopConfusionsMask);
 
-                  vector<string> wrong,right;
-                  //QString str2 = str1; str2.replace("CorrectorOutput","Inds");
-                  QString str2 = mFilename;
-                  generateCorrectionPairs(wrong,right,str2.toUtf8().constData(), str1.toUtf8().constData());
-                  loadConfusionsFont(wrong,right,ConfPmapFont);
-                  loadConfusionsFont(wrong,right,ConfPmap);
-                  TopConfusions.clear(); TopConfusionsMask.clear();
-                  loadTopConfusions(ConfPmap,TopConfusions,TopConfusionsMask);
-
-                  //on_actionSpell_Check_triggered();
+          //on_actionSpell_Check_triggered();
     }
 
 }
@@ -1121,15 +1090,14 @@ void MainWindow::on_actionLoadGDocPage_triggered()
 void MainWindow::on_actionSave_As_triggered()
 {
     QString file = QFileDialog::getSaveFileName(this, "Open a File");
-    if (!file.isEmpty())
-    {
+    if (!file.isEmpty()) {
         mFilename = file;
         int pos1 = mFilename.lastIndexOf("/");
-        dir1levelup = mFilename.mid(0, pos1);
-        currentpagename = mFilename.mid(pos1 + 1, mFilename.length() - pos1);
-        int pos2 = dir1levelup.lastIndexOf("/");
-        dir2levelup = dir1levelup.mid(0, pos2);
-        currentdirname = dir1levelup.mid(pos2 + 1, dir1levelup.length() - pos2);
+        gDirOneLevelUp = mFilename.mid(0, pos1);
+        gCurrentPageName = mFilename.mid(pos1 + 1, mFilename.length() - pos1);
+        int pos2 = gDirOneLevelUp.lastIndexOf("/");
+        gDirTwoLevelUp = gDirOneLevelUp.mid(0, pos2);
+        gCurrentDirName = gDirOneLevelUp.mid(pos2 + 1, gDirOneLevelUp.length() - pos2);
         on_actionSave_triggered();
     }
 }
@@ -1139,10 +1107,10 @@ void MainWindow::on_actionSave_As_triggered()
 void MainWindow::on_actionToDevanagari_triggered()
 {
     int nMilliseconds = myTimer.elapsed();
-    secs = nMilliseconds/1000;
-    int mins = secs/60;
-    secs = secs - mins*60;
-    ui->lineEdit->setText(QString::number(mins) + "mins " + QString::number(secs) + " secs elapsed on this page(Right Click to update)");
+    gSeconds = nMilliseconds/1000;
+    int mins = gSeconds/60;
+    int seconds = gSeconds - mins * 60;
+    ui->lineEdit->setText(QString::number(mins) + "mins " + QString::number(seconds) + " secs elapsed on this page(Right Click to update)");
     QTextCursor cursor = ui->textBrowser->textCursor();
     cursor.select(QTextCursor::WordUnderCursor);
     QString str1 = cursor.selectedText();
@@ -1333,7 +1301,7 @@ void MainWindow::on_actionLoadDict_triggered()
 //    QString localmFilename1 = mFilename1;
 //    localmFilename1.replace("Inds/","Dict");
 
-    QString localmFilename1 = dir2levelup + "/Dict";
+    QString localmFilename1 = gDirTwoLevelUp + "/Dict";
 
     //localmFilename1n = localmFilename1.toUtf8().constData();
     //cout <<localmFilename1.toUtf8().constData() << endl;
@@ -1358,14 +1326,14 @@ void MainWindow::on_actionLoadOCRWords_triggered()
 {
 //    QString localmFilename1 = mFilename1;
 //    localmFilename1.replace("Inds/","GEROCR");
-    QString localmFilename1 = dir2levelup + "/GEROCR";
+    QString localmFilename1 = gDirTwoLevelUp + "/GEROCR";
 
     cout << localmFilename1.toUtf8().constData() << endl;
     loadMapNV(localmFilename1.toUtf8().constData(),GBook,vGBook,"GBook"); localmFilename1 = mFilename1;
     cout << localmFilename1.toUtf8().constData() << endl;
 
 //    localmFilename1.replace("Inds/","IEROCR");
-    localmFilename1 = dir2levelup + "/IEROCR";
+    localmFilename1 = gDirTwoLevelUp + "/IEROCR";
     loadMapNV(localmFilename1.toUtf8().constData(),IBook,vIBook,"IBook");
     cout << GBook.size() << " " << IBook.size() << endl;
     loadStr += "\n" + QString::number((IBook.size())) + " Indsenz Words Loaded & ";
@@ -1378,7 +1346,7 @@ void MainWindow::on_actionLoadDomain_triggered()
 {
 //    QString localmFilename1 = mFilename1;
 //    localmFilename1.replace("Inds/","PWords");
-    QString localmFilename1 = dir2levelup + "/PWords";
+    QString localmFilename1 = gDirTwoLevelUp + "/PWords";
     loadMap(localmFilename1.toUtf8().constData(),PWords,"PWords"); localmFilename1 = mFilename1;
     //cout << "PWords loaded" << PWords.size();
     loadMapPWords(vGBook,vIBook,PWords);
@@ -1393,11 +1361,11 @@ void MainWindow::on_actionLoadSubPS_triggered()
 //    QString localmFilename1 = mFilename1;
     size_t count = loadPWordsPatternstoTrie(TPWordsP,PWords);// justsubstrings not patterns exactly // PWordsP,
 //    localmFilename1.replace("Inds/","CPair");
-    QString localmFilename1 = dir2levelup + "/CPair";
+    QString localmFilename1 = gDirTwoLevelUp + "/CPair";
     loadCPair(localmFilename1.toUtf8().constData(),CPair,Dict,PWords); localmFilename1 = mFilename1;
 
     //localmFilename1.replace("Inds/","LSTM");
-    localmFilename1 = dir2levelup + "/LSTM";
+    localmFilename1 = gDirTwoLevelUp + "/LSTM";
     ifstream myfile(localmFilename1.toUtf8().constData());
               if (myfile.is_open())
               { string str1, str2,line;
@@ -1423,7 +1391,7 @@ void MainWindow::on_actionLoadConfusions_triggered()
     //QString lfR = mFilename; lfR.replace("Inds/page-1.txt","WrongAllRight");
 //    QString localmFilename1 = mFilename;
 //    localmFilename1.replace("Inds/","CPair");
-     QString localmFilename1 = dir2levelup + "/CPair";
+     QString localmFilename1 = gDirTwoLevelUp + "/CPair";
    loadConfusions(localmFilename1.toUtf8().constData(), ConfPmap);localmFilename1 = mFilename;
    //loadCPair(localmFilename1.toUtf8().constData(), lfR.toUtf8().constData(), CPair);*./
 
@@ -1462,8 +1430,8 @@ public :
 
 public slots:
     void MySlot(){
-    secs++;
-    ui->lineEdit->settext(stoi(secs) + " secs passed");
+    gSeconds++;
+    ui->lineEdit->settext(stoi(gSeconds) + " secs passed");
     }
 };*/
 
@@ -1483,10 +1451,10 @@ void MainWindow::on_actionToSlp1_triggered()
 {
 
         int nMilliseconds = myTimer.elapsed();
-        secs = nMilliseconds/1000;
-        int mins = secs/60;
-        secs = secs - mins*60;
-        ui->lineEdit->setText(QString::number(mins) + "mins " + QString::number(secs) + " secs elapsed on this page(Right Click to update)");
+        gSeconds = nMilliseconds/1000;
+        int mins = gSeconds/60;
+        int seconds = gSeconds - mins * 60;
+        ui->lineEdit->setText(QString::number(mins) + "mins " + QString::number(seconds) + " secs elapsed on this page(Right Click to update)");
         QTextCursor cursor = ui->textBrowser->textCursor();
         //cursor.select(QTextCursor::WordUnderCursor);
         QString str1 = cursor.selectedText();
@@ -1507,7 +1475,7 @@ void MainWindow::on_actionCreateSuggestionLog_triggered()
     QString strC = strI;
     strI.replace("CorrectorOutput", "Inds"); strC.replace("Inds","CorrectorOutput");
 //    QString strC = mFilename;
-//    QString strI = dir2levelup + "/CorrectorOutput/"+ currentpagename ;
+//    QString strI = gDirTwoLevelUp + "/CorrectorOutput/"+ gCurrentPageName ;
 
     // load text files one by one
 
@@ -2805,23 +2773,23 @@ void MainWindow::on_actionJusitfiedAlign_triggered()
     QString sel = selected.toHtml();
     sel.replace("<br />" ," ");
     sel = "</p><p>" + sel + "</p><p>";
-    auto newfrag = selected.fromHtml(sel);
-    cursor.insertFragment(newfrag);
+    auto newFrag = selected.fromHtml(sel);
+    cursor.insertFragment(newFrag);
     ui->textBrowser->setAlignment(Qt::AlignJustify);
 }
 
 void MainWindow::on_actionAllFontProperties_triggered()
 {
-    QFont initialfont = ui->textBrowser->font();
+    QFont initialFont = ui->textBrowser->font();
     auto pointsize = ui->textBrowser->fontPointSize();
-    if(pointsize) initialfont.setPointSize(pointsize);
+    if(pointsize) initialFont.setPointSize(pointsize);
     bool ok;
-    QFont font = QFontDialog::getFont(&ok, initialfont, this);
+    QFont font = QFontDialog::getFont(&ok, initialFont, this);
     if(ok)
     {
-        QTextCharFormat font1;
-        font1.setFont(font);
-        ui->textBrowser->textCursor().mergeCharFormat(font1);
+        QTextCharFormat newFont;
+        newFont.setFont(font);
+        ui->textBrowser->textCursor().mergeCharFormat(newFont);
     }
 }
 
@@ -2841,8 +2809,8 @@ void MainWindow::on_actionSuperscript_triggered() {
     QString sel = selected.toPlainText();
     cursor.removeSelectedText();
     sel = "<sup>" + sel + "</sup>";
-    auto newfrag = selected.fromHtml(sel);
-    cursor.insertFragment(newfrag);
+    auto newFrag = selected.fromHtml(sel);
+    cursor.insertFragment(newFrag);
 }
 void MainWindow::on_actionSubscript_triggered() {
     auto cursor = ui->textBrowser->textCursor();
@@ -2850,8 +2818,8 @@ void MainWindow::on_actionSubscript_triggered() {
     cursor.removeSelectedText();
     QString sel = selected.toPlainText();
     sel = "<sub>" + sel + "</sub>";
-    auto newfrag = selected.fromHtml(sel);
-    cursor.insertFragment(newfrag);
+    auto newFrag = selected.fromHtml(sel);
+    cursor.insertFragment(newFrag);
 }
 void MainWindow::on_actionInsert_Horizontal_Line_triggered()
 {
@@ -2862,7 +2830,6 @@ void MainWindow::on_actionLineSpace_triggered()
 {
     QTextCursor cursor = ui->textBrowser->textCursor();
     QTextBlockFormat format = cursor.blockFormat();
-    int pointSize = format.FontPointSize;
     double lineHeight = format.lineHeight()/100;
     bool False = false;
     bool *ok = &False;
@@ -2882,111 +2849,8 @@ void MainWindow::on_actionInset_Tab_Space_triggered()
     ui->textBrowser->insertPlainText("    ");
 }
 
-/*
-void MainWindow::on_pushButton_2_clicked() //VERIFER
-{
 
-    string s1 = "",s2 = "", s3 = ""; QString qs1="", qs2="",qs3="";
-    file = QFileDialog::getOpenFileName(this,"Open Verifier's Output File");
-if(!file.isEmpty())
-    {
-QString verifiertext = file;
-    QString correctortext = file.replace("VerifierOutput","CorrectorOutput"); //CAN CHANGE ACCORDING TO FILE STRUCTURE
-    QString ocrtext = file.replace("CorrectorOutput","Inds"); //CAN CHANGE ACCORDING TO FILE STRUCTURE
-    ocrtext.replace(".html",".txt");
-    ocrtext.replace("V1_","");
-    ocrtext.replace("V2_","");
-    ocrtext.replace("V3_","");
-    if(!ocrtext.isEmpty())
-    {
-        QFile sFile(ocrtext);
-        if(sFile.open(QFile::ReadOnly | QFile::Text))
-        {
-            QTextStream in(&sFile);
-            in.setCodec("UTF-8");
-            QString t = in.readAll();
-            t= t.replace(" \n","\n");
-            qs1=t;
-            sFile.close();
-        }
-
-    }
-    if(!correctortext.isEmpty())
-    {
-        QFile sFile(correctortext);
-        if(sFile.open(QFile::ReadOnly | QFile::Text))
-        {
-            QTextStream in(&sFile);
-            in.setCodec("UTF-8");
-            QString t = in.readAll();
-            t= t.replace(" \n","\n");
-            qs2=t;
-            sFile.close();
-        }
-
-    }
-    if(!verifiertext.isEmpty())
-    {
-        QFile sFile(verifiertext);
-        if(sFile.open(QFile::ReadOnly | QFile::Text))
-        {
-            QTextStream in(&sFile);
-            in.setCodec("UTF-8");
-            QString t = in.readAll();
-            t= t.replace(" \n","\n");
-            qs3=t;
-            sFile.close();
-        }
-
-    }
-    QTextDocument doc;
-    QString t;
-
-    doc.setHtml(qs1);
-    qs1 = doc.toPlainText();
-    t = qs1;  t.replace(" ", "");
-    s1 = t.toUtf8().constData();
-
-    doc.setHtml(qs2);
-    qs2 = doc.toPlainText();
-    t = qs2;  t.replace(" ", "");
-    s2 = t.toUtf8().constData();
-
-    doc.setHtml(qs3);
-    qs3 = doc.toPlainText();
-    t = qs3;  t.replace(" ", "");
-    s3 = t.toUtf8().constData();
-
-    int l1,l2,l3, DiffOcr_Corrector,DiffCorrector_Verifier,DiffOcr_Verifier; float correctorChangesPerc,verifierChangesPerc,ocrErrorPerc;
-
-       l1 = s1.length();
-       l2 = s2.length();
-       l3 = s3.length();
-       DiffOcr_Corrector = editDist(s1,s2);
-       correctorChangesPerc = ((float)(DiffOcr_Corrector)/(float)l1)*100;
-       if(correctorChangesPerc<0) correctorChangesPerc = ((float)(DiffOcr_Corrector)/(float)l2)*100;
-
-       DiffCorrector_Verifier = editDist(s2,s3);
-       verifierChangesPerc = ((float)(DiffCorrector_Verifier)/(float)l2)*100;
-       if(verifierChangesPerc<0) verifierChangesPerc = ((float)(DiffCorrector_Verifier)/(float)l3)*100;
-
-       DiffOcr_Verifier = editDist(s1,s3);
-       ocrErrorPerc = ((float)(DiffOcr_Verifier)/(float)l1)*100;
-       if(ocrErrorPerc<0) ocrErrorPerc = ((float)(DiffOcr_Verifier)/(float)l3)*100;
-       float ocrErrorAcc = 100 - ocrErrorPerc;
-
-       QString qcorrectorChangesPerc = QString::number(((float)lround(correctorChangesPerc*100))/100);
-       QString qverifierChangesPerc = QString::number(((float)lround(verifierChangesPerc*100))/100);
-       QString qocrErrorAcc = QString::number(((float)lround(ocrErrorAcc*100))/100);
-
-    DiffView *dv = new DiffView(qs1,qs2,qs3,qcorrectorChangesPerc,qverifierChangesPerc,qocrErrorAcc);
-    dv->show();
-}
-}
-*/
-
-
-void MainWindow::on_pushButton_3_clicked() //Corrector
+void MainWindow::on_compareCorrectorOutput_clicked() //Corrector
 {
     QString qs1="", qs2="";
     file = QFileDialog::getOpenFileName(this,"Open Corrector's Output File");
@@ -3004,7 +2868,6 @@ void MainWindow::on_pushButton_3_clicked() //Corrector
         ocrimage.replace(".txt", ".jpeg");
         ocrimage.replace(".html",".jpeg");
 
-        //ocrtext.replace(".html",".txt");
         if(!ocrtext.isEmpty())
         {
             QFile sFile(ocrtext);
@@ -3078,7 +2941,7 @@ void MainWindow::on_actionAccuracyLog_triggered()
     foreach(QString filename, textfiles)
     {
 
-        string pagename = filename.toUtf8().constData();
+        string pageName = filename.toUtf8().constData();
         filename = folder + "/" + filename;
 
         QString verifiertext = filename;
@@ -3160,7 +3023,7 @@ void MainWindow::on_actionAccuracyLog_triggered()
         float correctorwordaccuracy = (float)(wordcount-worderrors)/(float)wordcount*100;
         correctorwordaccuracy = (((float)lround(correctorwordaccuracy*100))/100);
 
-        csvFile<<pagename<<","<<worderrors<<","<<DiffCorrector_Verifier<<","<< correctorwordaccuracy<<","<<correctorCharAcc<<"," <<correctorChangesPerc<<","<<ocrAcc<<"\n";
+        csvFile<<pageName<<","<<worderrors<<","<<DiffCorrector_Verifier<<","<< correctorwordaccuracy<<","<<correctorCharAcc<<"," <<correctorChangesPerc<<","<<ocrAcc<<"\n";
 
     }
 
@@ -3168,48 +3031,23 @@ void MainWindow::on_actionAccuracyLog_triggered()
 
 }
 
-/*
-void MainWindow::on_addcomments_clicked()
-{
-//    QString commentstext = ui->commentsfield->text().toUtf8().constData();
-    QString commentstext = "";
-    int pos1 = ui->textBrowser->textCursor().selectionStart();
-    int pos2 = ui->textBrowser->textCursor().selectionEnd();
-    int pos = min(pos1,pos2);
-    int loc = commentstext.indexOf(":");
-    QString highlightedtext = commentstext.mid(0,loc) ;
-    QString comment = commentstext.mid(loc+1,commentstext.length()-loc);
-
-//    QString key = QString::number(pos) + highlightedtext;
-    int key = pos;
-    QString value = commentstext;
-
-    if(comment!="" | comment!=" ")
-    {
-        commentdict[key] = value;
-        //qDebug()<< commentdict <<"commenteddict";
-    }
-
-}
-*/
 void MainWindow::on_viewallcomments_clicked()
 {
     map<int, int> wordcount;
-        QString commentFilename = dir2levelup + "/Comments/comments.json";
-        QString pagename = currentpagename;
-        pagename.replace(".txt", "");
-        pagename.replace(".html", "");
-        int totalcharerr = 0, totalworderr = 0, rating = 0; QString comments = ""; float wordacc,characc;
+        QString commentFilename = gDirTwoLevelUp + "/Comments/comments.json";
+        QString pageName = gCurrentPageName;
+        pageName.replace(".txt", "");
+        pageName.replace(".html", "");
+        int totalCharError = 0, totalWordError = 0, rating = 0; QString comments = ""; float wordAccuracy,charAccuracy;
 
         QFile jsonFile(commentFilename);
         jsonFile.open(QIODevice::ReadOnly | QIODevice::Text);
         QByteArray data = jsonFile.readAll();
-
         QJsonParseError errorPtr;
         QJsonDocument document = QJsonDocument::fromJson(data, &errorPtr);
         QJsonObject mainObj = document.object();
         QJsonObject pages = mainObj.value("pages").toObject();
-        QJsonObject page = pages.value(pagename).toObject();
+        QJsonObject page = pages.value(pageName).toObject();
 
         if(document.isNull())
         {
@@ -3218,25 +3056,23 @@ void MainWindow::on_viewallcomments_clicked()
 
         comments = page.value("comments").toString();
         rating = page.value("rating").toInt();
-        totalcharerr = page.value("charerrors").toInt();
-        totalworderr = page.value("worderrors").toInt();
-        wordacc = page.value("wordaccuracy").toDouble();
-        characc = page.value("characcuracy").toDouble();
+        totalCharError = page.value("charerrors").toInt();
+        totalWordError = page.value("worderrors").toInt();
+        wordAccuracy = page.value("wordaccuracy").toDouble();
+        charAccuracy = page.value("characcuracy").toDouble();
 
 
         jsonFile.close();
 
-        CommentsView *cv = new CommentsView(totalworderr,totalcharerr,wordacc,characc,comments,commentFilename, rating);
+        CommentsView *cv = new CommentsView(totalWordError,totalCharError,wordAccuracy,charAccuracy,comments,commentFilename, rating);
         cv->show();
 }
 
-
-
 void MainWindow::on_actionViewAverageAccuracies_triggered()
 {
-    QString commentFilename = dir2levelup + "/Comments/comments.json";
-    QString csvfile = dir2levelup + "/Comments/AverageAccuracies.csv";
-    float avgcharacc=0, avgwordacc = 0, avgrating  = 0; int avgcharerrors = 0, avgworderrors = 0;
+    QString commentFilename = gDirTwoLevelUp + "/Comments/comments.json";
+    QString csvfile = gDirTwoLevelUp + "/Comments/AverageAccuracies.csv";
+    float avgCharAccuracy=0, avgWordAccuracy = 0, avgRating  = 0; int avgCharErrors = 0, avgWordErrors = 0;
 
     QFile jsonFile(commentFilename);
     jsonFile.open(QIODevice::ReadOnly | QIODevice::Text);
@@ -3246,11 +3082,17 @@ void MainWindow::on_actionViewAverageAccuracies_triggered()
     QJsonDocument document = QJsonDocument::fromJson(data, &errorPtr);
     QJsonObject mainObj = document.object();
 
-    avgcharacc= mainObj["AverageCharAccuracy"].toDouble();
-    avgwordacc = mainObj["AverageWordAccuracy"].toDouble();
-    avgcharerrors = mainObj["AverageCharErrors"].toInt();
-    avgworderrors = mainObj["AverageWordErrors"].toInt();
+    avgCharAccuracy= mainObj["AverageCharAccuracy"].toDouble();
+    avgWordAccuracy = mainObj["AverageWordAccuracy"].toDouble();
+    avgCharErrors = mainObj["AverageCharErrors"].toInt();
+    avgWordErrors = mainObj["AverageWordErrors"].toInt();
 
-    AverageAccuracies *aa = new AverageAccuracies(csvfile, avgwordacc, avgcharacc, avgworderrors, avgcharerrors);
-    aa->show();
+    AverageAccuracies *avgAcc = new AverageAccuracies(csvfile, avgWordAccuracy, avgCharAccuracy, avgWordErrors, avgCharErrors);
+    avgAcc->show();
+}
+
+void MainWindow::on_actionDiacritics_triggered()
+{
+    DiacriticsView *dv = new DiacriticsView(this);
+    dv->show();
 }
