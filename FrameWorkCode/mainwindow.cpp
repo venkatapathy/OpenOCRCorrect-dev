@@ -3020,16 +3020,16 @@ void MainWindow::on_actionCommit_triggered() {
 	mProject.commit(text.toStdString());
 }
 void MainWindow::on_actionTurn_In_triggered() {
-    mProject.push();
-    mProject.disable_push();
-    auto list = ui->menuGit->actions();
-    for (auto a : list) {
-        QString name = a->text();
-        if (name == "Turn In") {
-            a->setEnabled(false);
-        }
-    }
-    //on_actionSend_Email_triggered();
+    //mProject.push();
+    //mProject.disable_push();
+    //auto list = ui->menuGit->actions();
+    //for (auto a : list) {
+      //  QString name = a->text();
+        //if (name == "Turn In") {
+          //  a->setEnabled(false);
+        //}
+    //}
+    on_actionSend_Email_triggered();
 }
 void MainWindow::on_actionFetch_2_triggered() {
 	mProject.fetch();
@@ -3310,8 +3310,8 @@ void MainWindow::on_actionSend_Email_triggered()
             QString projectId = "B0001"; //should be added in project.xml file and fetched from there
             QString userId = "U0001";    //fetch on sign in
             QString userRole = "Corrector";  //fetch on sign in
-            QString projectJsonFilePath = "/ProjectJson.json";   //add location
-            QString userJsonFilePath = "/UserJson.json";  //add location
+            QString projectJsonFilePath = "ProjectJson.json";   //add location
+            QString userJsonFilePath = "UserJson.json";  //add location
 
             QFile projectJsonFile(projectJsonFilePath);
             projectJsonFile.open(QIODevice::ReadOnly | QIODevice::Text);
@@ -3354,8 +3354,8 @@ void MainWindow::on_actionSend_Email_triggered()
             userJsonFile.close();
 
             SimpleMail::Sender sender ("smtp.gmail.com", 465, SimpleMail::Sender::SslConnection);
-            sender.setUser("xiesecomps1@gmail.com");
-            sender.setPassword("omkar17897");
+            sender.setUser("aksharanveshini.iitb@gmail.com");
+            sender.setPassword("backend-ui");
             SimpleMail::MimeMessage message;
             message.setSender(SimpleMail::EmailAddress("aksharanveshini.iitb@gmail.com", "Akshar Anveshini"));
 
