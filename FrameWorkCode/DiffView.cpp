@@ -4,17 +4,6 @@
 DiffView::DiffView( QString &ocrtext,  QString &interntext,  QString &verifiertext,const QString &InternAcc, const QString &VerifierAcc, const QString &OcrAcc, QWidget *parent)
 	: QMainWindow(parent)
 {
-
-    QTextDocument doc;
-    doc.setHtml(interntext);
-    interntext = doc.toPlainText();
-
-    doc.setHtml(ocrtext);
-    ocrtext = doc.toPlainText();
-
-    doc.setHtml(verifiertext);
-    verifiertext = doc.toPlainText();
-
     ui = new Ui::DiffView();
 	ui->setupUi(this);
 	diff_match_patch dmp;

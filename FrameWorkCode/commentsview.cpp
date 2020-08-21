@@ -2,7 +2,7 @@
 #include "ui_commentsview.h"
 #include "mainwindow.h"
 #include <QCloseEvent>
-
+#include <QString>
 QString commentFilename;
 QString pagename;
 CommentsView::CommentsView(const int &words, const int &chars, const float &wordacc, const float &characc,const QString commentsField,const QString commentsFilelocation, const QString currentpagename, int rating, QWidget *parent) :
@@ -19,7 +19,8 @@ CommentsView::CommentsView(const int &words, const int &chars, const float &word
     //ui->rating->setText(QString::number(rating));
     commentFilename = commentsFilelocation;
     pagename = currentpagename;
-
+	pagename.replace(".txt", "");
+	pagename.replace(".html", "");
 }
 
 

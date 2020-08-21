@@ -24,6 +24,7 @@ SOURCES +=\
     DiffView.cpp \
     averageaccuracies.cpp \
     commentsview.cpp \
+    diacriticsview.cpp \
     diff_match_patch.cpp \
         mainwindow.cpp \
     main.cpp \
@@ -35,6 +36,7 @@ HEADERS  += mainwindow.h \
     DiffView.h \
     averageaccuracies.h \
     commentsview.h \
+    diacriticsview.h \
     diff_match_patch.h \
     eddis.h \
     slpNPatternDict.h \
@@ -84,6 +86,7 @@ FORMS    += mainwindow.ui \
     DiffView.ui \
     averageaccuracies.ui \
     commentsview.ui \
+    diacriticsview.ui \
 	interndiffview.ui
 
 RESOURCES += \

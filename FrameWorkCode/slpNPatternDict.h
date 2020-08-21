@@ -5,7 +5,9 @@
 #include <fstream>
 #include <iostream>
 #include <map>
+#include <vector>
 #include <unordered_map>
+#include "eddis.h"
 //#include <boost/serialization/map.hpp>
 //#include <boost/serialization/vector.hpp>
 //#include <boost/serialization/serialization.hpp>
@@ -59,26 +61,26 @@ string toDev(string s)
         string vowel_slp1[]={"a","A","i","I","u","U","f","e","E","o","O","Z","M","H","*","~"};
         string consonants_dn[]={"क","ख","ग","घ","ङ","च","छ","ज","झ","ञ","ट","ठ","ड","ढ","ण","त","थ","द","ध","न","प","फ","ब","भ","म","य","र","ल","व","श","ष","स","ह","क़","ख़","ग़","ज़","ड़","ढ़","ऩ","फ़","य़","ऱ","ळ"};
         string consonants_dn_halanta[]={"क्","ख्","ग्","घ्","ङ्","च्","छ्","ज्","झ्","ञ्","ट्","ठ्","ड्","ढ्","ण्","त्","थ्","द्","ध्","न्","प्","फ्","ब्","भ्","म्","य्","र्","ल्","व्","श्","ष्","स्","ह्","क़्","ख़्","ग़्","ज़्","ड़्","ढ़्","ऩ्","फ़्","य़्","ऱ्","ळ्"};
-        string consonants_slp1[]={"k","K","g","G","N","c","C","j","J","Y","w","W","q","Q","R","t","T","d","D","n","p","P","b","B","m","y","r","l","v","S","z","s","h","@","#","$","F","x","X","%","^","L","V","&"};
+        string consonants_slp1[]={"k","K","g","G","N","c","C","j","J","Y","w","W","q","Q","R","t","T","d","D","n","p","P","b","B","m","y","r","l","v","S","z","s","h","@","#","$","F","x","X","%","^","&","V","L"};
         string no_dn[]={"०","१","२","३","४","५","६","७","८","९","॥","।","–","—"};
         string no_slp1[]={"0","1","2","3","4","5","6","7","8","9","||","|","-","-"};
 
         for(int i=0;i<44;i++)
-                {
-                    s=ReplaceString(s,consonants_slp1[i],consonants_dn_halanta[i]);
-                }
-                for(int i=0;i<12;i++)
-                {
-                    s=ReplaceString(s,"्"+vowel_slp1[i],vowel_dn_joiner[i]);
-                }
-                for(int i=0;i<16;i++)
-                {
-                    s=ReplaceString(s,vowel_slp1[i],vowel_dn[i]);
-                }
-                for(int i=0;i<13;i++)
-                {
-                    s=ReplaceString(s,no_slp1[i],no_dn[i]);
-                }
+        {
+            s=ReplaceString(s,consonants_slp1[i],consonants_dn_halanta[i]);
+        }
+        for(int i=0;i<12;i++)
+        {
+            s=ReplaceString(s,"्"+vowel_slp1[i],vowel_dn_joiner[i]);
+        }
+        for(int i=0;i<16;i++)
+        {
+            s=ReplaceString(s,vowel_slp1[i],vowel_dn[i]);
+        }
+        for(int i=0;i<13;i++)
+        {
+            s=ReplaceString(s,no_slp1[i],no_dn[i]);
+        }
     }
 else if(SanFlag ){
     string vowel_dn[]={"अ","आ","इ","ई","उ","ऊ","ऋ","ॠ","ऌ","ॡ","ए","ऐ","ओ","औ","ं","ः","ँ","ᳲ","ᳳ","ऽ","ॐ"};
@@ -91,27 +93,27 @@ else if(SanFlag ){
     string numbers_eng[]={"1","2","3","4","5","6","7","8","9","0","|","||","0","$","'","'","''","''","%"};
 
 
-        for(int i=0;i<34;i++)
-        {
-            s=ReplaceString(s,consonants_slp1[i],consonants_dn_halanta[i]);
-        }
-        //cout << "here1 " << s <<endl;
-        for(int i=0;i<14;i++)
-        {
-            s=ReplaceString(s,"्"+vowel_slp1[i],vowel_dn_joiner[i]);
-        }
-        //cout << "here2 " << s <<endl;
-        for(int i=0;i<21;i++)
-        {
-            s=ReplaceString(s,vowel_slp1[i],vowel_dn[i]);
-        }
-        //cout << "here3 " << s <<endl;
-        for(unsigned int i=0;i<(sizeof(numbers_etc_dn)/sizeof(numbers_etc_dn[0]));i++)
-        {
-            s=ReplaceString(s,numbers_eng[i],numbers_etc_dn[i]);
-        }
-        //cout << "here3 " << s <<endl;
-        //cout<<s<<endl;
+       for(int i=0;i<34;i++)
+       {
+           s=ReplaceString(s,consonants_slp1[i],consonants_dn_halanta[i]);
+       }
+       //cout << "here1 " << s <<endl;
+       for(int i=0;i<14;i++)
+       {
+           s=ReplaceString(s,"्"+vowel_slp1[i],vowel_dn_joiner[i]);
+       }
+       //cout << "here2 " << s <<endl;
+       for(int i=0;i<21;i++)
+       {
+           s=ReplaceString(s,vowel_slp1[i],vowel_dn[i]);
+       }
+       //cout << "here3 " << s <<endl;
+       for(unsigned int i=0;i<(sizeof(numbers_etc_dn)/sizeof(numbers_etc_dn[0]));i++)
+       {
+           s=ReplaceString(s,numbers_eng[i],numbers_etc_dn[i]);
+       }
+       //cout << "here3 " << s <<endl;
+       //cout<<s<<endl;
     }
 
     return s;
@@ -126,7 +128,7 @@ string toslp1(string s)
         string vowel_slp1[]={"a","A","i","I","u","U","f","e","E","o","O","Z","M","H","*","~"};
         string consonants_dn[]={"क","ख","ग","घ","ङ","च","छ","ज","झ","ञ","ट","ठ","ड","ढ","ण","त","थ","द","ध","न","प","फ","ब","भ","म","य","र","ल","व","श","ष","स","ह","क़","ख़","ग़","ज़","ड़","ढ़","ऩ","फ़","य़","ऱ","ळ"};
         string consonants_dn_halanta[]={"क्","ख्","ग्","घ्","ङ्","च्","छ्","ज्","झ्","ञ्","ट्","ठ्","ड्","ढ्","ण्","त्","थ्","द्","ध्","न्","प्","फ्","ब्","भ्","म्","य्","र्","ल्","व्","श्","ष्","स्","ह्","क़्","ख़्","ग़्","ज़्","ड़्","ढ़्","ऩ्","फ़्","य़्","ऱ्","ळ्"};
-        string consonants_slp1[]={"k","K","g","G","N","c","C","j","J","Y","w","W","q","Q","R","t","T","d","D","n","p","P","b","B","m","y","r","l","v","S","z","s","h","@","#","$","F","x","X","%","^","L","V","&"};
+        string consonants_slp1[]={"k","K","g","G","N","c","C","j","J","Y","w","W","q","Q","R","t","T","d","D","n","p","P","b","B","m","y","r","l","v","S","z","s","h","@","#","$","F","x","X","%","^","&","V","L"};
         string no_dn[]={"०","१","२","३","४","५","६","७","८","९","।","॥","–","—"};
         string no_slp1[]={"0","1","2","3","4","5","6","7","8","9","|","||","-","-"};
 
@@ -1494,4 +1496,3 @@ return "";
 }
 
 #endif // SLPNPATTERNDICT_H
-

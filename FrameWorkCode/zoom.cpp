@@ -51,6 +51,7 @@ bool Graphics_view_zoom::eventFilter(QObject *object, QEvent *event) {
       }
     }
   }
+
   Q_UNUSED(object)
   return false;
 }

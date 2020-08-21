@@ -71,16 +71,7 @@ private slots:
 
     void mousePressEvent(QMouseEvent *ev);
 
-   // void mouseReleaseEvent(QMouseEvent *ev);
-
-    //void mouseMoveEvent(QMouseEvent *event);
-
     void menuSelection(QAction* action);
-
-    //void mouseMoveEvent(QMouseEvent* e) override { e->ignore(); }
-
-    //bool eventFilter(QObject *object, QEvent *event);
-
 
     void on_actionLoad_Next_Page_triggered();
 
@@ -160,25 +151,17 @@ private slots:
 
     void on_actionUnBold_triggered();
 
-//    void on_actionSaveAsODF_triggered();
+    void on_compareCorrectorOutput_clicked();
 
-    //void on_pushButton_clicked();
-
-    void on_pushButton_3_clicked();
-
-    void on_pushButton_2_clicked();
+    void on_compareVerifierOutput_clicked();
 
     void on_actionJusitfiedAlign_triggered();
 
     void on_actionAccuracyLog_triggered();
-    
- //   void on_actionHighlight_toggled(bool arg1);
 
     void on_actionHighlight_triggered();
-
-   // void on_addcomments_clicked();
     
-    void on_viewallcomments_clicked();
+    void on_viewAllComments_clicked();
     
     void on_actionFontBlack_triggered();
 
@@ -189,12 +172,27 @@ private slots:
     void LogHighlights(QString word);
 
 	void on_actionSuperscript_triggered();
+
 	void on_actionSubscript_triggered();
+
     void on_actionInsert_Horizontal_Line_triggered();
+
+	void on_actionZoom_In_triggered();
+
+	void on_actionZoom_Out_triggered();
+
+    void on_actionLineSpace_triggered();
+
+    void SaveTimeLog();
+
+    void on_actionDiacritics_triggered();
+
+    void on_actionInsert_Tab_Space_triggered();
 
 private:
     Ui::MainWindow *ui;
-
+	QGraphicsScene * graphic = nullptr;
+	Graphics_view_zoom * z =nullptr;
     QString mFilename;
     QString mFilenamejpeg;
 };
