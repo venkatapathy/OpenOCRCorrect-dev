@@ -2926,7 +2926,7 @@ void MainWindow::on_actionAccuracyLog_triggered()
 {
     QString qs1="", qs2="",qs3="";
 
-    file = QFileDialog::getOpenFileName(this,"Open Output File"); //open file
+    file = QFileDialog::getOpenFileName(this,"Open File from VerifierOutput Folder"); //open file
     int loc =  file.lastIndexOf("/");
     QString folder = file.mid(0,loc); //fetch parent tdirectory
 
@@ -2947,8 +2947,12 @@ void MainWindow::on_actionAccuracyLog_triggered()
         filename = folder + "/" + filename;
 
         QString verifiertext = filename;
-        QString ocrtext = filename.replace("VerifierOutput","Inds"); //CAN CHANGE ACCORDING TO FILE STRUCTURE
-        QString correctortext = filename.replace("Inds","CorrectorOutput"); //CAN CHANGE ACCORDING TO FILE STRUCTURE
+        QString correctortext = filename.replace("VerifierOutput","CorrectorOutput"); //CAN CHANGE ACCORDING TO FILE STRUCTURE
+        QString ocrtext = filename.replace("CorrectorOutput","Inds"); //CAN CHANGE ACCORDING TO FILE STRUCTURE
+        ocrtext.replace(".html",".txt");
+        ocrtext.replace("V1_", "");
+        ocrtext.replace("V2_", "");
+        ocrtext.replace("V3_", "");
 
         if(!ocrtext.isEmpty())
         {
@@ -2991,6 +2995,13 @@ void MainWindow::on_actionAccuracyLog_triggered()
        {
            continue;
        }
+       QTextDocument doc;
+
+       doc.setHtml(qs2);
+       qs2 = doc.toPlainText().replace(" \n","\n");
+
+       doc.setHtml(qs3);
+       qs3 = doc.toPlainText().replace(" \n","\n");
 
        diff_match_patch dmp;
 
@@ -3359,10 +3370,7 @@ void MainWindow::on_actionViewAverageAccuracies_triggered()
 {
     QString commentFilename = gDirTwoLevelUp + "/Comments/comments.json";
     QString csvfile = gDirTwoLevelUp + "/Comments/AverageAccuracies.csv";
-    QString pagename = gCurrentPageName;
-    pagename.replace(".txt", "");
-    pagename.replace(".html", "");
-    float avgcharacc=0, avgwordacc = 0, avgrating  = 0; int avgcharerrors = 0, avgworderrors = 0;
+    float avgCharAccuracy=0, avgWordAccuracy = 0, avgRating  = 0; int avgCharErrors = 0, avgWordErrors = 0;
 
     QFile jsonFile(commentFilename);
     jsonFile.open(QIODevice::ReadOnly | QIODevice::Text);
@@ -3372,13 +3380,13 @@ void MainWindow::on_actionViewAverageAccuracies_triggered()
     QJsonDocument document = QJsonDocument::fromJson(data, &errorPtr);
     QJsonObject mainObj = document.object();
 
-    avgcharacc= mainObj["AverageCharAccuracy"].toDouble();
-    avgwordacc = mainObj["AverageWordAccuracy"].toDouble();
-    avgcharerrors = mainObj["AverageCharErrors"].toInt();
-    avgworderrors = mainObj["AverageWordErrors"].toInt();
+    avgCharAccuracy= mainObj["AverageCharAccuracy"].toDouble();
+    avgWordAccuracy = mainObj["AverageWordAccuracy"].toDouble();
+    avgCharErrors = mainObj["AverageCharErrors"].toInt();
+    avgWordErrors = mainObj["AverageWordErrors"].toInt();
 
-    AverageAccuracies *aa = new AverageAccuracies(csvfile, avgwordacc, avgcharacc, avgworderrors, avgcharerrors);
-    aa->show();
+    AverageAccuracies *avgAcc = new AverageAccuracies(csvfile, avgWordAccuracy, avgCharAccuracy, avgWordErrors, avgCharErrors);
+    avgAcc->show();
 }
 
 void MainWindow::LogHighlights(QString word)
