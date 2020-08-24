@@ -2042,11 +2042,6 @@ void MainWindow::on_actionAllFontProperties_triggered() //Sanoj
 	}
 }
 
-void MainWindow::on_actionFontBlack_triggered()
-{
-	curr_browser->setTextColor(Qt::black);
-}
-
 
 //void MainWindow::on_actionSaveAsODF_triggered()//Sanoj
 //{
@@ -2061,7 +2056,7 @@ void MainWindow::on_actionFontBlack_triggered()
 //}
 
 
-
+/*
 void MainWindow::on_actionVerifier_Diff_View_triggered() //VERIFER Sanoj
 {
 
@@ -2220,7 +2215,7 @@ void MainWindow::on_actionCorrector_Diff_View_triggered() //INTERN NIPUN
 	InternDiffView *dv = new InternDiffView(qs1, qs2, ocrimage, diff); //Fetch OCR Image in DiffView2 and Set
 	dv->show();
 }
-
+*/
 void MainWindow::on_actionAccuracyLog_triggered()
 {
     QString qs1="", qs2="",qs3="";
@@ -2635,7 +2630,7 @@ void MainWindow::on_actionView_Comments_triggered()
 }
 
 
-
+/*
 void MainWindow::on_actionViewAverageAccuracies_triggered()
 {
 	QString commentFilename = dir2levelup + "/Comments/comments.json";
@@ -2661,6 +2656,7 @@ void MainWindow::on_actionViewAverageAccuracies_triggered()
 	AverageAccuracies *aa = new AverageAccuracies(csvfile, avgwordacc, avgcharacc, avgworderrors, avgcharerrors);
 	aa->show();
 }
+*/
 
 void MainWindow::LogHighlights(QString word)
 {
@@ -3296,16 +3292,6 @@ void MainWindow::directoryChanged(const QString &path) {
 	}
 }
 
-void MainWindow::on_compareCorrectorOutput_clicked()
-{
-    on_actionCompare_Corrector_triggered();
-}
-
-void MainWindow::on_ViewComments_clicked()
-{
-    on_actionView_Comments_triggered();
-}
-
 void MainWindow::on_actionZoom_In_triggered()
 {
     if (z)
@@ -3325,3 +3311,27 @@ void MainWindow::on_actionDiacritics_triggered()
 }
 
 
+
+void MainWindow::on_actionFontBlack_triggered()
+{
+    curr_browser->setTextColor(Qt::black);
+}
+
+void MainWindow::on_actionAdd_Image_triggered()
+{
+    QString file = QFileDialog::getOpenFileName(this, tr("Select an image"),
+                                          ".", tr("Bitmap Files (*.bmp)\n"
+                                            "JPEG (*.jpg *jpeg)\n"
+                                            "GIF (*.gif)\n"
+                                            "PNG (*.png)\n"));
+    QUrl Uri ( QString ( "file://%1" ).arg ( file ) );
+    QImage image = QImageReader ( file ).read();
+    QTextDocument * textDocument = curr_browser->document();
+    textDocument->addResource( QTextDocument::ImageResource, Uri, QVariant ( image ) );
+    QTextCursor cursor = curr_browser->textCursor();
+    QTextImageFormat imageFormat;
+    imageFormat.setWidth( image.width() );
+    imageFormat.setHeight( image.height() );
+    imageFormat.setName( Uri.toString() );
+    cursor.insertImage(imageFormat);
+}

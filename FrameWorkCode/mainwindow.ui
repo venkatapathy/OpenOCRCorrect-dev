@@ -246,7 +246,7 @@ p, li { white-space: pre-wrap; }
      <x>0</x>
      <y>0</y>
      <width>1366</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuOCR_Correction_Window">
@@ -331,6 +331,8 @@ p, li { white-space: pre-wrap; }
     <addaction name="actionRightAlign"/>
     <addaction name="actionCentreAlign"/>
     <addaction name="actionJusitfiedAlign"/>
+    <addaction name="separator"/>
+    <addaction name="actionAdd_Image"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -369,7 +371,7 @@ p, li { white-space: pre-wrap; }
     <bool>false</bool>
    </attribute>
    <addaction name="actionNew"/>
-   <addaction name="actionOpen"/>
+   <addaction name="actionOpen_Project"/>
    <addaction name="actionSave"/>
    <addaction name="actionSave_As"/>
    <addaction name="actionLoadData"/>
@@ -395,23 +397,13 @@ p, li { white-space: pre-wrap; }
    <addaction name="actionRightAlign"/>
    <addaction name="actionJusitfiedAlign"/>
    <addaction name="actionHighlight"/>
+   <addaction name="actionFontBlack"/>
+   <addaction name="separator"/>
    <addaction name="actionZoom_In"/>
    <addaction name="actionZoom_Out"/>
    <addaction name="actionDiacritics"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <action name="actionOpen">
-   <property name="icon">
-    <iconset resource="AppResources.qrc">
-     <normaloff>:/Images/open.png</normaloff>:/Images/open.png</iconset>
-   </property>
-   <property name="text">
-    <string>Open</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+O</string>
-   </property>
-  </action>
   <action name="actionSave">
    <property name="icon">
     <iconset resource="AppResources.qrc">
@@ -742,13 +734,12 @@ p, li { white-space: pre-wrap; }
    </property>
   </action>
   <action name="actionOpen_Project">
+   <property name="icon">
+    <iconset resource="AppResources.qrc">
+     <normaloff>:/Images/open.png</normaloff>:/Images/open.png</iconset>
+   </property>
    <property name="text">
     <string>Open Project</string>
-   </property>
-  </action>
-  <action name="actionView_File_Hierarchy">
-   <property name="text">
-    <string>View File Hierarchy</string>
    </property>
   </action>
   <action name="actionTurn_In">
@@ -833,6 +824,19 @@ p, li { white-space: pre-wrap; }
     <string>Diacritics</string>
    </property>
   </action>
+  <action name="actionFontBlack">
+   <property name="text">
+    <string>FontBlack</string>
+   </property>
+   <property name="toolTip">
+    <string>FontBlack</string>
+   </property>
+  </action>
+  <action name="actionAdd_Image">
+   <property name="text">
+    <string>Add Image</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <tabstops>
@@ -840,6 +844,8 @@ p, li { white-space: pre-wrap; }
   <tabstop>graphicsView</tabstop>
  </tabstops>
  <resources>
+  <include location="AppResources.qrc"/>
+  <include location="AppResources.qrc"/>
   <include location="AppResources.qrc"/>
  </resources>
  <connections/>

@@ -168,9 +168,9 @@ private slots:
 
     //void on_pushButton_clicked();
 
-    void on_actionVerifier_Diff_View_triggered();
+   // void on_actionVerifier_Diff_View_triggered();
 	
-	void on_actionCorrector_Diff_View_triggered();
+    //void on_actionCorrector_Diff_View_triggered();
 
     //void on_viewallcomments_clicked();
 
@@ -190,7 +190,7 @@ private slots:
 	void updateAverageAccuracies();
     //void on_actionCompare_Verifier_clicked();
 	void on_actionCompare_Corrector_triggered();
-	void on_actionViewAverageAccuracies_triggered();
+    //void on_actionViewAverageAccuracies_triggered();
 
 	void LogHighlights(QString word);
 	void on_actionOpen_Project_triggered();
@@ -220,9 +220,9 @@ private slots:
  //   void on_actionCompare_Verifier_triggered();
 
 
-    void on_compareCorrectorOutput_clicked();
+    //void on_compareCorrectorOutput_clicked();
 
-    void on_ViewComments_clicked();
+    //void on_ViewComments_clicked();
 
     void on_actionZoom_In_triggered();
 
@@ -232,6 +232,8 @@ private slots:
 
     void on_actionCompare_Verifier_triggered();
 
+
+    void on_actionAdd_Image_triggered();
 
 private:
     Ui::MainWindow *ui;
