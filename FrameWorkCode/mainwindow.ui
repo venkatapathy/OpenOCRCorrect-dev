@@ -333,6 +333,7 @@ p, li { white-space: pre-wrap; }
     <addaction name="actionJusitfiedAlign"/>
     <addaction name="separator"/>
     <addaction name="actionAdd_Image"/>
+    <addaction name="actionResize_Image"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -835,6 +836,11 @@ p, li { white-space: pre-wrap; }
   <action name="actionAdd_Image">
    <property name="text">
     <string>Add Image</string>
+   </property>
+  </action>
+  <action name="actionResize_Image">
+   <property name="text">
+    <string>Resize Image</string>
    </property>
   </action>
  </widget>

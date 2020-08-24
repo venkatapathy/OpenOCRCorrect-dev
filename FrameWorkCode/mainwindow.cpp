@@ -13,6 +13,7 @@
 #include "interndiffview.h"
 #include "commentsview.h"
 #include "diacriticsview.h"
+#include "resizeimageview.h"
 #include <string>
 #include <fstream>
 #include <vector>
@@ -3334,4 +3335,43 @@ void MainWindow::on_actionAdd_Image_triggered()
     imageFormat.setHeight( image.height() );
     imageFormat.setName( Uri.toString() );
     cursor.insertImage(imageFormat);
+}
+
+void MainWindow::on_actionResize_Image_triggered()
+{
+    QTextBlock currentBlock = curr_browser->textCursor().block();
+    QTextBlock::iterator it;
+
+        for (it = currentBlock.begin(); !(it.atEnd()); ++it)
+        {
+
+                 QTextFragment fragment = it.fragment();
+
+
+                 if (fragment.isValid())
+                 {
+
+                     if(fragment.charFormat().isImageFormat ())
+                     {
+                          QTextImageFormat newImageFormat = fragment.charFormat().toImageFormat();
+
+                          QPair<double, double> size = ResizeImageView::getNewSize(this, newImageFormat.width(), newImageFormat.height());
+
+                          newImageFormat.setWidth(size.first);
+                          newImageFormat.setHeight(size.second);
+
+                          if (newImageFormat.isValid())
+                          {
+                              //QMessageBox::about(this, "Fragment", fragment.text());
+                              //newImageFormat.setName(":/icons/text_bold.png");
+                              QTextCursor helper = curr_browser->textCursor();
+
+                              helper.setPosition(fragment.position());
+                              helper.setPosition(fragment.position() + fragment.length(),
+                                                  QTextCursor::KeepAnchor);
+                              helper.setCharFormat(newImageFormat);
+                          }
+                      }
+                  }
+           }
 }

@@ -235,6 +235,8 @@ private slots:
 
     void on_actionAdd_Image_triggered();
 
+    void on_actionResize_Image_triggered();
+
 private:
     Ui::MainWindow *ui;
 	Project mProject;
