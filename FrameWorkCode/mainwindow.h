@@ -181,7 +181,7 @@ private slots:
 
 	void on_actionZoom_Out_triggered();
 
-    void on_actionLineSpace_triggered();
+    //void on_actionLineSpace_triggered();
 
     void SaveTimeLog();
 

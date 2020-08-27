@@ -80,60 +80,6 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-
-
-/*
-
-bool fileFlag = 0;
-void MainWindow::on_actionLoad_Next_Page_triggered()
-{   QString file = "";
-    string localFilename = mFilenamejpeg.toUtf8().constData();
-    string nos = "0123456789";
-    size_t loc = localFilename.find(".jpeg");
-    string s = localFilename.substr(loc-1,1);
-    string no;
-    while(nos.find(s) != string::npos) { no = s + no; loc--; s = localFilename.substr(loc-1,1);  }
-    //cout << stoi(no) + 1 << endl;
-    localFilename.replace(loc,no.size(),to_string(stoi(no) + 1));
-
-    mFilenamejpeg = QString::fromStdString(localFilename); fileFlag = 1;
-    imageOrig.load(mFilenamejpeg);
-    QGraphicsScene *graphic = new QGraphicsScene(this);
-    graphic->addPixmap(QPixmap::fromImage(imageOrig));
-    ui->graphicsView->setScene(graphic);
-    ui->graphicsView->adjustSize();
-    ui->graphicsView->fitInView(graphic->itemsBoundingRect(),Qt::KeepAspectRatio);
-    //localmFilename = mFilename;
-    //on_actionOpen_triggered();
-
-    //imageOrig.load(localFilename.replace(QString("txt"),QString("jpeg")));
-
-}
-
-
-
-void MainWindow::on_actionLoad_Prev_Page_triggered()
-{   QString file = "";
-    string localFilename = mFilenamejpeg.toUtf8().constData();
-    string nos = "0123456789";
-    size_t loc = localFilename.find(".txt");
-    string s = localFilename.substr(loc-1,1);
-    string no;
-    while(nos.find(s) != string::npos) { no = s + no; loc--; s = localFilename.substr(loc-1,1);  }
-    //cout << stoi(no) + 1 << endl;
-    localFilename.replace(loc,no.size(),to_string(stoi(no) - 1));
-    mFilenamejpeg = QString::fromStdString(localFilename); fileFlag = 1;
-    imageOrig.load(mFilenamejpeg);
-    QGraphicsScene *graphic = new QGraphicsScene(this);
-    graphic->addPixmap(QPixmap::fromImage(imageOrig));
-    ui->graphicsView->setScene(graphic);
-    ui->graphicsView->adjustSize();
-    ui->graphicsView->fitInView(graphic->itemsBoundingRect(),Qt::KeepAspectRatio);
-    //localmFilename = mFilename;
-    //on_actionOpen_triggered();
-
-    //imageOrig.load(localFilename.replace(QString("txt"),QString("jpeg")));
-}*/
 void DisplayError(QString error)
 {
     QMessageBox msgBox;
@@ -718,6 +664,7 @@ void MainWindow::mousePressEvent(QMouseEvent *ev)
         gSeconds += nMilliseconds / 1000;
         int mins = gSeconds / 60;
         int seconds = gSeconds - mins * 60;
+        QString str1;
         ui->lineEdit->setText(QString::number(mins) + "mins " + QString::number(seconds) + " secs elapsed on this page(Right Click to update)");
 
         if ((ev->button() == Qt::RightButton) || (RightclickFlag))
@@ -726,11 +673,11 @@ void MainWindow::mousePressEvent(QMouseEvent *ev)
             QTextCursor cursor = ui->textBrowser->textCursor();
             cursor.select(QTextCursor::WordUnderCursor);
             // code to copy selected string:-
-            QString str1 = cursor.selectedText();
+            str1 = cursor.selectedText();
             selectedStr = str1.toUtf8().constData();
 
         }
-        if (selectedStr != "") {
+        if (!(selectedStr== "" | str1.isEmpty())) {
             // code to display options on rightclick
             ui->textBrowser->setContextMenuPolicy(Qt::CustomContextMenu);//IMP TO AVOID UNDO ETC AFTER SELECTING A SUGGESTION
             QMenu* popup_menu = ui->textBrowser->createStandardContextMenu();
@@ -1020,15 +967,15 @@ void MainWindow::on_actionSave_triggered()
     } else {
 
         QString temp_gCurrentPageName = gCurrentPageName;
-        if(gCurrentDirName == "Inds")
-        {
-            temp_gCurrentPageName = "V1_" + gCurrentPageName;
-        }
-        if(gCurrentDirName == "VerifierOutput")
-        {
-            temp_gCurrentPageName.replace("V2_","V3_");
-            temp_gCurrentPageName.replace("V1_","V2_");
-        }
+//        if(gCurrentDirName == "Inds")
+//        {
+//            temp_gCurrentPageName = "V1_" + gCurrentPageName;
+//        }
+//        if(gCurrentDirName == "VerifierOutput")
+//        {
+//            temp_gCurrentPageName.replace("V2_","V3_");
+//            temp_gCurrentPageName.replace("V1_","V2_");
+//        }
         QString changefiledir = filestructure_fw[gCurrentDirName];
         QString localFilename = gDirTwoLevelUp + "/" +changefiledir +"/" + temp_gCurrentPageName;
         localFilename.replace(".txt",".html");
@@ -2828,23 +2775,23 @@ void MainWindow::on_actionInsert_Horizontal_Line_triggered()
     ui->textBrowser->insertHtml("<hr>");
 }
 
-void MainWindow::on_actionLineSpace_triggered()
-{
-    QTextCursor cursor = ui->textBrowser->textCursor();
-    QTextBlockFormat format = cursor.blockFormat();
-    double lineHeight = format.lineHeight()/100;
-    bool False = false;
-    bool *ok = &False;
-    if(lineHeight == 0)
-        lineHeight = 1;
-    double inputLineSpace = QInputDialog::getDouble(this, "Custom Line Space", "Line Space", lineHeight, 0, 10, 2,ok);
-    if(*ok) {
-        // LineHeight(x,1) sets x as a percentage with base as 100
-        //200 is Double LineSpace and 50 is half LineSpace
-        format.setLineHeight(inputLineSpace*100, 1);
-        cursor.setBlockFormat(format);
-    }
-}
+//void MainWindow::on_actionLineSpace_triggered()
+//{
+//    QTextCursor cursor = ui->textBrowser->textCursor();
+//    QTextBlockFormat format = cursor.blockFormat();
+//    double lineHeight = format.lineHeight()/100;
+//    bool False = false;
+//    bool *ok = &False;
+//    if(lineHeight == 0)
+//        lineHeight = 1;
+//    double inputLineSpace = QInputDialog::getDouble(this, "Custom Line Space", "Line Space", lineHeight, 0, 10, 2,ok);
+//    if(*ok) {
+//        // LineHeight(x,1) sets x as a percentage with base as 100
+//        //200 is Double LineSpace and 50 is half LineSpace
+//        format.setLineHeight(inputLineSpace*100, 1);
+//        cursor.setBlockFormat(format);
+//    }
+//}
 
 void MainWindow::on_actionInsert_Tab_Space_triggered()
 {
