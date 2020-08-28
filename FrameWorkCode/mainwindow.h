@@ -75,16 +75,7 @@ private slots:
 
     void mousePressEvent(QMouseEvent *ev);
 
-   // void mouseReleaseEvent(QMouseEvent *ev);
-
-    //void mouseMoveEvent(QMouseEvent *event);
-
     void menuSelection(QAction* action);
-
-    //void mouseMoveEvent(QMouseEvent* e) override { e->ignore(); }
-
-    //bool eventFilter(QObject *object, QEvent *event);
-
 
     void on_actionLoad_Next_Page_triggered();
 
@@ -164,51 +155,47 @@ private slots:
 
     void on_actionUnBold_triggered();
 
-//    void on_actionSaveAsODF_triggered();
-
-    //void on_pushButton_clicked();
-
-    void on_actionVerifier_Diff_View_triggered();
-	
-	void on_actionCorrector_Diff_View_triggered();
-
-    //void on_viewallcomments_clicked();
-
     void on_actionJusitfiedAlign_triggered();
 
-    void on_actionAverage_Accuracy_triggered();
-	 void on_actionHighlight_triggered();
-
-	//void on_actionHighlight_triggered();
-
-	// void on_addcomments_clicked();
-
-	void on_actionView_Comments_triggered();
+    void on_actionHighlight_triggered();
 
 	void on_actionFontBlack_triggered();
 
-	void updateAverageAccuracies();
-    //void on_actionCompare_Verifier_clicked();
-	void on_actionCompare_Corrector_triggered();
 	void on_actionViewAverageAccuracies_triggered();
 
-	void LogHighlights(QString word);
-	void on_actionOpen_Project_triggered();
-	void file_click(const QModelIndex & indx);
-	void LoadDocument(QFile * file, QString ext, QString name);
-	void LoadImageFromFile(QFile * file);
-	void CustomContextMenuTriggered(const QPoint &p);
-	void AddNewFile();
-	void OpenDirectory();
-	void RemoveFile();
-	void closetab(int index);
-	void tabchanged(int index);
-	void on_actionCommit_triggered();
-	void on_actionTurn_In_triggered();
-	void on_actionPush_triggered();
-	void on_actionFetch_2_triggered();
-	void directoryChanged(const QString &path);
+    //void LogHighlights(QString word);
 
+	void on_actionOpen_Project_triggered();
+
+    void file_click(const QModelIndex & indx);
+
+    void LoadDocument(QFile * file, QString ext, QString name);
+
+    void LoadImageFromFile(QFile * file);
+
+    void CustomContextMenuTriggered(const QPoint &p);
+
+    void AddNewFile();
+
+    void OpenDirectory();
+
+    void RemoveFile();
+
+    void closetab(int index);
+
+    void tabchanged(int index);
+
+    void on_actionCommit_triggered();
+
+    void on_actionTurn_In_triggered();
+
+    void on_actionPush_triggered();
+
+    void on_actionFetch_2_triggered();
+
+    void on_actionVerifier_Turn_In_triggered();
+
+    void directoryChanged(const QString &path);
 
     void on_actionAccuracyLog_triggered();
 
@@ -216,21 +203,39 @@ private slots:
 
     //void on_actionFetch_triggered();
 
- //   void on_actionCompare_Verifier_triggered();
-
+    //void on_actionCompare_Verifier_triggered();
 
     void on_compareCorrectorOutput_clicked();
 
-    void on_ViewComments_clicked();
+    void on_viewComments_clicked();
 
     void on_actionZoom_In_triggered();
 
     void on_actionZoom_Out_triggered();
 
-    void on_actionDiacritics_triggered();
+    void on_actionSymbols_triggered();
 
-    void on_actionCompare_Verifier_triggered();
+    //void on_actionCompare_Verifier_triggered();
 
+    void on_actionInsert_Tab_Space_triggered();
+
+    //void on_actionLineSpace_triggered();
+
+    void on_actionInsert_Horizontal_Line_triggered();
+
+    void on_actionSubscript_triggered();
+
+    void on_actionSuperscript_triggered();
+
+    void UpdateFileBrekadown();
+
+    void on_actionAdd_Image_triggered();
+
+    void SaveTimeLog();
+
+    void DisplayTimeLog();
+
+    void on_actionResize_Image_triggered();
 
 private:
     Ui::MainWindow *ui;
@@ -238,7 +243,8 @@ private:
     QString mFilename;
     QString mFilenamejpeg;
 	QString current_folder;
-	QString current_page_name="";
+    QString currentTabPageName="";
+    int currentTabIndex;
 	QTextBrowser * curr_browser = nullptr;
 	QGraphicsScene * graphic =nullptr;
 	Graphics_view_zoom * z = nullptr;

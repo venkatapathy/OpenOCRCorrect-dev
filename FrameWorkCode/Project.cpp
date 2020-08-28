@@ -499,7 +499,7 @@ bool Project::add_config() {
 	error = git_config_open_level(&sys_cfg, cfg, GIT_CONFIG_LEVEL_SYSTEM);
 	check_lg2(error, "Couldn't open system level config", "");
 
-	error = git_config_get_entry(&entry, sys_cfg, "user.name");
+    error = git_config_get_entry(&entry, sys_cfg, "user.name");
 	check_lg2(error, "Couldn't get user.name", "");
 	std::string str = "";
 	if (entry) {
@@ -584,6 +584,11 @@ QString Project::get_stage() {
 	auto c = doc.child("Project").child("Metadata");
 	QString stage = c.child("Stage").child_value();
 	return stage;
+}
+QString Project::get_version() {
+    auto c = doc.child("Project").child("Metadata");
+    QString version = c.child("Version").child_value();
+    return version;
 }
 void Project::open_git_repo() {
 	std::string dir = mProjectDir.path().toStdString();
