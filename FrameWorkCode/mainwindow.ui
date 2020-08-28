@@ -349,7 +349,6 @@ p, li { white-space: pre-wrap; }
     <addaction name="actionTurn_In"/>
     <addaction name="actionCommit"/>
     <addaction name="actionFetch_2"/>
-    <addaction name="actionVerifier_Turn_In"/>
    </widget>
    <addaction name="menuSelectLanguage"/>
    <addaction name="menuOCR_Correction_Window"/>

@@ -536,7 +536,6 @@ public:
         menuGit->addAction(actionTurn_In);
         menuGit->addAction(actionCommit);
         menuGit->addAction(actionFetch_2);
-        menuGit->addAction(actionVerifier_Turn_In);
         mainToolBar->addAction(actionNew);
         mainToolBar->addAction(actionOpen);
         mainToolBar->addAction(actionSave);

@@ -3019,17 +3019,7 @@ void MainWindow::on_actionTurn_In_triggered() {
 void MainWindow::on_actionFetch_2_triggered() {
 	mProject.fetch();
 }
-void MainWindow::on_actionVerifier_Turn_In_triggered() {
-	mProject.push();
-	mProject.enable_push();
-	auto list = ui->menuGit->actions();
-	for (auto a : list) {
-		QString name = a->text();
-		if (name == "Turn In") {
-			a->setEnabled(true);
-		}
-	}
-}
+
 QString GetFilter(QString & Name, const QStringList &list) {
 
 	QString Filter = Name;

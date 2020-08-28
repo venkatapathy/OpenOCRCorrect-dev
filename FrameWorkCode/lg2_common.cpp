@@ -1,6 +1,11 @@
 #include  "lg2_common.h"
 #include <iostream>
+#include <qmessagebox.h>
 
+void PostError(QString errorMessage) {
+	QMessageBox messageBox;
+	messageBox.critical(0, "Git Error", errorMessage);
+}
 int check_lg2(int error, std::string message, std::string extra ) {
 	const git_error *lg2err;
 	const char *lg2msg = "", *lg2spacer = "";
@@ -10,6 +15,9 @@ int check_lg2(int error, std::string message, std::string extra ) {
 		lg2msg = lg2err->message;
 		lg2spacer = " - ";
 		klass = lg2err->klass;
+		std::string errorMsg = message + ".\nError Message: " + lg2msg + "\nError Code: " + std::to_string(klass);
+		QString qerrorMsg = QString::fromStdString(errorMsg);
+		PostError(qerrorMsg);
 	}
 	if (!extra.empty()) {
 		std::cout << message << extra << "(" << error << ") " << lg2spacer << lg2msg;
