@@ -271,3 +271,6 @@ __pycache__/
 /FrameWorkCode/HOCRDocument.hpp
 /FrameWorkCode/HOCRDocument.cpp
 /FrameWorkCode/tessdata
+/verifier-linux
+*.rar
+*.zip
