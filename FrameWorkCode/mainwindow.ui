@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1366</width>
-    <height>768</height>
+    <height>1190</height>
    </rect>
   </property>
   <property name="mouseTracking">
@@ -17,30 +17,77 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QVBoxLayout" name="verticalLayout_2">
-    <item>
-     <widget class="QLineEdit" name="lineEdit">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="minimumSize">
-       <size>
-        <width>400</width>
-        <height>20</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>400</width>
-        <height>20</height>
-       </size>
-      </property>
-     </widget>
+   <layout class="QGridLayout" name="gridLayout_2">
+    <item row="0" column="0">
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QLineEdit" name="lineEdit">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>400</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>400</width>
+          <height>20</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="lineEdit_2">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>20</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="viewComments">
+        <property name="text">
+         <string>View Comments</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="compareCorrectorOutput">
+        <property name="text">
+         <string>Compare Corrector Output</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
-    <item>
+    <item row="1" column="0">
      <widget class="QSplitter" name="splitter">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
@@ -54,13 +101,13 @@
        </property>
        <property name="minimumSize">
         <size>
-         <width>100</width>
+         <width>0</width>
          <height>0</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
-         <width>400</width>
+         <width>300</width>
          <height>16777215</height>
         </size>
        </property>
@@ -82,13 +129,13 @@
            </property>
            <property name="minimumSize">
             <size>
-             <width>100</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>300</width>
+             <width>500</width>
              <height>16777215</height>
             </size>
            </property>
@@ -112,7 +159,7 @@
         <attribute name="title">
          <string>Project</string>
         </attribute>
-        <layout class="QGridLayout" name="gridLayout_2">
+        <layout class="QGridLayout" name="gridLayout_3">
          <item row="0" column="0">
           <widget class="QTreeView" name="treeView">
            <property name="sizePolicy">
@@ -123,13 +170,13 @@
            </property>
            <property name="minimumSize">
             <size>
-             <width>100</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>400</width>
+             <width>500</width>
              <height>16777215</height>
             </size>
            </property>
@@ -139,6 +186,12 @@
        </widget>
       </widget>
       <widget class="QTabWidget" name="tabWidget_2">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
        <property name="maximumSize">
         <size>
          <width>16777215</width>
@@ -161,8 +214,8 @@
         <attribute name="title">
          <string>Tab 1</string>
         </attribute>
-        <layout class="QHBoxLayout" name="horizontalLayout_2">
-         <item>
+        <layout class="QGridLayout" name="gridLayout_4">
+         <item row="0" column="0">
           <widget class="QTextBrowser" name="textBrowser">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
@@ -172,8 +225,8 @@
            </property>
            <property name="minimumSize">
             <size>
-             <width>550</width>
-             <height>550</height>
+             <width>400</width>
+             <height>0</height>
             </size>
            </property>
            <property name="font">
@@ -213,80 +266,43 @@ p, li { white-space: pre-wrap; }
         </layout>
        </widget>
       </widget>
-      <widget class="QWidget" name="layoutWidget">
-       <layout class="QVBoxLayout" name="verticalLayout">
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout">
-          <item>
-           <widget class="QPushButton" name="viewComments">
-            <property name="text">
-             <string>View Comments</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="compareCorrectorOutput">
-            <property name="text">
-             <string>Compare Corrector Output</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <widget class="QGraphicsView" name="graphicsView">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>400</width>
-            <height>550</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="sizeAdjustPolicy">
-           <enum>QAbstractScrollArea::AdjustIgnored</enum>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-          <property name="renderHints">
-           <set>QPainter::NonCosmeticDefaultPen</set>
-          </property>
-          <property name="dragMode">
-           <enum>QGraphicsView::ScrollHandDrag</enum>
-          </property>
-          <property name="transformationAnchor">
-           <enum>QGraphicsView::AnchorViewCenter</enum>
-          </property>
-          <property name="resizeAnchor">
-           <enum>QGraphicsView::AnchorViewCenter</enum>
-          </property>
-         </widget>
-        </item>
-       </layout>
+      <widget class="QGraphicsView" name="graphicsView">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="sizeAdjustPolicy">
+        <enum>QAbstractScrollArea::AdjustIgnored</enum>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+       <property name="renderHints">
+        <set>QPainter::NonCosmeticDefaultPen</set>
+       </property>
+       <property name="dragMode">
+        <enum>QGraphicsView::ScrollHandDrag</enum>
+       </property>
+       <property name="transformationAnchor">
+        <enum>QGraphicsView::AnchorViewCenter</enum>
+       </property>
+       <property name="resizeAnchor">
+        <enum>QGraphicsView::AnchorViewCenter</enum>
+       </property>
       </widget>
      </widget>
     </item>
@@ -388,7 +404,6 @@ p, li { white-space: pre-wrap; }
     <addaction name="actionSubscript"/>
     <addaction name="actionInsert_Horizontal_Line"/>
     <addaction name="actionFontBlack"/>
-    <addaction name="actionLineSpace"/>
     <addaction name="actionInsert_Tab_Space"/>
     <addaction name="actionAdd_Image"/>
     <addaction name="actionResize_Image"/>
@@ -397,11 +412,9 @@ p, li { white-space: pre-wrap; }
     <property name="title">
      <string>View</string>
     </property>
-    <addaction name="actionCompare_Verifier"/>
     <addaction name="actionCompare_Corrector"/>
     <addaction name="separator"/>
     <addaction name="actionAverage_Accuracy"/>
-    <addaction name="actionView_Comments"/>
    </widget>
    <widget class="QMenu" name="menuGit">
     <property name="title">
@@ -455,16 +468,15 @@ p, li { white-space: pre-wrap; }
    <addaction name="actionCentreAlign"/>
    <addaction name="actionRightAlign"/>
    <addaction name="actionJusitfiedAlign"/>
-   <addaction name="actionLineSpace"/>
    <addaction name="actionHighlight"/>
+   <addaction name="actionSymbols"/>
    <addaction name="actionZoom_In"/>
    <addaction name="actionZoom_Out"/>
-   <addaction name="actionDiacritics"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionOpen_Project">
    <property name="icon">
-    <iconset resource="AppResources.qrc">
+    <iconset>
      <normaloff>:/Images/open.png</normaloff>:/Images/open.png</iconset>
    </property>
    <property name="text">
@@ -476,7 +488,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionSave">
    <property name="icon">
-    <iconset resource="AppResources.qrc">
+    <iconset>
      <normaloff>:/Images/save.png</normaloff>:/Images/save.png</iconset>
    </property>
    <property name="text">
@@ -488,7 +500,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionSave_As">
    <property name="icon">
-    <iconset resource="AppResources.qrc">
+    <iconset>
      <normaloff>:/Images/save-as.png</normaloff>:/Images/save-as.png</iconset>
    </property>
    <property name="text">
@@ -500,7 +512,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionNew">
    <property name="icon">
-    <iconset resource="AppResources.qrc">
+    <iconset>
      <normaloff>:/Images/New.png</normaloff>:/Images/New.png</iconset>
    </property>
    <property name="text">
@@ -508,6 +520,9 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="shortcut">
     <string>Ctrl+N</string>
+   </property>
+   <property name="visible">
+    <bool>true</bool>
    </property>
   </action>
   <action name="actionSpell_Check">
@@ -770,7 +785,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionRightAlign">
    <property name="icon">
-    <iconset resource="AppResources.qrc">
+    <iconset>
      <normaloff>:/Images/AlignRight.png</normaloff>
      <normalon>:/Images/AlignCenter.png</normalon>:/Images/AlignRight.png</iconset>
    </property>
@@ -818,11 +833,6 @@ p, li { white-space: pre-wrap; }
     <string>Fetch</string>
    </property>
   </action>
-  <action name="actionCompare_Verifier">
-   <property name="text">
-    <string>Verifier Diff View</string>
-   </property>
-  </action>
   <action name="actionCompare_Corrector">
    <property name="text">
     <string>Corrector Diff View</string>
@@ -867,32 +877,45 @@ p, li { white-space: pre-wrap; }
    <property name="text">
     <string>Highlight</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+H</string>
+   </property>
   </action>
   <action name="actionZoom_In">
    <property name="icon">
-    <iconset resource="AppResources.qrc">
+    <iconset>
      <normaloff>:/Images/Zoom-In-icon.png</normaloff>:/Images/Zoom-In-icon.png</iconset>
    </property>
    <property name="text">
     <string>Zoom In</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl++</string>
+   </property>
   </action>
   <action name="actionZoom_Out">
    <property name="icon">
-    <iconset resource="AppResources.qrc">
+    <iconset>
      <normaloff>:/Images/Zoom-Out-icon.png</normaloff>:/Images/Zoom-Out-icon.png</iconset>
    </property>
    <property name="text">
     <string>Zoom_Out</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+-</string>
+   </property>
   </action>
-  <action name="actionDiacritics">
+  <action name="actionSymbols">
    <property name="icon">
-    <iconset resource="AppResources.qrc">
-     <normaloff>:/Images/icon_diacritics.png</normaloff>:/Images/icon_diacritics.png</iconset>
+    <iconset>
+     <normaloff>:/Images/symbols.png</normaloff>
+     <normalon>:/Images/symbols.png</normalon>:/Images/symbols.png</iconset>
    </property>
    <property name="text">
-    <string>Diacritics</string>
+    <string>Symbols</string>
+   </property>
+   <property name="toolTip">
+    <string>Special Symbols</string>
    </property>
   </action>
   <action name="actionSuperscript">
@@ -913,16 +936,6 @@ p, li { white-space: pre-wrap; }
   <action name="actionFontBlack">
    <property name="text">
     <string>FontBlack</string>
-   </property>
-  </action>
-  <action name="actionLineSpace">
-   <property name="icon">
-    <iconset>
-     <normalon>:/Images/linespacing.png</normalon>
-    </iconset>
-   </property>
-   <property name="text">
-    <string>LineSpace</string>
    </property>
   </action>
   <action name="actionViewAverageAccuracies">
@@ -950,14 +963,6 @@ p, li { white-space: pre-wrap; }
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <tabstops>
-  <tabstop>textBrowser</tabstop>
-  <tabstop>graphicsView</tabstop>
- </tabstops>
- <resources>
-  <include location="AppResources.qrc"/>
-  <include location="AppResources.qrc"/>
-  <include location="AppResources.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

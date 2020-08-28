@@ -12,7 +12,7 @@
 #include "diff_match_patch.h"
 #include "interndiffview.h"
 #include "commentsview.h"
-#include "diacriticsview.h"
+#include "Symbols.h"
 #include "resizeimageview.h"
 #include <string>
 #include <fstream>
@@ -67,22 +67,22 @@ map<QString, QString> filestructure_bw = { {"VerifierOutput","CorrectorOutput"},
 };
 
 MainWindow::MainWindow(QWidget *parent) :
-	QMainWindow(parent),
-	ui(new Ui::MainWindow)
+    QMainWindow(parent),
+    ui(new Ui::MainWindow)
 {
-	ui->setupUi(this);
+    ui->setupUi(this);
 
-	QString str = "SLP1 Guide:";
-	str += "\n";
-	str += "डॉ,, ड़,, ढ़,, अ   - a,, आ/ ा   - A,, इ/ ि   - i,, ई/ ी   - I,, उ/ ु   - u,, ऊ/ ू   - U,, ऋ/ ृ   - f,, ॠ/ ॄ   - F,, ऌ/ ॢ   - x,, ॡ/ \"ॣ\”   - X,, ए/ े   - e,, ऐ/ ै   - E,, ओ/ ो   - o,, औ/ ौ   - O,, ं   - M,, ः   - H,, ँ    - ~,, ऽ   - $,, ॐ   - %,, ज्ञ   - jYa ,, ळ ,, त्र   - tra,, श्र   - Sra,, क्ष्/क्ष   - kz/kza,, द्य्/द्य   - dy/dya,, क्/क   - k/ka,, ख्/ख   - K/Ka,, ग्/ग   - g/ga,, घ्/घ   - G/Ga,, ङ्/ङ   - N/Na,, च्/च   - c/ca,, छ्/छ   - C/Ca,, ज्/ज   - j/ja,, झ्/झ   - J/Ja,, ञ्/ञ   - Y/Ya,, ट्/ट   - w/wa,, ठ्/ठ   - W/Wa,, ड्/ड   - q/qa,, ढ्/ढ   - Q/Qa,, ण्/ण   - R/Ra,, त्/त   - t/ta,, थ्/थ   - T/Ta,, द्/द   - d/da,, ध्/ध   - D/Da,, न्/न   - n/na,, प्/प   - p/pa,, फ्/फ   - P/Pa,, ब्/ब   - b/ba,, भ्/भ   - B/Ba,, म्/म   - m/ma,, य्/य   - y/ya,, र्/र   - r/ra,, ल्/ल   - l/la,, व्/व   - v/va,, श्/श   - S/Sa,, ष्/ष   - z/za,, स्/स   - s/sa,, ह्/ह   - h/ha,, ळ्/ळ   - &/&a,, ऩ्  -%,, फ़्  - ^,, य़्  - L,, ऱ्  - V,,१   - 1,, २   - 2,, ३   - 3,, ४   - 4,, ५   - 5,, ६   - 6,, ७   - 7,, ८   - 8,, ९   - 9,, ०   - 0,, ।   - |,, ॥   - ||";
-	ui->tabWidget_2->removeTab(0);
-	ui->tabWidget_2->removeTab(0);
-	bool b = connect(ui->tabWidget_2, SIGNAL(tabCloseRequested(int)), this, SLOT(closetab(int)));
-	b = connect(ui->tabWidget_2, SIGNAL(currentChanged(int)), this, SLOT(tabchanged(int)));
-	b = connect(&watcher, SIGNAL(directoryChanged(const QString&)), this, SLOT(directoryChanged(const QString&)));
-	str.replace(",, ", "\n");
-	// str.replace(", ","\t");
-	ui->textEdit->setText(str);
+    QString str = "SLP1 Guide:";
+    str += "\n";
+    str += "डॉ,, ड़  - xa,, ढ़  -Xa,, अ  - a,, आ/ ा  - A,, इ/ ि  - i,, ई/ ी  - I,, उ/ ु  - u,, ऊ/ ू  - U,, ऋ/ ृ  - f,, ॠ/ ॄ  - F,, ऌ/ ॢ  - x,, ॡ/ \"ॣ\”  - X,, ए/ े  - e,, ऐ/ ै  - E,, ओ/ ो  - o,, औ/ ौ  - O,, ं  - M,, ः  - H,, ँ   - ~,, ऽ  - $,, ॐ  - %,, ज्ञ  - jYa ,, ळ ,, त्र  - tra,, श्र  - Sra,, क्ष्/क्ष  - kz/kza,, द्य्/द्य  - dy/dya,, क्/क  - k/ka,, ख्/ख  - K/Ka,, ग्/ग  - g/ga,, घ्/घ  - G/Ga,, ङ्/ङ  - N/Na,, च्/च  - c/ca,, छ्/छ  - C/Ca,, ज्/ज  - j/ja,, झ्/झ  - J/Ja,, ञ्/ञ  - Y/Ya,, ट्/ट  - w/wa,, ठ्/ठ  - W/Wa,, ड्/ड  - q/qa,, ढ्/ढ  - Q/Qa,, ण्/ण  - R/Ra,, त्/त  - t/ta,, थ्/थ  - T/Ta,, द्/द  - d/da,, ध्/ध  - D/Da,, न्/न  - n/na,, प्/प  - p/pa,, फ्/फ  - P/Pa,, ब्/ब  - b/ba,, भ्/भ  - B/Ba,, म्/म  - m/ma,, य्/य  - y/ya,, र्/र  - r/ra,, ल्/ल  - l/la,, व्/व  - v/va,, श्/श  - S/Sa,, ष्/ष  - z/za,, स्/स  - s/sa,, ह्/ह  - h/ha,, ळ्/ळ  - L/La,, ऩ्  -%,, फ़्  - ^,, य़्  - &,, ऱ्  - V,, १  - 1,, २  - 2,, ३  - 3,, ४  - 4,, ५  - 5,, ६  - 6,, ७  - 7,, ८  - 8,, ९  - 9,, ०  - 0,, ।  - |,, ॥  - ||";
+    ui->tabWidget_2->removeTab(0);
+    ui->tabWidget_2->removeTab(0);
+    bool b = connect(ui->tabWidget_2, SIGNAL(tabCloseRequested(int)), this, SLOT(closetab(int)));
+    b = connect(ui->tabWidget_2, SIGNAL(currentChanged(int)), this, SLOT(tabchanged(int)));
+    b = connect(&watcher, SIGNAL(directoryChanged(const QString&)), this, SLOT(directoryChanged(const QString&)));
+    str.replace(",, ", "\n");
+    // str.replace(", ","\t");
+    ui->textEdit->setText(str);
 }
 
 MainWindow::~MainWindow()
@@ -156,6 +156,52 @@ void GetPageNumber(string localFilename, string *no, size_t *loc, QString *ext)
         *no = s + *no; (*loc)--; s = localFilename.substr((*loc)-1,1);
     }
 }
+
+int GetGraphemesCount(QString string)
+{
+    int count = 0;
+    QTextBoundaryFinder finder = QTextBoundaryFinder(QTextBoundaryFinder::BoundaryType::Grapheme, string);
+    while (finder.toNextBoundary() != -1) {
+            count++;
+        }
+    int spaces = string.count(' ');
+    return count - spaces;
+}
+
+int LevenshteinWithGraphemes(QList<Diff> diffs)
+{
+    int levenshtein = 0;
+    QString diffChars = "";
+    QString insertions = "";
+    QString deletions = "";
+    foreach(Diff aDiff, diffs) {
+      switch (aDiff.operation) {
+        case INSERT:
+          insertions += aDiff.text;
+          break;
+        case DELETE:
+          deletions += aDiff.text;
+          break;
+        case EQUAL:
+          // A deletion and an insertion is one substitution.
+          if(GetGraphemesCount(insertions)> GetGraphemesCount(deletions))
+              levenshtein += insertions.length();
+          else
+              levenshtein += deletions.length();
+          insertions = "";
+          deletions = "";
+          break;
+        default:
+            break;
+      }
+    }
+    if(GetGraphemesCount(insertions)> GetGraphemesCount(deletions))
+        levenshtein += insertions.length();
+    else
+        levenshtein += deletions.length();
+    return levenshtein;
+}
+
 
 void MainWindow::on_actionLoad_Next_Page_triggered()
 {
@@ -377,140 +423,147 @@ string selectedStr ="";
 //GIVE EVENT TO TEXT BROWZER INSTEAD OF MAINWINDOW
 void MainWindow::mousePressEvent(QMouseEvent *ev)
 {
-	
-	if (curr_browser) {
-		curr_browser->cursorForPosition(ev->pos());
+
+    if (curr_browser) {
+        curr_browser->cursorForPosition(ev->pos());
 
         DisplayTimeLog();
-        
-		if ((ev->button() == Qt::RightButton) || (RightclickFlag))
-		{
-			QTextCursor cursor1 = curr_browser->cursorForPosition(ev->pos());
-			QTextCursor cursor = curr_browser->textCursor();
-			cursor.select(QTextCursor::WordUnderCursor);
-			// code to copy selected string:-
+
+        if ((ev->button() == Qt::RightButton) || (RightclickFlag))
+        {
+            QTextCursor cursor1 = curr_browser->cursorForPosition(ev->pos());
+            QTextCursor cursor = curr_browser->textCursor();
+            cursor.select(QTextCursor::WordUnderCursor);
+            // code to copy selected string:-
             QString str1 = cursor.selectedText();
-			selectedStr = str1.toUtf8().constData();
-			if (selectedStr != "") {
-				// code to display options on rightclick
-				curr_browser->setContextMenuPolicy(Qt::CustomContextMenu);//IMP TO AVOID UNDO ETC AFTER SELECTING A SUGGESTION
-				QMenu* popup_menu = curr_browser->createStandardContextMenu();
-				QMenu* spell_menu;
-				spell_menu = new QMenu("suggestions", this);
-				//QAction* action = tr("tihor");
-				QAction* act;
-				//vector<string> Words =  print5NearestEntries(TGPage,selectedStr);
-				vector<string>  Words1 = print5NearestEntries(TGBook, selectedStr);
-				vector<string> Alligned = print5NearestEntries(TGBookP, selectedStr);
-				vector<string> PWords1 = print5NearestEntries(TPWords, selectedStr);
-				string PairSugg = print2OCRSugg(selectedStr, Alligned[0], ConfPmap, Dict); // map<string,int>&
-				vector<string>  Words = print1OCRNearestEntries(toslp1(selectedStr), vIBook);
-				//cout <<" here " << toDev(Words[0]) << endl;
+            selectedStr = str1.toUtf8().constData();
+            if (selectedStr != "") {
+                // code to display options on rightclick
+                curr_browser->setContextMenuPolicy(Qt::CustomContextMenu);//IMP TO AVOID UNDO ETC AFTER SELECTING A SUGGESTION
+                QMenu* popup_menu = curr_browser->createStandardContextMenu();
+                QMenu* spell_menu;
+                spell_menu = new QMenu("suggestions", this);
+                //QAction* action = tr("tihor");
+                QAction* act;
+                //vector<string> Words =  print5NearestEntries(TGPage,selectedStr);
+                vector<string>  Words1 = print5NearestEntries(TGBook, selectedStr);
+                if (Words1.empty()) return;
+                vector<string> Alligned = print5NearestEntries(TGBookP, selectedStr);
+                if (Alligned.empty()) return;
+
+                vector<string> PWords1 = print5NearestEntries(TPWords, selectedStr);
+                if (PWords1.empty()) return;
+
+                string PairSugg = print2OCRSugg(selectedStr, Alligned[0], ConfPmap, Dict); // map<string,int>&
+                if (PairSugg.empty())return;
+                vector<string>  Words = print1OCRNearestEntries(toslp1(selectedStr), vIBook);
+                if (Words.empty())return;
+                //cout <<" here " << toDev(Words[0]) << endl;
 
 
-				// find nearest confirming to OCR Sugg from Book
-				string nearestCOnfconfirmingSuggvec;
-				vector<string> vec = Words1;
-				int min = 100;
-				for (size_t t = 0; t < vec.size(); t++) {
-					vector<string> wordConfusions; vector<int> wCindex;
-					int minFactor = loadWConfusionsNindex1(selectedStr, vec[t], ConfPmap, wordConfusions, wCindex);
-					wordConfusions.clear(); wCindex.clear();
-					if (minFactor < min) { min = minFactor; nearestCOnfconfirmingSuggvec = vec[t]; }
-				}
+                // find nearest confirming to OCR Sugg from Book
+                string nearestCOnfconfirmingSuggvec;
+                vector<string> vec = Words1;
+                int min = 100;
+                for (size_t t = 0; t < vec.size(); t++) {
+                    vector<string> wordConfusions; vector<int> wCindex;
+                    int minFactor = loadWConfusionsNindex1(selectedStr, vec[t], ConfPmap, wordConfusions, wCindex);
+                    wordConfusions.clear(); wCindex.clear();
+                    if (minFactor < min) { min = minFactor; nearestCOnfconfirmingSuggvec = vec[t]; }
+                }
 
-				// find nearest confirming to OCR Sugg from PWords
-				string nearestCOnfconfirmingSuggvec1;
-				vector<string> vec1 = PWords1;
-				min = 100;
-				for (size_t t = 0; t < vec1.size(); t++) {
-					vector<string> wordConfusions; vector<int> wCindex;
-					int minFactor = loadWConfusionsNindex1(selectedStr, vec1[t], ConfPmap, wordConfusions, wCindex);
-					wordConfusions.clear(); wCindex.clear();
-					if (minFactor < min) { min = minFactor; nearestCOnfconfirmingSuggvec1 = vec1[t]; }
-				}
+                // find nearest confirming to OCR Sugg from PWords
+                string nearestCOnfconfirmingSuggvec1;
+                vector<string> vec1 = PWords1;
+                min = 100;
+                for (size_t t = 0; t < vec1.size(); t++) {
+                    vector<string> wordConfusions; vector<int> wCindex;
+                    int minFactor = loadWConfusionsNindex1(selectedStr, vec1[t], ConfPmap, wordConfusions, wCindex);
+                    wordConfusions.clear(); wCindex.clear();
+                    if (minFactor < min) { min = minFactor; nearestCOnfconfirmingSuggvec1 = vec1[t]; }
+                }
 
-				vector<pair<int, string>> vecSugg, vecSugg1;
-				map<string, int> mapSugg;
-				string CSugg = CPair[toslp1(selectedStr)];
-				if (CSugg.size() > 0) mapSugg[toslp1(CSugg)]++;
-				if (Words.size() > 0)  mapSugg[toslp1(Words[0])]++;
-				if (Words1.size() > 0) mapSugg[toslp1(nearestCOnfconfirmingSuggvec)]++;
-				if (PWords1.size() > 0) mapSugg[toslp1(nearestCOnfconfirmingSuggvec1)]++;
-				if (PairSugg.size() > 0) mapSugg[toslp1(PairSugg)]++;
-				mapSugg[SamasBreakLRCorrect(toslp1(selectedStr), Dict, PWords, TPWords, TPWordsP)]++;
-				string s1 = toslp1(selectedStr);
-				string nearestCOnfconfirmingSuggvecFont = "";
-				min = 100;
-				for (size_t t = 0; t < vec.size(); t++) {
-					vector<string> wordConfusions; vector<int> wCindex;
-					int minFactor = loadWConfusionsNindex1(s1, vec[t], ConfPmapFont, wordConfusions, wCindex);
-					wordConfusions.clear(); wCindex.clear();
-					if (minFactor < min) { min = minFactor; nearestCOnfconfirmingSuggvecFont = vec[t]; }
-				}
-				if (nearestCOnfconfirmingSuggvecFont.size() > 0) mapSugg[nearestCOnfconfirmingSuggvecFont]++;
+                vector<pair<int, string>> vecSugg, vecSugg1;
+                map<string, int> mapSugg;
+                string CSugg = CPair[toslp1(selectedStr)];
+                if (CSugg.size() > 0) mapSugg[toslp1(CSugg)]++;
+                if (Words.size() > 0)  mapSugg[toslp1(Words[0])]++;
+                if (Words1.size() > 0) mapSugg[toslp1(nearestCOnfconfirmingSuggvec)]++;
+                if (PWords1.size() > 0) mapSugg[toslp1(nearestCOnfconfirmingSuggvec1)]++;
+                if (PairSugg.size() > 0) mapSugg[toslp1(PairSugg)]++;
+                mapSugg[SamasBreakLRCorrect(toslp1(selectedStr), Dict, PWords, TPWords, TPWordsP)]++;
+                string s1 = toslp1(selectedStr);
+                string nearestCOnfconfirmingSuggvecFont = "";
+                min = 100;
+                for (size_t t = 0; t < vec.size(); t++) {
+                    vector<string> wordConfusions; vector<int> wCindex;
+                    int minFactor = loadWConfusionsNindex1(s1, vec[t], ConfPmapFont, wordConfusions, wCindex);
+                    wordConfusions.clear(); wCindex.clear();
+                    if (minFactor < min) { min = minFactor; nearestCOnfconfirmingSuggvecFont = vec[t]; }
+                }
+                if (nearestCOnfconfirmingSuggvecFont.size() > 0) mapSugg[nearestCOnfconfirmingSuggvecFont]++;
 
-				string PairSuggFont = "";
-				if (Alligned.size() > 0) PairSuggFont = print2OCRSugg(s1, Alligned[0], ConfPmap, Dict);
-				if (PairSuggFont.size() > 0) mapSugg[PairSuggFont]++;
+                string PairSuggFont = "";
+                if (Alligned.size() > 0) PairSuggFont = print2OCRSugg(s1, Alligned[0], ConfPmap, Dict);
+                if (PairSuggFont.size() > 0) mapSugg[PairSuggFont]++;
 
-				string sugg9 = "";
-				sugg9 = generatePossibilitesNsuggest(s1, TopConfusions, TopConfusionsMask, Dict, SRules);
-				if (sugg9.size() > 0) mapSugg[sugg9]++;
+                string sugg9 = "";
+                sugg9 = generatePossibilitesNsuggest(s1, TopConfusions, TopConfusionsMask, Dict, SRules);
+                if (sugg9.size() > 0) mapSugg[sugg9]++;
 
-				map<string, int> mapSugg1;
-				for (size_t ksugg1 = 0; ksugg1 < 5; ksugg1++) {
-					if (Words.size() > ksugg1)  mapSugg1[toslp1(Words[ksugg1])]++;
-					if (Words1.size() > ksugg1) mapSugg1[toslp1(Words1[ksugg1])]++;
-					if (PWords1.size() > ksugg1) mapSugg1[toslp1(PWords1[ksugg1])]++;
-				}
-
-
-				for (map<string, int>::const_iterator eptr = mapSugg.begin(); eptr != mapSugg.end(); eptr++) {
-					vecSugg.push_back(make_pair(editDist(toslp1(eptr->first), toslp1(selectedStr)), eptr->first));
-				}
-
-				for (map<string, int>::const_iterator eptr = mapSugg1.begin(); eptr != mapSugg1.end(); eptr++) {
-					vecSugg1.push_back(make_pair(editDist(toslp1(eptr->first), toslp1(selectedStr)), eptr->first));
-				}
+                map<string, int> mapSugg1;
+                for (size_t ksugg1 = 0; ksugg1 < 5; ksugg1++) {
+                    if (Words.size() > ksugg1)  mapSugg1[toslp1(Words[ksugg1])]++;
+                    if (Words1.size() > ksugg1) mapSugg1[toslp1(Words1[ksugg1])]++;
+                    if (PWords1.size() > ksugg1) mapSugg1[toslp1(PWords1[ksugg1])]++;
+                }
 
 
-				//vecSugg.push_back(make_pair(editDist(toslp1(selectedStr),selectedStr),selectedStr));
-				//if(Words.size() > 0) vecSugg.push_back(make_pair(editDist(toslp1(selectedStr),toslp1(Words[0])),Words[0]));
-				//vecSugg.push_back(make_pair(editDist(toslp1(selectedStr),toslp1(Words1[0])),Words1[0]));
-				//vecSugg.push_back(make_pair(editDist(toslp1(selectedStr),toslp1(PairSugg)),PairSugg));
-				sort(vecSugg.begin(), vecSugg.end()); sort(vecSugg1.begin(), vecSugg1.end());
-				//cout << vec[0]  << " " << vec[1]  << " " << vec[2]  << " " << newtrie.next.size() << endl;
-				//Words = suggestions((selectedStr));
-				for (uint bitarrayi = 0; bitarrayi < vecSugg.size(); bitarrayi++) {
-					act = new QAction(QString::fromStdString(toDev(vecSugg[bitarrayi].second)), spell_menu);
-					//cout<<vecSugg[bitarrayi].first<<endl;
-					spell_menu->addAction(act);
-				}
+                for (map<string, int>::const_iterator eptr = mapSugg.begin(); eptr != mapSugg.end(); eptr++) {
+                    vecSugg.push_back(make_pair(editDist(toslp1(eptr->first), toslp1(selectedStr)), eptr->first));
+                }
 
-				for (uint bitarrayi = 0; bitarrayi < vecSugg1.size(); bitarrayi++) {
-					if (mapSugg[vecSugg1[bitarrayi].second] < 1) {
-						act = new QAction(QString::fromStdString(toDev(vecSugg1[bitarrayi].second)), spell_menu);
-						//cout<<vecSugg1[bitarrayi].first<<endl;
-						spell_menu->addAction(act);
-					}
-				}
-				/*Words =  print5NearestEntries(TDict,selectedStr);
-				if (Words.size() > 0) {
-					act = new QAction(QString::fromStdString(toDev(Words[0])), spell_menu);
+                for (map<string, int>::const_iterator eptr = mapSugg1.begin(); eptr != mapSugg1.end(); eptr++) {
+                    vecSugg1.push_back(make_pair(editDist(toslp1(eptr->first), toslp1(selectedStr)), eptr->first));
+                }
 
-					spell_menu->addAction(act);
 
-				}*/
+                //vecSugg.push_back(make_pair(editDist(toslp1(selectedStr),selectedStr),selectedStr));
+                //if(Words.size() > 0) vecSugg.push_back(make_pair(editDist(toslp1(selectedStr),toslp1(Words[0])),Words[0]));
+                //vecSugg.push_back(make_pair(editDist(toslp1(selectedStr),toslp1(Words1[0])),Words1[0]));
+                //vecSugg.push_back(make_pair(editDist(toslp1(selectedStr),toslp1(PairSugg)),PairSugg));
+                sort(vecSugg.begin(), vecSugg.end()); sort(vecSugg1.begin(), vecSugg1.end());
+                //cout << vec[0]  << " " << vec[1]  << " " << vec[2]  << " " << newtrie.next.size() << endl;
+                //Words = suggestions((selectedStr));
+                for (uint bitarrayi = 0; bitarrayi < vecSugg.size(); bitarrayi++) {
+                    act = new QAction(QString::fromStdString(toDev(vecSugg[bitarrayi].second)), spell_menu);
+                    //cout<<vecSugg[bitarrayi].first<<endl;
+                    spell_menu->addAction(act);
+                }
 
-				popup_menu->insertSeparator(popup_menu->actions()[0]);
-				popup_menu->insertMenu(popup_menu->actions()[0], spell_menu);
-				connect(spell_menu, SIGNAL(triggered(QAction*)), this, SLOT(menuSelection(QAction*)));
-				popup_menu->exec(ev->globalPos());
-				popup_menu->close(); popup_menu->clear();
-				//curr_browser->createStandardContextMenu()->clear();
-				//cursor.select(QTextCursor::WordUnderCursor);
-				vecSugg.clear(); Words1.clear(); Words.clear(); Alligned.clear(); PairSugg.clear();
+                for (uint bitarrayi = 0; bitarrayi < vecSugg1.size(); bitarrayi++) {
+                    if (mapSugg[vecSugg1[bitarrayi].second] < 1) {
+                        act = new QAction(QString::fromStdString(toDev(vecSugg1[bitarrayi].second)), spell_menu);
+                        //cout<<vecSugg1[bitarrayi].first<<endl;
+                        spell_menu->addAction(act);
+                    }
+                }
+                /*Words =  print5NearestEntries(TDict,selectedStr);
+                if (Words.size() > 0) {
+                    act = new QAction(QString::fromStdString(toDev(Words[0])), spell_menu);
+
+                    spell_menu->addAction(act);
+
+                }*/
+
+                popup_menu->insertSeparator(popup_menu->actions()[0]);
+                popup_menu->insertMenu(popup_menu->actions()[0], spell_menu);
+                connect(spell_menu, SIGNAL(triggered(QAction*)), this, SLOT(menuSelection(QAction*)));
+                popup_menu->exec(ev->globalPos());
+                popup_menu->close(); popup_menu->clear();
+                //curr_browser->createStandardContextMenu()->clear();
+                //cursor.select(QTextCursor::WordUnderCursor);
+                vecSugg.clear(); Words1.clear(); Words.clear(); Alligned.clear(); PairSugg.clear();
             }
             else {
 
@@ -520,7 +573,7 @@ void MainWindow::mousePressEvent(QMouseEvent *ev)
                 popup_menu->exec(ev->globalPos());
                 popup_menu->close(); popup_menu->clear();
             }
-		} // if right click
+        } // if right click
     }
 }// if mouse event
 
@@ -642,11 +695,16 @@ void MainWindow::menuSelection(QAction* action)
 
 void MainWindow::on_actionNew_triggered()
 {
-	if (curr_browser) {
-		mFilename = "Untitled";
-		curr_browser->setPlainText("");
-	}
+    if (curr_browser) {
+        mFilename = "Untitled";
+        curr_browser->setPlainText("");
+    } else {
+        QTextBrowser * b = new QTextBrowser();
+        currentTabIndex = ui->tabWidget_2->addTab(b, "Untitled");
+        ui->tabWidget_2->setCurrentIndex(currentTabIndex);
+    }
 }
+
 
 void MainWindow::on_actionSave_triggered()
 {
@@ -2063,6 +2121,8 @@ void MainWindow::on_actionEnglish_triggered()
 
 void MainWindow::on_actionBold_triggered() //modified
 {
+    if(!curr_browser)
+        return;
     QTextCharFormat format;
     format.setFontWeight(QFont::Bold);
     curr_browser->textCursor().mergeCharFormat(format);
@@ -2070,6 +2130,8 @@ void MainWindow::on_actionBold_triggered() //modified
 
 void MainWindow::on_actionUnBold_triggered() //modified
 {
+    if(!curr_browser)
+        return;
     QTextCharFormat format;
     format.setFontWeight(QFont::Normal);
     curr_browser->textCursor().mergeCharFormat(format);
@@ -2077,20 +2139,28 @@ void MainWindow::on_actionUnBold_triggered() //modified
 
 void MainWindow::on_actionLeftAlign_triggered() //modified
 {
+    if(!curr_browser)
+        return;
     curr_browser->setAlignment(Qt::AlignLeft);
 }
 
 void MainWindow::on_actionRightAlign_triggered() //modified
 {
+    if(!curr_browser)
+        return;
     curr_browser->setAlignment(Qt::AlignRight);
 }
 
 void MainWindow::on_actionCentreAlign_triggered()
 {
+    if(!curr_browser)
+        return;
     curr_browser->setAlignment(Qt::AlignCenter);
 }
 void MainWindow::on_actionJusitfiedAlign_triggered()
 {
+    if(!curr_browser)
+        return;
     auto cursor = curr_browser->textCursor();
     auto selected = cursor.selection();
     cursor.removeSelectedText();
@@ -2104,6 +2174,8 @@ void MainWindow::on_actionJusitfiedAlign_triggered()
 
 void MainWindow::on_actionAllFontProperties_triggered()
 {
+    if(!curr_browser)
+        return;
     QFont initialFont = curr_browser->font();
     auto pointsize = curr_browser->fontPointSize();
     if(pointsize) initialFont.setPointSize(pointsize);
@@ -2119,15 +2191,21 @@ void MainWindow::on_actionAllFontProperties_triggered()
 
 void MainWindow::on_actionHighlight_triggered()
 {
+    if(!curr_browser)
+        return;
     curr_browser->setTextBackgroundColor(Qt::transparent);
 }
 
 void MainWindow::on_actionFontBlack_triggered()
 {
+    if(!curr_browser)
+        return;
     curr_browser->setTextColor(Qt::black);
 }
 
 void MainWindow::on_actionSuperscript_triggered() {
+    if(!curr_browser)
+        return;
     auto cursor = curr_browser->textCursor();
     auto selected = cursor.selection();
     QString sel = selected.toPlainText();
@@ -2137,6 +2215,8 @@ void MainWindow::on_actionSuperscript_triggered() {
     cursor.insertFragment(newFrag);
 }
 void MainWindow::on_actionSubscript_triggered() {
+    if(!curr_browser)
+        return;
     auto cursor = curr_browser->textCursor();
     auto selected = cursor.selection();
     cursor.removeSelectedText();
@@ -2147,267 +2227,37 @@ void MainWindow::on_actionSubscript_triggered() {
 }
 void MainWindow::on_actionInsert_Horizontal_Line_triggered()
 {
+    if(!curr_browser)
+        return;
     curr_browser->insertHtml("<hr>");
 }
 
-void MainWindow::on_actionLineSpace_triggered()
-{
-    QTextCursor cursor = curr_browser->textCursor();
-    QTextBlockFormat format = cursor.blockFormat();
-    double lineHeight = format.lineHeight()/100;
-    bool False = false;
-    bool *ok = &False;
-    if(lineHeight == 0)
-        lineHeight = 1;
-    double inputLineSpace = QInputDialog::getDouble(this, "Custom Line Space", "Line Space", lineHeight, 0, 10, 2,ok);
-    if(*ok) {
-        // LineHeight(x,1) sets x as a percentage with base as 100
-        //200 is Double LineSpace and 50 is half LineSpace
-        format.setLineHeight(inputLineSpace*100, 1);
-        cursor.setBlockFormat(format);
-    }
-}
+//void MainWindow::on_actionLineSpace_triggered()
+//{
+//    if(!curr_browser)
+//        return;
+//    QTextCursor cursor = curr_browser->textCursor();
+//    QTextBlockFormat format = cursor.blockFormat();
+//    double lineHeight = format.lineHeight()/100;
+//    bool False = false;
+//    bool *ok = &False;
+//    if(lineHeight == 0)
+//        lineHeight = 1;
+//    double inputLineSpace = QInputDialog::getDouble(this, "Custom Line Space", "Line Space", lineHeight, 0, 10, 2,ok);
+//    if(*ok) {
+//        // LineHeight(x,1) sets x as a percentage with base as 100
+//        //200 is Double LineSpace and 50 is half LineSpace
+//        format.setLineHeight(inputLineSpace*100, 1);
+//        cursor.setBlockFormat(format);
+//    }
+//}
 
 void MainWindow::on_actionInsert_Tab_Space_triggered()
 {
+    if(!curr_browser)
+        return;
     curr_browser->insertPlainText("    ");
 }
-//void MainWindow::LogHighlights(QString word) //Verifier
-//{
-//	QString dir = mProject.GetDir().absolutePath();
-//	QString highlightsFilename = gDirTwoLevelUp + "/Comments/HighlightsLog.json";
-//	QString pagename = gCurrentPageName;
-//	pagename.replace(".txt", "");
-//	pagename.replace(".html", "");
-//	QFile jsonFile(highlightsFilename);
-//	jsonFile.open(QIODevice::ReadOnly | QIODevice::Text);
-//	QByteArray data = jsonFile.readAll();
-
-//	QJsonParseError errorPtr;
-//	QJsonDocument document = QJsonDocument::fromJson(data, &errorPtr);
-//	QJsonObject mainObj = document.object();
-//	QJsonObject page = mainObj.value(pagename).toObject();
-//	QJsonObject highlights;
-//	jsonFile.close();
-
-//	int nMilliseconds = myTimer.elapsed();
-//	secs = nMilliseconds / 1000;
-//	//    int mins = secs/60;
-//	//    secs = secs - mins*60;
-//	QString time = QTime::currentTime().toString();
-//	highlights["Word"] = word;
-//	highlights["Timestamp"] = time;
-//	highlights["Time Elapsed (s)"] = secs;
-//	highlights["Page Name"] = pagename;
-
-//	page.remove(time);
-//	page.insert(time, highlights);
-//	mainObj.remove(pagename);
-//	mainObj.insert(pagename, page);
-//	document.setObject(mainObj);
-
-//	QFile jsonFile1(highlightsFilename);
-//	jsonFile1.open(QIODevice::WriteOnly);
-//	jsonFile1.write(document.toJson());
-//}
-
-//void MainWindow::on_actionCompare_Verifier_triggered() //Verifier
-//{
-
-//	string s1 = "", s2 = "", s3 = ""; QString qs1 = "", qs2 = "", qs3 = "";
-//	file = QFileDialog::getOpenFileName(this, "Open Verifier's Output File");
-//	if (!file.isEmpty())
-//	{
-//		QString verifiertext = file;
-//		QString correctortext = file.replace("VerifierOutput", "CorrectorOutput"); //CAN CHANGE ACCORDING TO FILE STRUCTURE
-//		QString ocrtext = file.replace("CorrectorOutput", "Inds"); //CAN CHANGE ACCORDING TO FILE STRUCTURE
-//		ocrtext.replace(".html", ".txt");
-//		ocrtext.replace("V1_", "");
-//		ocrtext.replace("V2_", "");
-//		ocrtext.replace("V3_", "");
-//		if (!ocrtext.isEmpty())
-//		{
-//			QFile sFile(ocrtext);
-//			if (sFile.open(QFile::ReadOnly | QFile::Text))
-//			{
-//				QTextStream in(&sFile);
-//				in.setCodec("UTF-8");
-//				QString t = in.readAll();
-//				t = t.replace(" \n", "\n");
-//				qs1 = t;
-//				sFile.close();
-//			}
-
-//		}
-//		if (!correctortext.isEmpty())
-//		{
-//			QFile sFile(correctortext);
-//			if (sFile.open(QFile::ReadOnly | QFile::Text))
-//			{
-//				QTextStream in(&sFile);
-//				in.setCodec("UTF-8");
-//				QString t = in.readAll();
-//				t = t.replace(" \n", "\n");
-//				qs2 = t;
-//				sFile.close();
-//			}
-
-//		}
-//		if (!verifiertext.isEmpty())
-//		{
-//			QFile sFile(verifiertext);
-//			if (sFile.open(QFile::ReadOnly | QFile::Text))
-//			{
-//				QTextStream in(&sFile);
-//				in.setCodec("UTF-8");
-//				QString t = in.readAll();
-//				t = t.replace(" \n", "\n");
-//				qs3 = t;
-//				sFile.close();
-//			}
-
-//		}
-//		QTextDocument doc;
-//		QString t;
-
-//		//    doc.setHtml(qs1);
-//		//    qs1 = doc.toPlainText();
-//		t = qs1;  t.replace(" ", "");
-//		s1 = t.toUtf8().constData();
-
-//		doc.setHtml(qs2);
-//		qs2 = doc.toPlainText();
-//		t = qs2;  t.replace(" ", "");
-//		s2 = t.toUtf8().constData();
-
-//		doc.setHtml(qs3);
-//		qs3 = doc.toPlainText();
-//		t = qs3;  t.replace(" ", "");
-//		s3 = t.toUtf8().constData();
-
-//		int l1, l2, l3, DiffOcr_Corrector, DiffCorrector_Verifier, DiffOcr_Verifier; float correctorChangesPerc, verifierChangesPerc, ocrErrorPerc;
-
-
-//		l1 = s1.length();
-//		l2 = s2.length();
-//		l3 = s3.length();
-//		DiffOcr_Corrector = editDist(s1, s2);
-//		correctorChangesPerc = ((float)(DiffOcr_Corrector) / (float)l1) * 100;
-//		if (correctorChangesPerc < 0) correctorChangesPerc = ((float)(DiffOcr_Corrector) / (float)l2) * 100;
-
-//		DiffCorrector_Verifier = editDist(s2, s3);
-//		verifierChangesPerc = ((float)(DiffCorrector_Verifier) / (float)l2) * 100;
-//		if (verifierChangesPerc < 0) verifierChangesPerc = ((float)(DiffCorrector_Verifier) / (float)l3) * 100;
-
-//		DiffOcr_Verifier = editDist(s1, s3);
-//		ocrErrorPerc = ((float)(DiffOcr_Verifier) / (float)l1) * 100;
-//		if (ocrErrorPerc < 0) ocrErrorPerc = ((float)(DiffOcr_Verifier) / (float)l3) * 100;
-//		float ocrErrorAcc = 100 - ocrErrorPerc;
-
-//		QString qcorrectorChangesPerc = QString::number(((float)lround(correctorChangesPerc * 100)) / 100);
-//		QString qverifierChangesPerc = QString::number(((float)lround(verifierChangesPerc * 100)) / 100);
-//		QString qocrErrorAcc = QString::number(((float)lround(ocrErrorAcc * 100)) / 100);
-
-//		DiffView *dv = new DiffView(qs1, qs2, qs3, qcorrectorChangesPerc, qverifierChangesPerc, qocrErrorAcc);
-//		dv->show();
-//	}
-//}
-
-
-//void MainWindow::on_actionHighlight_triggered() //Verifier
-//{
-//	QTextCursor cursor = curr_browser->textCursor();
-//	QString text = cursor.selectedText().toUtf8().constData();
-//	int pos1 = curr_browser->textCursor().selectionStart();
-//	int pos2 = curr_browser->textCursor().selectionEnd();
-
-//	int cursorpos = round(((float)(pos1 + pos2)) / 2);
-//	cursor.setPosition(cursorpos);
-
-//	QTextCharFormat  format = cursor.charFormat();
-//	if (format.background() == Qt::yellow)
-//	{
-//		format.setBackground(Qt::transparent);
-//	}
-//	else
-//	{
-//		format.setBackground(Qt::yellow);
-//		LogHighlights(text);
-//	}
-//	curr_browser->textCursor().mergeCharFormat(format);
-//	curr_browser->copy();
-//}
-
-
-//void MainWindow::updateAverageAccuracies() //Verifier
-//{
-//	QString commentFilename = mProject.GetDir().absolutePath() + "/Comments/comments.json";
-//	QString pagename;
-//	pagename.replace(".txt", "");
-//	pagename.replace(".html", "");
-//	float totalcharacc = 0, totalwordacc = 0, totalrating = 0; int totalcharerrors = 0, totalworderrors = 0, count = 0;
-
-//	QFile jsonFile(commentFilename);
-//	jsonFile.open(QIODevice::ReadOnly | QIODevice::Text);
-//	QByteArray data = jsonFile.readAll();
-
-//	QJsonParseError errorPtr;
-//	QJsonDocument document = QJsonDocument::fromJson(data, &errorPtr);
-//	QJsonObject mainObj = document.object();
-//	QJsonObject pages = mainObj.value("pages").toObject();
-//	QJsonObject page;
-//	if (document.isNull())
-//	{
-//		//qDebug()<<"empty json/parse error";
-//	}
-//	jsonFile.close();
-
-//	string csvfolder = mProject.GetDir().absolutePath().toStdString();
-//	csvfolder += "/Comments/AverageAccuracies.csv";
-//	std::ofstream csvFile(csvfolder);
-//	csvFile << "Page Name," << "Word-Level Accuracy," << "Character-Level Accuracy," << "Word-Level Errors," << "Character-Level Errors" << "\n";
-
-//	foreach(const QJsonValue &val, pages)
-//	{
-//		QString page = val.toObject().value("pagename").toString();
-//		float characc = val.toObject().value("characcuracy").toDouble();
-//		float wordacc = val.toObject().value("wordaccuracy").toDouble();
-//		int charerrors = val.toObject().value("charerrors").toInt();
-//		int worderrors = val.toObject().value("worderrors").toInt();
-//		//int rating     = val.toObject().value("rating").toInt();
-
-//		csvFile << page.toUtf8().constData() << "," << wordacc << "," << characc << "," << worderrors << "," << charerrors << "\n";
-
-//		totalcharacc += characc;
-//		totalwordacc += wordacc;
-//		totalcharerrors += charerrors;
-//		totalworderrors += worderrors;
-//		//totalrating     += rating;
-
-//		count++;
-//	}
-//	mainObj["AverageCharAccuracy"] = totalcharacc / count;
-//	mainObj["AverageWordAccuracy"] = totalwordacc / count;
-//	mainObj["AverageCharErrors"] = totalcharerrors / count;
-//	mainObj["AverageWordErrors"] = totalworderrors / count;
-//	//mainObj["AverageRating"] = totalrating/count;
-
-//	csvFile << ",,,,";
-//	csvFile << " ," << "Average Accuracy (Word level)," << "Average Accuracy (Character-Level)," << "Average Errors (Word level)," << "Average Errors (Character-Level)," << "\n";
-//	csvFile << " " << "," << totalwordacc / count << "," << totalcharacc / count << "," << totalworderrors / count << "," << totalcharerrors / count << "\n";
-
-
-//	QJsonDocument document1(mainObj);
-
-//	QFile jsonFile1(commentFilename);
-//	jsonFile1.open(QIODevice::WriteOnly);
-//	jsonFile1.write(document1.toJson());
-//	jsonFile1.close();
-
-//}
-
-
-
 
 void MainWindow::on_viewComments_clicked()
 {
@@ -2500,7 +2350,7 @@ void MainWindow::on_compareCorrectorOutput_clicked() //Corrector
 
             diff_match_patch dmp;
             auto diffs1 = dmp.diff_main(qs1,qs2);
-            DiffOcr_Corrector = dmp.diff_levenshtein(diffs1);
+            DiffOcr_Corrector = LevenshteinWithGraphemes(diffs1);
             correctorChangesPerc = ((float)(DiffOcr_Corrector)/(float)l2)*100;
             if(correctorChangesPerc>100) correctorChangesPerc = ((float)(DiffOcr_Corrector)/(float)l1)*100;
             correctorChangesPerc = (((float)lround(correctorChangesPerc*100))/100);
@@ -2603,59 +2453,59 @@ void MainWindow::on_actionAccuracyLog_triggered()
             }
 
         }
-       int l1,l2,l3, DiffOcr_Corrector,DiffCorrector_Verifier,DiffOcr_Verifier; float correctorChangesPerc,verifierChangesPerc,ocrErrorPerc;
+        int l1,l2,l3, DiffOcr_Corrector,DiffCorrector_Verifier,DiffOcr_Verifier; float correctorChangesPerc,verifierChangesPerc,ocrErrorPerc;
 
-       l1 = qs1.length(); l2 = qs2.length(); l3 = qs3.length();
-       if(qs1=="" | qs2 == "" | qs3 == "")
-       {
-           continue;
-       }
-       QTextDocument doc;
+           l1 = GetGraphemesCount(qs1); l2 = GetGraphemesCount(qs2); l3 = GetGraphemesCount(qs3);
+           if(qs1=="" | qs2 == "" | qs3 == "")
+           {
+               continue;
+           }
+           QTextDocument doc;
 
-       doc.setHtml(qs2);
-       qs2 = doc.toPlainText().replace(" \n","\n");
+           doc.setHtml(qs2);
+           qs2 = doc.toPlainText().replace(" \n","\n");
 
-       doc.setHtml(qs3);
-       qs3 = doc.toPlainText().replace(" \n","\n");
+           doc.setHtml(qs3);
+           qs3 = doc.toPlainText().replace(" \n","\n");
 
-       diff_match_patch dmp;
+           diff_match_patch dmp;
 
-       auto diffs1 = dmp.diff_main(qs1,qs2);
-       DiffOcr_Corrector = dmp.diff_levenshtein(diffs1);
-       correctorChangesPerc = ((float)(DiffOcr_Corrector)/(float)l1)*100;
-       if(correctorChangesPerc<0) correctorChangesPerc = ((float)(DiffOcr_Corrector)/(float)l2)*100;
-       correctorChangesPerc = (((float)lround(correctorChangesPerc*100))/100);
+           auto diffs1 = dmp.diff_main(qs1,qs2);
+           DiffOcr_Corrector = LevenshteinWithGraphemes(diffs1);
+           correctorChangesPerc = ((float)(DiffOcr_Corrector)/(float)l1)*100;
+           if(correctorChangesPerc<0) correctorChangesPerc = ((float)(DiffOcr_Corrector)/(float)l2)*100;
+           correctorChangesPerc = (((float)lround(correctorChangesPerc*100))/100);
 
-       auto diffs2 = dmp.diff_main(qs2,qs3);
-       DiffCorrector_Verifier = dmp.diff_levenshtein(diffs2);
-       verifierChangesPerc = ((float)(DiffCorrector_Verifier)/(float)l2)*100;
-       if(verifierChangesPerc<0) verifierChangesPerc = ((float)(DiffCorrector_Verifier)/(float)l3)*100;
-       float correctorCharAcc =100- (((float)lround(verifierChangesPerc*100))/100); //Corrector accuracy = 100-changes mabe by Verfier
+           auto diffs2 = dmp.diff_main(qs2,qs3);
+           DiffCorrector_Verifier = LevenshteinWithGraphemes(diffs2);
+           verifierChangesPerc = ((float)(DiffCorrector_Verifier)/(float)l2)*100;
+           if(verifierChangesPerc<0) verifierChangesPerc = ((float)(DiffCorrector_Verifier)/(float)l3)*100;
+           float correctorCharAcc =100- (((float)lround(verifierChangesPerc*100))/100); //Corrector accuracy = 100-changes mabe by Verfier
 
-       auto diffs3 = dmp.diff_main(qs1,qs3);
-       DiffOcr_Verifier = dmp.diff_levenshtein(diffs3);
-       ocrErrorPerc = ((float)(DiffOcr_Verifier)/(float)l1)*100;
-       if(ocrErrorPerc<0) ocrErrorPerc = ((float)(DiffOcr_Verifier)/(float)l3)*100;
-       float ocrAcc = 100- (((float)lround(ocrErrorPerc*100))/100);
+           auto diffs3 = dmp.diff_main(qs1,qs3);
+           DiffOcr_Verifier = LevenshteinWithGraphemes(diffs3);
+           ocrErrorPerc = ((float)(DiffOcr_Verifier)/(float)l1)*100;
+           if(ocrErrorPerc<0) ocrErrorPerc = ((float)(DiffOcr_Verifier)/(float)l3)*100;
+           float ocrAcc = 100- (((float)lround(ocrErrorPerc*100))/100);
 
 
-        auto a = dmp.diff_linesToChars(qs2, qs3); //LinesToChars modifed for WordstoChar in diff_match_patch.cpp
-        auto lineText1 = a[0].toString();
-        auto lineText2 = a[1].toString();
-        auto lineArray = a[2].toStringList();
-        int wordCount = lineArray.count();
-        auto diffs = dmp.diff_main(lineText1, lineText2);
-        int worderrors = dmp.diff_levenshtein(diffs);
-        dmp.diff_charsToLines(diffs, lineArray);
+            auto a = dmp.diff_linesToChars(qs2, qs3); //LinesToChars modifed for WordstoChar in diff_match_patch.cpp
+            auto lineText1 = a[0].toString();
+            auto lineText2 = a[1].toString();
+            auto lineArray = a[2].toStringList();
+            int wordCount = lineArray.count();
+            auto diffs = dmp.diff_main(lineText1, lineText2);
+            int worderrors = dmp.diff_levenshtein(diffs);
+            dmp.diff_charsToLines(diffs, lineArray);
 
-        float correctorwordaccuracy = (float)(wordCount-worderrors)/(float)wordCount*100;
-        correctorwordaccuracy = (((float)lround(correctorwordaccuracy*100))/100);
+            float correctorwordaccuracy = (float)(wordCount-worderrors)/(float)wordCount*100;
+            correctorwordaccuracy = (((float)lround(correctorwordaccuracy*100))/100);
 
-        csvFile<<pageName<<","<<worderrors<<","<<DiffCorrector_Verifier<<","<< correctorwordaccuracy<<","<<correctorCharAcc<<"," <<correctorChangesPerc<<","<<ocrAcc<<"\n";
+            csvFile<<pageName<<","<<worderrors<<","<<DiffCorrector_Verifier<<","<< correctorwordaccuracy<<","<<correctorCharAcc<<"," <<correctorChangesPerc<<","<<ocrAcc<<"\n";
 
-    }
+        }
 
-    csvFile.close();
+        csvFile.close();
 
 }
 
@@ -2684,6 +2534,8 @@ void MainWindow::on_actionTurn_In_triggered() {
 }
 void MainWindow::on_actionFetch_2_triggered() {
 	mProject.fetch();
+    QString version = mProject.get_version();
+    ui->lineEdit_2->setText("Version: " + version);
 }
 void MainWindow::on_actionVerifier_Turn_In_triggered() {
 	mProject.push();
@@ -2747,7 +2599,7 @@ void MainWindow::LoadDocument(QFile * f, QString ext, QString name) {
         while (getline(iss, line)) {
             QString qline = QString::fromStdString(line);
             if(line == "\n" | line == "" | qline.contains("\r") )
-                strHtml+="</p><p>";
+                strHtml+=line + "</p><p>";
             else strHtml += line + "<br />";
        }
        strHtml += "</p></body></html>";
@@ -2951,6 +2803,8 @@ void MainWindow::on_actionOpen_Project_triggered() {
 		bool b = connect(ui->treeView, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(CustomContextMenuTriggered(const QPoint&)));
 		b = connect(ui->treeView, SIGNAL(clicked(const QModelIndex&)), this, SLOT(file_click(const QModelIndex&)));
 		QString stage = mProject.get_stage();
+        QString version = mProject.get_version();
+        ui->lineEdit_2->setText("Version: " + version);
 		QDir dir = mProject.GetDir();
 		QString str = mProject.GetDir().absolutePath()+"/CorrectorOutput/";
 		QString str2 = mProject.GetDir().absolutePath() + "/VerifierOutput/";
@@ -3049,10 +2903,10 @@ void MainWindow::on_actionZoom_Out_triggered()
         z->gentle_zoom(0.9);
 }
 
-void MainWindow::on_actionDiacritics_triggered()
+void MainWindow::on_actionSymbols_triggered()
 {
-    DiacriticsView *dv = new DiacriticsView(this);
-    dv->show();
+    SymbolsView *symbols = new SymbolsView(this);
+    symbols->show();
 }
 
 void MainWindow::on_actionAdd_Image_triggered()

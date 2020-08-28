@@ -157,13 +157,9 @@ private slots:
 
     void on_actionJusitfiedAlign_triggered();
 
-    void on_actionAverage_Accuracy_triggered();
-
     void on_actionHighlight_triggered();
 
 	void on_actionFontBlack_triggered();
-
-	void updateAverageAccuracies();
 
 	void on_actionViewAverageAccuracies_triggered();
 
@@ -217,13 +213,13 @@ private slots:
 
     void on_actionZoom_Out_triggered();
 
-    void on_actionDiacritics_triggered();
+    void on_actionSymbols_triggered();
 
     //void on_actionCompare_Verifier_triggered();
 
     void on_actionInsert_Tab_Space_triggered();
 
-    void on_actionLineSpace_triggered();
+    //void on_actionLineSpace_triggered();
 
     void on_actionInsert_Horizontal_Line_triggered();
 
