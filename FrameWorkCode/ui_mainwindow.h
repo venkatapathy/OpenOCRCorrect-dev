@@ -596,7 +596,6 @@ public:
         menuFontAndLayout->addAction(actionSubscript);
         menuFontAndLayout->addAction(actionInsert_Horizontal_Line);
         menuFontAndLayout->addAction(actionFontBlack);
-        menuFontAndLayout->addAction(actionLineSpace);
         menuFontAndLayout->addAction(actionInsert_Tab_Space);
         menuFontAndLayout->addAction(actionAdd_Image);
         menuFontAndLayout->addAction(actionResize_Image);
@@ -634,7 +633,6 @@ public:
         mainToolBar->addAction(actionCentreAlign);
         mainToolBar->addAction(actionRightAlign);
         mainToolBar->addAction(actionJusitfiedAlign);
-        mainToolBar->addAction(actionLineSpace);
         mainToolBar->addAction(actionHighlight);
         mainToolBar->addAction(actionSymbols);
         mainToolBar->addAction(actionZoom_In);

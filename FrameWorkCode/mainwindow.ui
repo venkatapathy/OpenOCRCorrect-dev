@@ -417,7 +417,6 @@ p, li { white-space: pre-wrap; }
     <addaction name="actionSubscript"/>
     <addaction name="actionInsert_Horizontal_Line"/>
     <addaction name="actionFontBlack"/>
-    <addaction name="actionLineSpace"/>
     <addaction name="actionInsert_Tab_Space"/>
     <addaction name="actionAdd_Image"/>
     <addaction name="actionResize_Image"/>
@@ -483,7 +482,6 @@ p, li { white-space: pre-wrap; }
    <addaction name="actionCentreAlign"/>
    <addaction name="actionRightAlign"/>
    <addaction name="actionJusitfiedAlign"/>
-   <addaction name="actionLineSpace"/>
    <addaction name="actionHighlight"/>
    <addaction name="actionSymbols"/>
    <addaction name="actionZoom_In"/>
