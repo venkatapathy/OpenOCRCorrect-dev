@@ -193,8 +193,7 @@ private slots:
 
     void on_actionFetch_2_triggered();
 
-    void on_actionVerifier_Turn_In_triggered();
-
+    
     void directoryChanged(const QString &path);
 
     void on_actionAccuracyLog_triggered();

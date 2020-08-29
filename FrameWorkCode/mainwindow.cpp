@@ -840,6 +840,9 @@ void MainWindow::on_actionLoadData_triggered()
 
             ui->lineEdit->setText(initialText);
             LoadDataFlag = 0;
+			QMessageBox messageBox;
+			messageBox.information(0, "Load Data", "Data has been loaded.");
+			
 		}
 	}
 }
