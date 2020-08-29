@@ -478,6 +478,7 @@ p, li { white-space: pre-wrap; }
    <addaction name="actionAllFontProperties"/>
    <addaction name="actionBold"/>
    <addaction name="actionUnBold"/>
+   <addaction name="actionFontBlack"/>
    <addaction name="actionLeftAlign"/>
    <addaction name="actionCentreAlign"/>
    <addaction name="actionRightAlign"/>

@@ -59,13 +59,22 @@
             "worderrors": 3
         },
         "page-4": {
-            "characcuracy": 94.41999816894531,
-            "charerrors": 72,
+            "characcuracy": 100,
+            "charerrors": 0,
             "comments": "jjjjkl",
             "pagename": "page-4",
             "rating": 5,
-            "wordaccuracy": 94.91999816894531,
-            "worderrors": 6
+            "wordaccuracy": 100,
+            "worderrors": 0
+        },
+        "page-7": {
+            "characcuracy": 100,
+            "charerrors": 0,
+            "comments": "yololol",
+            "pagename": "page-7",
+            "rating": 5,
+            "wordaccuracy": 100,
+            "worderrors": 0
         }
     }
 }

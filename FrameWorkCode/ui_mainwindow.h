@@ -629,6 +629,7 @@ public:
         mainToolBar->addAction(actionAllFontProperties);
         mainToolBar->addAction(actionBold);
         mainToolBar->addAction(actionUnBold);
+        mainToolBar->addAction(actionFontBlack);
         mainToolBar->addAction(actionLeftAlign);
         mainToolBar->addAction(actionCentreAlign);
         mainToolBar->addAction(actionRightAlign);

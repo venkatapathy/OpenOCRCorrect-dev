@@ -2182,6 +2182,7 @@ void MainWindow::on_actionAllFontProperties_triggered()
 
 void MainWindow::on_actionFontBlack_triggered()
 {
+	if(curr_browser)
     curr_browser->setTextColor(Qt::black);
 }
 
@@ -2854,8 +2855,8 @@ void MainWindow::on_actionFetch_2_triggered() {
 	mProject.fetch();
 }
 void MainWindow::on_actionVerifier_Turn_In_triggered() {
-	mProject.push();
 	mProject.enable_push();
+	mProject.push();
 	auto list = ui->menuGit->actions();
 	for (auto a : list) {
 		QString name = a->text();
