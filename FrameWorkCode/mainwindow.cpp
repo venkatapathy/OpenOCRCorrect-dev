@@ -2126,6 +2126,8 @@ void MainWindow::on_actionEnglish_triggered()
 
 void MainWindow::on_actionBold_triggered() //modified
 {
+	if(!curr_browser)
+		return;
     QTextCharFormat format;
     format.setFontWeight(QFont::Bold);
     curr_browser->textCursor().mergeCharFormat(format);
@@ -2133,6 +2135,8 @@ void MainWindow::on_actionBold_triggered() //modified
 
 void MainWindow::on_actionUnBold_triggered() //modified
 {
+	if(!curr_browser)
+		return;
     QTextCharFormat format;
     format.setFontWeight(QFont::Normal);
     curr_browser->textCursor().mergeCharFormat(format);
@@ -2140,20 +2144,28 @@ void MainWindow::on_actionUnBold_triggered() //modified
 
 void MainWindow::on_actionLeftAlign_triggered() //modified
 {
+	if(!curr_browser)
+		return;
     curr_browser->setAlignment(Qt::AlignLeft);
 }
 
 void MainWindow::on_actionRightAlign_triggered() //modified
 {
+	if(!curr_browser)
+		return;
     curr_browser->setAlignment(Qt::AlignRight);
 }
 
 void MainWindow::on_actionCentreAlign_triggered()
 {
+	if(!curr_browser)
+		return;
     curr_browser->setAlignment(Qt::AlignCenter);
 }
 void MainWindow::on_actionJusitfiedAlign_triggered()
 {
+	if(!curr_browser)
+		return;
     auto cursor = curr_browser->textCursor();
     auto selected = cursor.selection();
     cursor.removeSelectedText();
@@ -2167,6 +2179,8 @@ void MainWindow::on_actionJusitfiedAlign_triggered()
 
 void MainWindow::on_actionAllFontProperties_triggered()
 {
+	if(!curr_browser)
+		return;
     QFont initialFont = curr_browser->font();
     auto pointsize = curr_browser->fontPointSize();
     if(pointsize) initialFont.setPointSize(pointsize);
@@ -2206,11 +2220,15 @@ void MainWindow::on_actionSubscript_triggered() {
 }
 void MainWindow::on_actionInsert_Horizontal_Line_triggered()
 {
+	if(!curr_browser)
+		return;
     curr_browser->insertHtml("<hr>");
 }
 
 void MainWindow::on_actionLineSpace_triggered()
 {
+	if(!curr_browser)
+		return;
     QTextCursor cursor = curr_browser->textCursor();
     QTextBlockFormat format = cursor.blockFormat();
     double lineHeight = format.lineHeight()/100;
@@ -2229,6 +2247,8 @@ void MainWindow::on_actionLineSpace_triggered()
 
 void MainWindow::on_actionInsert_Tab_Space_triggered()
 {
+	if(!curr_browser)
+		return;
     curr_browser->insertPlainText("    ");
 }
 
