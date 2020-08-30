@@ -134,8 +134,8 @@ public:
     QMenu *menuFontAndLayout;
     QMenu *menuView;
     QMenu *menuGit;
-    QToolBar *mainToolBar;
     QStatusBar *statusBar;
+    QToolBar *toolBar;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -146,7 +146,7 @@ public:
         actionOpen_Project = new QAction(MainWindow);
         actionOpen_Project->setObjectName(QString::fromUtf8("actionOpen_Project"));
         QIcon icon;
-        icon.addFile(QString::fromUtf8(":/Images/open.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon.addFile(QString::fromUtf8("open.png"), QSize(), QIcon::Normal, QIcon::Off);
         actionOpen_Project->setIcon(icon);
         actionSave = new QAction(MainWindow);
         actionSave->setObjectName(QString::fromUtf8("actionSave"));
@@ -192,6 +192,7 @@ public:
         actionLoadData = new QAction(MainWindow);
         actionLoadData->setObjectName(QString::fromUtf8("actionLoadData"));
         QIcon icon9;
+        icon9.addFile(QString::fromUtf8("LoadData.png"), QSize(), QIcon::Normal, QIcon::Off);
         icon9.addFile(QString::fromUtf8(":/Images/LoadData.png"), QSize(), QIcon::Normal, QIcon::On);
         actionLoadData->setIcon(icon9);
         actionLoadDict = new QAction(MainWindow);
@@ -492,7 +493,7 @@ public:
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 1366, 22));
+        menuBar->setGeometry(QRect(0, 0, 1366, 21));
         menuOCR_Correction_Window = new QMenu(menuBar);
         menuOCR_Correction_Window->setObjectName(QString::fromUtf8("menuOCR_Correction_Window"));
         menuCreateReports = new QMenu(menuBar);
@@ -512,12 +513,12 @@ public:
         menuGit = new QMenu(menuBar);
         menuGit->setObjectName(QString::fromUtf8("menuGit"));
         MainWindow->setMenuBar(menuBar);
-        mainToolBar = new QToolBar(MainWindow);
-        mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
-        MainWindow->addToolBar(Qt::TopToolBarArea, mainToolBar);
         statusBar = new QStatusBar(MainWindow);
         statusBar->setObjectName(QString::fromUtf8("statusBar"));
         MainWindow->setStatusBar(statusBar);
+        toolBar = new QToolBar(MainWindow);
+        toolBar->setObjectName(QString::fromUtf8("toolBar"));
+        MainWindow->addToolBar(Qt::TopToolBarArea, toolBar);
 
         menuBar->addAction(menuSelectLanguage->menuAction());
         menuBar->addAction(menuOCR_Correction_Window->menuAction());
@@ -590,36 +591,8 @@ public:
         menuGit->addAction(actionTurn_In);
         menuGit->addAction(actionCommit);
         menuGit->addAction(actionFetch_2);
-        mainToolBar->addAction(actionNew);
-        mainToolBar->addAction(actionOpen_Project);
-        mainToolBar->addAction(actionSave);
-        mainToolBar->addAction(actionSave_As);
-        mainToolBar->addAction(actionLoadData);
-        mainToolBar->addSeparator();
-        mainToolBar->addAction(actionSpell_Check);
-        mainToolBar->addSeparator();
-        mainToolBar->addAction(actionLoad_Prev_Page);
-        mainToolBar->addAction(actionLoad_Next_Page);
-        mainToolBar->addSeparator();
-        mainToolBar->addAction(actionLoadGDocPage);
-        mainToolBar->addSeparator();
-        mainToolBar->addAction(actionSanskrit);
-        mainToolBar->addAction(actionEnglish);
-        mainToolBar->addAction(actionHindi);
-        mainToolBar->addSeparator();
-        mainToolBar->addAction(actionToDevanagari);
-        mainToolBar->addSeparator();
-        mainToolBar->addAction(actionAllFontProperties);
-        mainToolBar->addAction(actionBold);
-        mainToolBar->addAction(actionUnBold);
-        mainToolBar->addAction(actionLeftAlign);
-        mainToolBar->addAction(actionCentreAlign);
-        mainToolBar->addAction(actionRightAlign);
-        mainToolBar->addAction(actionJusitfiedAlign);
-        mainToolBar->addAction(actionHighlight);
-        mainToolBar->addAction(actionSymbols);
-        mainToolBar->addAction(actionZoom_In);
-        mainToolBar->addAction(actionZoom_Out);
+        toolBar->addAction(actionOpen_Project);
+        toolBar->addAction(actionLoadData);
 
         retranslateUi(MainWindow);
 
@@ -779,6 +752,7 @@ public:
         menuFontAndLayout->setTitle(QCoreApplication::translate("MainWindow", "FontAndLayout", nullptr));
         menuView->setTitle(QCoreApplication::translate("MainWindow", "View", nullptr));
         menuGit->setTitle(QCoreApplication::translate("MainWindow", "Version Control", nullptr));
+        toolBar->setWindowTitle(QCoreApplication::translate("MainWindow", "toolBar", nullptr));
     } // retranslateUi
 
 };
