@@ -135,7 +135,6 @@ public:
     QMenu *menuFeatureExtraction;
     QMenu *menuSelectLanguage;
     QMenu *menuFontAndLayout;
-    QMenu *menuView;
     QMenu *menuGit;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
@@ -522,8 +521,6 @@ public:
         menuSelectLanguage->setObjectName(QString::fromUtf8("menuSelectLanguage"));
         menuFontAndLayout = new QMenu(menuBar);
         menuFontAndLayout->setObjectName(QString::fromUtf8("menuFontAndLayout"));
-        menuView = new QMenu(menuBar);
-        menuView->setObjectName(QString::fromUtf8("menuView"));
         menuGit = new QMenu(menuBar);
         menuGit->setObjectName(QString::fromUtf8("menuGit"));
         MainWindow->setMenuBar(menuBar);
@@ -541,7 +538,6 @@ public:
         menuBar->addAction(menuFontAndLayout->menuAction());
         menuBar->addAction(menuConvertFiles->menuAction());
         menuBar->addAction(menuFeatureExtraction->menuAction());
-        menuBar->addAction(menuView->menuAction());
         menuBar->addAction(menuGit->menuAction());
         menuOCR_Correction_Window->addAction(actionNew);
         menuOCR_Correction_Window->addAction(actionOpen_Project);
@@ -599,10 +595,6 @@ public:
         menuFontAndLayout->addAction(actionInsert_Tab_Space);
         menuFontAndLayout->addAction(actionAdd_Image);
         menuFontAndLayout->addAction(actionResize_Image);
-        menuView->addAction(actionCompare_Verifier);
-        menuView->addAction(actionCompare_Corrector);
-        menuView->addSeparator();
-        menuView->addAction(actionAverage_Accuracy);
         menuGit->addAction(actionTurn_In);
         menuGit->addAction(actionCommit);
         menuGit->addAction(actionFetch_2);
@@ -614,9 +606,6 @@ public:
         mainToolBar->addAction(actionLoadData);
         mainToolBar->addSeparator();
         mainToolBar->addAction(actionSpell_Check);
-        mainToolBar->addSeparator();
-        mainToolBar->addAction(actionLoad_Prev_Page);
-        mainToolBar->addAction(actionLoad_Next_Page);
         mainToolBar->addSeparator();
         mainToolBar->addAction(actionLoadGDocPage);
         mainToolBar->addSeparator();
@@ -634,6 +623,7 @@ public:
         mainToolBar->addAction(actionCentreAlign);
         mainToolBar->addAction(actionRightAlign);
         mainToolBar->addAction(actionJusitfiedAlign);
+        mainToolBar->addSeparator();
         mainToolBar->addAction(actionHighlight);
         mainToolBar->addAction(actionSymbols);
         mainToolBar->addAction(actionZoom_In);
@@ -798,7 +788,6 @@ public:
         menuFeatureExtraction->setTitle(QCoreApplication::translate("MainWindow", "FeatureExtraction", nullptr));
         menuSelectLanguage->setTitle(QCoreApplication::translate("MainWindow", "SelectLanguage", nullptr));
         menuFontAndLayout->setTitle(QCoreApplication::translate("MainWindow", "FontAndLayout", nullptr));
-        menuView->setTitle(QCoreApplication::translate("MainWindow", "View", nullptr));
         menuGit->setTitle(QCoreApplication::translate("MainWindow", "Version Control", nullptr));
     } // retranslateUi
 

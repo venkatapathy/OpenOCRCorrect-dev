@@ -421,15 +421,6 @@ p, li { white-space: pre-wrap; }
     <addaction name="actionAdd_Image"/>
     <addaction name="actionResize_Image"/>
    </widget>
-   <widget class="QMenu" name="menuView">
-    <property name="title">
-     <string>View</string>
-    </property>
-    <addaction name="actionCompare_Verifier"/>
-    <addaction name="actionCompare_Corrector"/>
-    <addaction name="separator"/>
-    <addaction name="actionAverage_Accuracy"/>
-   </widget>
    <widget class="QMenu" name="menuGit">
     <property name="title">
      <string>Version Control</string>
@@ -446,7 +437,6 @@ p, li { white-space: pre-wrap; }
    <addaction name="menuFontAndLayout"/>
    <addaction name="menuConvertFiles"/>
    <addaction name="menuFeatureExtraction"/>
-   <addaction name="menuView"/>
    <addaction name="menuGit"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
@@ -464,9 +454,6 @@ p, li { white-space: pre-wrap; }
    <addaction name="separator"/>
    <addaction name="actionSpell_Check"/>
    <addaction name="separator"/>
-   <addaction name="actionLoad_Prev_Page"/>
-   <addaction name="actionLoad_Next_Page"/>
-   <addaction name="separator"/>
    <addaction name="actionLoadGDocPage"/>
    <addaction name="separator"/>
    <addaction name="actionSanskrit"/>
@@ -483,6 +470,7 @@ p, li { white-space: pre-wrap; }
    <addaction name="actionCentreAlign"/>
    <addaction name="actionRightAlign"/>
    <addaction name="actionJusitfiedAlign"/>
+   <addaction name="separator"/>
    <addaction name="actionHighlight"/>
    <addaction name="actionSymbols"/>
    <addaction name="actionZoom_In"/>
