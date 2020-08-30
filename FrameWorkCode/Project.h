@@ -40,7 +40,14 @@ public:
 	QString get_stage();
     QString get_version();
 	Filter * getFilter(QString name);
+	bool isProjectOpen() {
+		return m_isOpen;
+	}
+	void setProjectOpen(bool open) {
+		m_isOpen = open;
+	}
 private:
+	bool m_isOpen = false;
 	QVector<QFile*> mFiles;
 	QVector<Filter*> mFilters;
 	TreeItem * mRoot=nullptr;

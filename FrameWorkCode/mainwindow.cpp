@@ -825,10 +825,10 @@ bool LoadDataFlag = 1; //To load data only once
 QString mFilename1, loadStr, loadStr1;
 void MainWindow::on_actionLoadData_triggered()
 {
-	if (curr_browser) {
-        if (LoadDataFlag) {
-            QString initialText = ui->lineEdit->text();
-            ui->lineEdit->setText("Loading Data...");
+	if (mProject.isProjectOpen()) {
+		if (LoadDataFlag) {
+			QString initialText = ui->lineEdit->text();
+			ui->lineEdit->setText("Loading Data...");
 			QString  localmFilename1 = mFilename;
 			string localmFilename1n = localmFilename1.toUtf8().constData();
 			localmFilename1n = localmFilename1n.substr(0, localmFilename1n.find("page"));
@@ -841,18 +841,23 @@ void MainWindow::on_actionLoadData_triggered()
 			on_actionLoadSubPS_triggered();
 			on_actionLoadConfusions_triggered();
 
-            ui->lineEdit->setText(initialText);
-            LoadDataFlag = 0;
+			ui->lineEdit->setText(initialText);
+			LoadDataFlag = 0;
 			QMessageBox messageBox;
 			messageBox.information(0, "Load Data", "Data has been loaded.");
 		}
 	}
 }
 
+bool loadDict(Project & project) {
+	QString localmFilename1 = project.GetDir().absolutePath() + "/Dicts/" + "Dict";
+	if (!QFile::exists(localmFilename1)) return false;
+	loadMap(localmFilename1.toUtf8().constData(), Dict, "Dict");
+	return true;
+}
 void MainWindow::on_actionLoadDict_triggered()
 {
-	QString localmFilename1 = mProject.GetDir().absolutePath() + "/Dicts/" + "Dict";
-	loadMap(localmFilename1.toUtf8().constData(), Dict, "Dict");
+	loadDict(mProject);
 }
 
 void MainWindow::on_actionLoadOCRWords_triggered()
@@ -3136,6 +3141,7 @@ void MainWindow::on_actionOpen_Project_triggered() {
 		ui->treeView->reset();
 		mProject.process_xml(xml);
 		mProject.open_git_repo();
+		mProject.setProjectOpen(true);
 		ui->treeView->setModel(mProject.getModel());
 		ui->treeView->setContextMenuPolicy(Qt::CustomContextMenu);
 		bool b = connect(ui->treeView, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(CustomContextMenuTriggered(const QPoint&)));
