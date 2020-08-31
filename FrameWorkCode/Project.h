@@ -27,7 +27,12 @@ public:
 	void fetch();
 	void enable_push();
 	void AddTemp(Filter * f, QFile &pFile,QString prefix);
-
+	void setProjectOpen(bool open) {
+		m_isOpen = open;
+	}
+	bool isProjectOpen() {
+		return m_isOpen;
+	}
 	~Project() {
 		for (auto p : mFiles) {
 			delete p;
@@ -41,6 +46,7 @@ public:
     QString get_version();
 	Filter * getFilter(QString name);
 private:
+	bool m_isOpen = false;
 	QVector<QFile*> mFiles;
 	QVector<Filter*> mFilters;
 	TreeItem * mRoot=nullptr;

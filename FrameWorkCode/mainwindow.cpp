@@ -822,7 +822,7 @@ bool LoadDataFlag = 1; //To load data only once
 QString mFilename1, loadStr, loadStr1;
 void MainWindow::on_actionLoadData_triggered()
 {
-	if (curr_browser) {
+	if (mProject.isProjectOpen()) {
         if (LoadDataFlag) {
             QString initialText = ui->lineEdit->text();
             ui->lineEdit->setText("Loading Data...");
@@ -832,17 +832,14 @@ void MainWindow::on_actionLoadData_triggered()
 			localmFilename1 = QString::fromStdString(localmFilename1n);
 			on_actionLoadDict_triggered();
 			loadStr += "\n";
-
 			on_actionLoadOCRWords_triggered();
 			on_actionLoadDomain_triggered();
 			on_actionLoadSubPS_triggered();
 			on_actionLoadConfusions_triggered();
-
             ui->lineEdit->setText(initialText);
             LoadDataFlag = 0;
 			QMessageBox messageBox;
 			messageBox.information(0, "Load Data", "Data has been loaded.");
-			
 		}
 	}
 }
@@ -2791,6 +2788,7 @@ void MainWindow::on_actionOpen_Project_triggered() {
 		ui->treeView->reset();
 		mProject.process_xml(xml);
 		mProject.open_git_repo();
+		mProject.setProjectOpen(true);
 		ui->treeView->setModel(mProject.getModel());
 		ui->treeView->setContextMenuPolicy(Qt::CustomContextMenu);
 		bool b = connect(ui->treeView, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(CustomContextMenuTriggered(const QPoint&)));
