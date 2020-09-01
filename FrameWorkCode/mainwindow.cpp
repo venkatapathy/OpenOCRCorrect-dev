@@ -708,6 +708,7 @@ void MainWindow::on_actionNew_triggered()
 {
     QTextBrowser * b = new QTextBrowser(this);
     b->setReadOnly(false);
+    b->setUndoRedoEnabled(true);
     currentTabIndex = ui->tabWidget_2->addTab(b, "Untitled");
     ui->tabWidget_2->setCurrentIndex(currentTabIndex);
 }
