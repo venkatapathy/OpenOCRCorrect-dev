@@ -399,7 +399,7 @@ static int transfer_progress_cb(const git_transfer_progress *stats, void *payloa
 }
 void Project::fetch() {
 	
-	QDir::setCurrent(mProjectDir.absolutePath());
+    QDir::setCurrent(mProjectDir.absolutePath() + "/CorrectorOutput");
 	QProcess::execute("git fetch");
 	QProcess::execute("git reset --hard origin/master");
 

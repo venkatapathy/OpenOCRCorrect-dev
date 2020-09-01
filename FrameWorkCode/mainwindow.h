@@ -236,6 +236,10 @@ private slots:
 
     void on_actionResize_Image_triggered();
 
+    void on_actionUndo_triggered();
+
+    void on_actionRedo_triggered();
+
 private:
     Ui::MainWindow *ui;
 	Project mProject;
