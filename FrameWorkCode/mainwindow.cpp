@@ -2859,6 +2859,8 @@ void MainWindow::on_actionOpen_Project_triggered() {
             timeLog[directory] = seconds;
         }
         bool isSet = QDir::setCurrent(mProject.GetDir().absolutePath() + "/CorrectorOutput") ; //Change application Directory to any subfolder of mProject folder for Image Insertion feature.
+	if(!QDir(mProject.GetDir().absolutePath() + "/Images/Inserted").exists())
+		QDir().mkdir(mProject.GetDir().absolutePath() + "/Images/Inserted");
 	}
 }
 void MainWindow::directoryChanged(const QString &path) {
