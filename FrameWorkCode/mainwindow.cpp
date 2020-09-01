@@ -140,7 +140,7 @@ void DisplayError(QString error)
 }
 
 //bool OPENSPELLFLAG = 1;// TO NOT CONVERT ASCII STRINGS TO DEVANAGARI ON OPENING WHEN SPELLCHECK IS CLICKED
-void GetPageNumber(string localFilename, string *no, size_t *loc, QString *ext)
+int GetPageNumber(string localFilename, string *no, size_t *loc, QString *ext)
 {
 
     string nos = "0123456789";
@@ -151,10 +151,13 @@ void GetPageNumber(string localFilename, string *no, size_t *loc, QString *ext)
         *loc = localFilename.find(".html");
         *ext = "html";
     }
+    if(*loc == string::npos)
+        return 0;
     string s = localFilename.substr((*loc)-1,1);
     while(nos.find(s) != string::npos) {
         *no = s + *no; (*loc)--; s = localFilename.substr((*loc)-1,1);
     }
+    return 1;
 }
 
 int GetGraphemesCount(QString string)
@@ -225,14 +228,18 @@ void MainWindow::on_actionLoad_Next_Page_triggered()
         string no = "";
         size_t loc;
         QString ext = "";
-        GetPageNumber(localFilename, &no, &loc, &ext);
+        if(!GetPageNumber(localFilename, &no, &loc, &ext))
+            return;
         localFilename.replace(loc,no.size(),to_string(stoi(no) + 1));
-
-        GetPageNumber(localCurrentTabPageName, &no, &loc, &ext);
+        QFile *file = new QFile(QString::fromStdString(localFilename));
+        QFileInfo finfo(file->fileName());
+        if(!(finfo.exists() && finfo.isFile()))
+            return;
+        if(!GetPageNumber(localCurrentTabPageName, &no, &loc, &ext))
+            return;
         localCurrentTabPageName.replace(loc,no.size(),to_string(stoi(no) + 1));
         currentTabPageName = QString::fromStdString(localCurrentTabPageName);
 
-        QFile *file = new QFile(QString::fromStdString(localFilename));
         fileFlag = 1;
         LoadDocument(file, ext, currentTabPageName);
         fileFlag = 0;
@@ -262,14 +269,18 @@ void MainWindow::on_actionLoad_Prev_Page_triggered()
         string no = "";
         size_t loc;
         QString ext = "";
-        GetPageNumber(localFilename, &no, &loc, &ext);
+        if(!GetPageNumber(localFilename, &no, &loc, &ext))
+            return;
         localFilename.replace(loc,no.size(),to_string(stoi(no) - 1));
+        QFile *file = new QFile(QString::fromStdString(localFilename));
+        QFileInfo finfo(file->fileName());
+        if(!(finfo.exists() && finfo.isFile())) // Check if file exists
+            return;
 
-        GetPageNumber(localCurrentTabPageName, &no, &loc, &ext);
+        if(!GetPageNumber(localCurrentTabPageName, &no, &loc, &ext))
+            return;
         localCurrentTabPageName.replace(loc,no.size(),to_string(stoi(no) - 1));
         currentTabPageName = QString::fromStdString(localCurrentTabPageName);
-
-        QFile *file = new QFile(QString::fromStdString(localFilename));
         fileFlag = 1;
         LoadDocument(file, ext, currentTabPageName);
         fileFlag = 0;
@@ -695,14 +706,11 @@ void MainWindow::menuSelection(QAction* action)
 
 void MainWindow::on_actionNew_triggered()
 {
-    if (curr_browser) {
-        mFilename = "Untitled";
-        curr_browser->setPlainText("");
-    } else {
-        QTextBrowser * b = new QTextBrowser();
-        currentTabIndex = ui->tabWidget_2->addTab(b, "Untitled");
-        ui->tabWidget_2->setCurrentIndex(currentTabIndex);
-    }
+    QTextBrowser * b = new QTextBrowser(this);
+    b->setReadOnly(false);
+    b->setUndoRedoEnabled(true);
+    currentTabIndex = ui->tabWidget_2->addTab(b, "Untitled");
+    ui->tabWidget_2->setCurrentIndex(currentTabIndex);
 }
 
 
@@ -2560,6 +2568,8 @@ void MainWindow::LoadDocument(QFile * f, QString ext, QString name) {
 
 	f->open(QIODevice::ReadOnly);
 	QFileInfo finfo(f->fileName());
+    if(!(finfo.exists() && finfo.isFile()))
+            return;
 	current_folder = finfo.dir().dirName();
 	QString fileName = finfo.fileName();
 	if (ui->tabWidget_2->count() != 0) {
@@ -2624,6 +2634,8 @@ void MainWindow::LoadDocument(QFile * f, QString ext, QString name) {
 	b->setMouseTracking(true);
 	b->installEventFilter(this);
 	b->setLineWrapColumnOrWidth(QTextEdit::NoWrap);
+    qDebug() << b->isUndoRedoEnabled();
+    b->setUndoRedoEnabled(true);
   
 	f->close();
 
@@ -2846,6 +2858,9 @@ void MainWindow::on_actionOpen_Project_triggered() {
             int seconds    = val.toObject().value("seconds").toInt();
             timeLog[directory] = seconds;
         }
+        bool isSet = QDir::setCurrent(mProject.GetDir().absolutePath() + "/CorrectorOutput") ; //Change application Directory to any subfolder of mProject folder for Image Insertion feature.
+	if(!QDir(mProject.GetDir().absolutePath() + "/Images/Inserted").exists())
+		QDir().mkdir(mProject.GetDir().absolutePath() + "/Images/Inserted");
 	}
 }
 void MainWindow::directoryChanged(const QString &path) {
@@ -2902,21 +2917,49 @@ void MainWindow::on_actionSymbols_triggered()
 
 void MainWindow::on_actionAdd_Image_triggered()
 {
-    QString file = QFileDialog::getOpenFileName(this, tr("Select an image"),
+    if(curr_browser) {
+        QString file = QFileDialog::getOpenFileName(this, tr("Select an image"),
                                           ".", tr("Bitmap Files (*.bmp)\n"
                                             "JPEG (*.jpg *jpeg)\n"
                                             "GIF (*.gif)\n"
                                             "PNG (*.png)\n"));
-    QUrl Uri ( QString ( "file://%1" ).arg ( file ) );
-    QImage image = QImageReader ( file ).read();
-    QTextDocument * textDocument = curr_browser->document();
-    textDocument->addResource( QTextDocument::ImageResource, Uri, QVariant ( image ) );
-    QTextCursor cursor = curr_browser->textCursor();
-    QTextImageFormat imageFormat;
-    imageFormat.setWidth( image.width() );
-    imageFormat.setHeight( image.height() );
-    imageFormat.setName( Uri.toString() );
-    cursor.insertImage(imageFormat);
+        QFileInfo fileInfo(file);
+        QString fileName = fileInfo.fileName();
+        QString destinationFileName =  mProject.GetDir().absolutePath() + "/Images/Inserted/" + fileName;
+        QString copiedFileName;
+        if(QFileInfo::exists(destinationFileName)) {
+            QString temp = destinationFileName;
+            int i =0;
+            while(QFileInfo::exists(temp)) {
+             temp = destinationFileName ;
+             temp.insert(destinationFileName.lastIndexOf("."),  ("(" + QString::number(++i) + ")"));
+            }
+            destinationFileName = temp;
+            QFileInfo finfo(destinationFileName);
+        }
+        QFile::copy(file, destinationFileName);
+
+        copiedFileName = QDir::current().relativeFilePath(destinationFileName);
+
+        //QUrl Uri ( QString ( "file://%1" ).arg ( file ) );
+        QImage image = QImageReader ( copiedFileName ).read();
+        QTextDocument * textDocument = curr_browser->document();
+        textDocument->addResource( QTextDocument::ImageResource, copiedFileName, QVariant ( image ) );
+        QTextCursor cursor = curr_browser->textCursor();
+//        int width = image.width();
+//        int height = image.height();
+//        if(width < 0 || height < 0){
+//            width = 256;
+//            height = 256;
+//        }
+        QTextImageFormat imageFormat;
+        imageFormat.setWidth( image.width() );
+        imageFormat.setHeight( image.height() );
+        imageFormat.setName( copiedFileName );
+//        QTextDocumentFragment fragment;
+//        fragment = QTextDocumentFragment::fromHtml("<img src=\""+ copiedFileName + "\" width=\"" + width + "\" height=\"" + height + "\" />");
+        cursor.insertImage(imageFormat);
+    }
 }
 
 void MainWindow::on_actionResize_Image_triggered()
@@ -2946,4 +2989,18 @@ void MainWindow::on_actionResize_Image_triggered()
           }
       }
    }
+}
+
+void MainWindow::on_actionUndo_triggered()
+{
+    if(!curr_browser)
+        return;
+    curr_browser->undo();
+}
+
+void MainWindow::on_actionRedo_triggered()
+{
+    if(!curr_browser)
+        return;
+    curr_browser->redo();
 }
