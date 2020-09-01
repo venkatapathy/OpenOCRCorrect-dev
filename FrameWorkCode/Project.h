@@ -37,6 +37,9 @@ public:
 		for (auto p : mFiles) {
 			delete p;
 		}
+		for (auto f : mFilters) {
+			delete f;
+		}
 		if(repo)
 		git_repository_free(repo);
 	}

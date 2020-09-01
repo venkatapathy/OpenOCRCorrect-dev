@@ -2536,9 +2536,9 @@ void MainWindow::on_actionCommit_triggered() {
 void MainWindow::on_actionTurn_In_triggered() {
 	QString version = mProject.get_version();
 	std::string turn_in = "Corrector Turned in: " + version.toStdString();
+	mProject.disable_push();
 	mProject.commit(turn_in);
 	mProject.push();
-	mProject.disable_push();
 	auto list = ui->menuGit->actions();
 	for (auto a : list) {
 		QString name = a->text();
@@ -2824,6 +2824,15 @@ void MainWindow::on_actionOpen_Project_triggered() {
 		Filter * filter = mProject.getFilter("Document");
 		auto list = cdir.entryList(QDir::Filter::Files);
 		std::cout << stage.toStdString();
+		if (stage == "Corrector") {
+			auto list = ui->menuGit->actions();
+			for (auto a : list) {
+				QString name = a->text();
+				if (name == "Turn In") {
+					a->setEnabled(true);
+				}
+			}
+		}
 		for (auto f : list) {
 			QString t = str + "/" + f;
 			QFile f2(t);
