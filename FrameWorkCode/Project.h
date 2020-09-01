@@ -25,7 +25,8 @@ public:
 	void push();
 	bool add_config();
 	void fetch();
-	void enable_push();
+    bool enable_push(QWidget *parent);
+    void enable_push();
 	void AddTemp(Filter * f, QFile &pFile,QString prefix);
 
 	~Project() {

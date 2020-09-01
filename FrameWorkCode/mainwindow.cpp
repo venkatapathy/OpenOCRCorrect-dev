@@ -141,7 +141,7 @@ void DisplayError(QString error)
 }
 
 //bool OPENSPELLFLAG = 1;// TO NOT CONVERT ASCII STRINGS TO DEVANAGARI ON OPENING WHEN SPELLCHECK IS CLICKED
-void GetPageNumber(string localFilename, string *no, size_t *loc, QString *ext)
+int GetPageNumber(string localFilename, string *no, size_t *loc, QString *ext)
 {
 
     string nos = "0123456789";
@@ -152,10 +152,13 @@ void GetPageNumber(string localFilename, string *no, size_t *loc, QString *ext)
         *loc = localFilename.find(".html");
         *ext = "html";
     }
+    if(*loc == string::npos)
+        return 0;
     string s = localFilename.substr((*loc)-1,1);
     while(nos.find(s) != string::npos) {
         *no = s + *no; (*loc)--; s = localFilename.substr((*loc)-1,1);
     }
+    return 1;
 }
 
 int GetGraphemesCount(QString string)
@@ -203,6 +206,7 @@ int LevenshteinWithGraphemes(QList<Diff> diffs)
     return levenshtein;
 }
 
+
 void MainWindow::on_actionLoad_Next_Page_triggered()
 {
     if(curr_browser) {
@@ -225,14 +229,18 @@ void MainWindow::on_actionLoad_Next_Page_triggered()
         string no = "";
         size_t loc;
         QString ext = "";
-        GetPageNumber(localFilename, &no, &loc, &ext);
+        if(!GetPageNumber(localFilename, &no, &loc, &ext))
+            return;
         localFilename.replace(loc,no.size(),to_string(stoi(no) + 1));
-
-        GetPageNumber(localCurrentTabPageName, &no, &loc, &ext);
+        QFile *file = new QFile(QString::fromStdString(localFilename));
+        QFileInfo finfo(file->fileName());
+        if(!(finfo.exists() && finfo.isFile()))
+            return;
+        if(!GetPageNumber(localCurrentTabPageName, &no, &loc, &ext))
+            return;
         localCurrentTabPageName.replace(loc,no.size(),to_string(stoi(no) + 1));
         currentTabPageName = QString::fromStdString(localCurrentTabPageName);
 
-        QFile *file = new QFile(QString::fromStdString(localFilename));
         fileFlag = 1;
         LoadDocument(file, ext, currentTabPageName);
         fileFlag = 0;
@@ -262,20 +270,25 @@ void MainWindow::on_actionLoad_Prev_Page_triggered()
         string no = "";
         size_t loc;
         QString ext = "";
-        GetPageNumber(localFilename, &no, &loc, &ext);
+        if(!GetPageNumber(localFilename, &no, &loc, &ext))
+            return;
         localFilename.replace(loc,no.size(),to_string(stoi(no) - 1));
+        QFile *file = new QFile(QString::fromStdString(localFilename));
+        QFileInfo finfo(file->fileName());
+        if(!(finfo.exists() && finfo.isFile())) // Check if file exists
+            return;
 
-        GetPageNumber(localCurrentTabPageName, &no, &loc, &ext);
+        if(!GetPageNumber(localCurrentTabPageName, &no, &loc, &ext))
+            return;
         localCurrentTabPageName.replace(loc,no.size(),to_string(stoi(no) - 1));
         currentTabPageName = QString::fromStdString(localCurrentTabPageName);
-
-        QFile *file = new QFile(QString::fromStdString(localFilename));
         fileFlag = 1;
         LoadDocument(file, ext, currentTabPageName);
         fileFlag = 0;
    }
 
 }
+
 
 
 vector<string> vGPage, vIPage, vCPage; // for calculating WER
@@ -695,14 +708,11 @@ void MainWindow::menuSelection(QAction* action)
 
 void MainWindow::on_actionNew_triggered()
 {
-	if (curr_browser) {
-		mFilename = "Untitled";
-		curr_browser->setPlainText("");
-    } else {
-        QTextBrowser * b = new QTextBrowser();
-        currentTabIndex = ui->tabWidget_2->addTab(b, "Untitled");
-        ui->tabWidget_2->setCurrentIndex(currentTabIndex);
-    }
+    QTextBrowser * b = new QTextBrowser(this);
+    b->setReadOnly(false);
+    b->setUndoRedoEnabled(true);
+    currentTabIndex = ui->tabWidget_2->addTab(b, "Untitled");
+    ui->tabWidget_2->setCurrentIndex(currentTabIndex);
 }
 
 void MainWindow::on_actionSave_triggered()
@@ -750,6 +760,7 @@ void MainWindow::on_actionSave_triggered()
         }
     }
     ConvertSlpDevFlag =0;
+    gSaveTriggered = 0;
     //on_actionSpell_Check_triggered();
 
 }
@@ -2799,11 +2810,7 @@ void MainWindow::on_actionAccuracyLog_triggered()
         }
        int l1,l2,l3, DiffOcr_Corrector,DiffCorrector_Verifier,DiffOcr_Verifier; float correctorChangesPerc,verifierChangesPerc,ocrErrorPerc;
 
-       l1 = GetGraphemesCount(qs1); l2 = GetGraphemesCount(qs2); l3 = GetGraphemesCount(qs3);
-       if(qs1=="" | qs2 == "" | qs3 == "")
-       {
-           continue;
-       }
+
        QTextDocument doc;
 
        doc.setHtml(qs2);
@@ -2812,37 +2819,50 @@ void MainWindow::on_actionAccuracyLog_triggered()
        doc.setHtml(qs3);
        qs3 = doc.toPlainText().replace(" \n","\n");
 
+       l1 = GetGraphemesCount(qs1); l2 = GetGraphemesCount(qs2); l3 = GetGraphemesCount(qs3);
+       if(qs1=="" | qs2 == "" | qs3 == "")
+       {
+           continue;
+       }
+
        diff_match_patch dmp;
 
        auto diffs1 = dmp.diff_main(qs1,qs2);
        DiffOcr_Corrector = LevenshteinWithGraphemes(diffs1);
-       correctorChangesPerc = ((float)(DiffOcr_Corrector)/(float)l1)*100;
-       if(correctorChangesPerc<0) correctorChangesPerc = ((float)(DiffOcr_Corrector)/(float)l2)*100;
+       correctorChangesPerc = ((float)(DiffOcr_Corrector)/(float)l2)*100;
+       if(correctorChangesPerc>100)
+           correctorChangesPerc = ((float)(DiffOcr_Corrector)/(float)l1)*100;
        correctorChangesPerc = (((float)lround(correctorChangesPerc*100))/100);
 
        auto diffs2 = dmp.diff_main(qs2,qs3);
        DiffCorrector_Verifier = LevenshteinWithGraphemes(diffs2);
-       verifierChangesPerc = ((float)(DiffCorrector_Verifier)/(float)l2)*100;
-       if(verifierChangesPerc<0) verifierChangesPerc = ((float)(DiffCorrector_Verifier)/(float)l3)*100;
+       verifierChangesPerc = ((float)(DiffCorrector_Verifier)/(float)l3)*100;
+       if(verifierChangesPerc>100)
+           verifierChangesPerc = ((float)(DiffCorrector_Verifier)/(float)l2)*100;
+       verifierChangesPerc = (((float)lround(verifierChangesPerc*100))/100);
        float correctorCharAcc =100- (((float)lround(verifierChangesPerc*100))/100); //Corrector accuracy = 100-changes mabe by Verfier
 
        auto diffs3 = dmp.diff_main(qs1,qs3);
        DiffOcr_Verifier = LevenshteinWithGraphemes(diffs3);
-       ocrErrorPerc = ((float)(DiffOcr_Verifier)/(float)l1)*100;
-       if(ocrErrorPerc<0) ocrErrorPerc = ((float)(DiffOcr_Verifier)/(float)l3)*100;
-       float ocrAcc = 100- (((float)lround(ocrErrorPerc*100))/100);
+       ocrErrorPerc = ((float)(DiffOcr_Verifier)/(float)l3)*100;
+       if(ocrErrorPerc>100)
+           ocrErrorPerc = ((float)(DiffOcr_Verifier)/(float)l1)*100;
+       float ocrAcc = 100 - (((float)lround(ocrErrorPerc*100))/100);
 
 
         auto a = dmp.diff_linesToChars(qs2, qs3); //LinesToChars modifed for WordstoChar in diff_match_patch.cpp
         auto lineText1 = a[0].toString();
         auto lineText2 = a[1].toString();
         auto lineArray = a[2].toStringList();
-        int wordCount = lineArray.count();
+        int wordCount2 = qs2.simplified().count(" ");
+        int wordCount3 = qs3.simplified().count(" ");
         auto diffs = dmp.diff_main(lineText1, lineText2);
-        int worderrors = LevenshteinWithGraphemes(diffs);
+        int worderrors = dmp.diff_levenshtein(diffs);
         dmp.diff_charsToLines(diffs, lineArray);
 
-        float correctorwordaccuracy = (float)(wordCount-worderrors)/(float)wordCount*100;
+        float correctorwordaccuracy = (float)(worderrors)/(float)wordCount3*100;
+        if(correctorwordaccuracy>100)
+            correctorwordaccuracy = (float)(worderrors)/(float)wordCount2*100;
         correctorwordaccuracy = (((float)lround(correctorwordaccuracy*100))/100);
 
         csvFile<<pageName<<","<<worderrors<<","<<DiffCorrector_Verifier<<","<< correctorwordaccuracy<<","<<correctorCharAcc<<"," <<correctorChangesPerc<<","<<ocrAcc<<"\n";
@@ -2860,9 +2880,10 @@ void MainWindow::on_actionPush_triggered() {
 void MainWindow::on_actionCommit_triggered() {
 	QInputDialog inp;
 	bool ok = false;
-	QString text = QInputDialog::getText(this, tr("QInputDialog::getText()"),
-		tr("Message:"), QLineEdit::Normal,
-		QDir::home().dirName(), &ok);
+//	QString text = QInputDialog::getText(this, tr("QInputDialog::getText()"),
+//		tr("Message:"), QLineEdit::Normal,
+//		QDir::home().dirName(), &ok);
+    QString text = "Verifier has Turned in Version:" + mProject.get_version();
 	mProject.commit(text.toStdString());
 }
 void MainWindow::on_actionTurn_In_triggered() {
@@ -2878,9 +2899,13 @@ void MainWindow::on_actionTurn_In_triggered() {
 }
 void MainWindow::on_actionFetch_2_triggered() {
 	mProject.fetch();
+    ui->lineEdit_2->setText("Version " + mProject.get_version());
 }
 void MainWindow::on_actionVerifier_Turn_In_triggered() {
-	mProject.enable_push();
+
+    on_actionCommit_triggered();
+    if(!mProject.enable_push(this))
+        return;
 	mProject.push();
 	auto list = ui->menuGit->actions();
 	for (auto a : list) {
@@ -2890,6 +2915,8 @@ void MainWindow::on_actionVerifier_Turn_In_triggered() {
 		}
 	}
     ui->lineEdit_2->setText("Version " + mProject.get_version());
+    QMessageBox::information(0, "Turn In", "Turned In Successfully");
+
 }
 QString GetFilter(QString & Name, const QStringList &list) {
 
@@ -2911,30 +2938,32 @@ QString GetFilter(QString & Name, const QStringList &list) {
 }
 void MainWindow::LoadDocument(QFile * f, QString ext, QString name) {
 
-	f->open(QIODevice::ReadOnly);
-	QFileInfo finfo(f->fileName());
-	current_folder = finfo.dir().dirName();
-	QString fileName = finfo.fileName();
-	if (ui->tabWidget_2->count() != 0) {
-		for (int i = 0; i < ui->tabWidget_2->count(); i++) {
-			if (name == ui->tabWidget_2->tabText(i)) {
-				ui->tabWidget_2->setCurrentIndex(i);
-				mFilename = f->fileName();
+    f->open(QIODevice::ReadOnly);
+    QFileInfo finfo(f->fileName());
+    if(!(finfo.exists() && finfo.isFile()))
+            return;
+    current_folder = finfo.dir().dirName();
+    QString fileName = finfo.fileName();
+    if (ui->tabWidget_2->count() != 0) {
+        for (int i = 0; i < ui->tabWidget_2->count(); i++) {
+            if (name == ui->tabWidget_2->tabText(i)) {
+                ui->tabWidget_2->setCurrentIndex(i);
+                mFilename = f->fileName();
                 UpdateFileBrekadown();
                 f->close();
-				return;
-			}
-		}
-	}
-	mFilename = f->fileName();
+                return;
+            }
+        }
+    }
+    mFilename = f->fileName();
     UpdateFileBrekadown();
-	QTextBrowser * b = new QTextBrowser(this);
-	b->setReadOnly(false);
-	QTextStream stream(f);
-	stream.setCodec("UTF-8");
-	QFont font("Shobhika Regular");
-	setWindowTitle(name);
-	font.setPointSize(16);
+    QTextBrowser * b = new QTextBrowser(this);
+    b->setReadOnly(false);
+    QTextStream stream(f);
+    stream.setCodec("UTF-8");
+    QFont font("Shobhika Regular");
+    setWindowTitle(name);
+    font.setPointSize(16);
     if(ext == "txt") {
         istringstream iss(stream.readAll().toUtf8().constData());
         string strHtml = "<html><body><p>";
@@ -2942,7 +2971,7 @@ void MainWindow::LoadDocument(QFile * f, QString ext, QString name) {
         while (getline(iss, line)) {
             QString qline = QString::fromStdString(line);
             if(line == "\n" | line == "" | qline.contains("\r") )
-                strHtml+=line+"</p><p>";
+                strHtml+=line + "</p><p>";
             else strHtml += line + "<br />";
        }
        strHtml += "</p></body></html>";
@@ -2958,9 +2987,9 @@ void MainWindow::LoadDocument(QFile * f, QString ext, QString name) {
        b->setFont(font);
     }
     if (ext == "html") {
-		b->setHtml(stream.readAll());
+        b->setHtml(stream.readAll());
     }
-	b->setFont(font);
+    b->setFont(font);
     gInitialTextHtml = b->toHtml();
 
     if(fileFlag) {
@@ -2974,11 +3003,12 @@ void MainWindow::LoadDocument(QFile * f, QString ext, QString name) {
         ui->tabWidget_2->setCurrentIndex(currentTabIndex);
     }
 
-	b->setMouseTracking(true);
-	b->installEventFilter(this);
-	b->setLineWrapColumnOrWidth(QTextEdit::NoWrap);
-  
-	f->close();
+    b->setMouseTracking(true);
+    b->installEventFilter(this);
+    b->setLineWrapColumnOrWidth(QTextEdit::NoWrap);
+    b->setUndoRedoEnabled(true);
+
+    f->close();
 
     QString imageFilePath = mProject.GetDir().absolutePath()+"/Images/" + gCurrentPageName;
     imageFilePath.replace(".txt", ".jpeg");
@@ -2987,6 +3017,7 @@ void MainWindow::LoadDocument(QFile * f, QString ext, QString name) {
     LoadImageFromFile(pImageFile);
 
 }
+
 void MainWindow::LoadImageFromFile(QFile * f) {
 	QString localFileName = f->fileName();
 
@@ -3103,6 +3134,7 @@ void MainWindow::CustomContextMenuTriggered(const QPoint & p) {
 void MainWindow::closetab(int idx) {
 	delete ui->tabWidget_2->widget(idx);
 }
+
 void MainWindow::tabchanged(int idx) {
     currentTabIndex = idx;
     curr_browser = (QTextBrowser*)ui->tabWidget_2->widget(currentTabIndex);
@@ -3127,61 +3159,62 @@ void MainWindow::tabchanged(int idx) {
     myTimer.start();
     DisplayTimeLog();
 }
+
 void MainWindow::on_actionOpen_Project_triggered() {
-	
-	QFile xml(QFileDialog::getOpenFileName(this, "Open Project", "./", tr("Project(*.xml)")));
-	QFileInfo finfo(xml);
+
+    QFile xml(QFileDialog::getOpenFileName(this, "Open Project", "./", tr("Project(*.xml)")));
+    QFileInfo finfo(xml);
     QString basedir = finfo.absoluteDir().absolutePath();
     QString s1 = basedir + "/Images/";
     QString s2 = basedir + "/Inds/";
     QString s3 = basedir+"/CorrectorOutput/";
-	QString s4 = basedir + "/VerifierOutput/";
-	bool exists = QDir(s1).exists() && QDir(s2).exists() && QDir(s3).exists() &&(QDir(s3).exists()|| QDir(s4).exists());
-	if (xml.exists()&& exists) {
-		ui->treeView->reset();
-		mProject.process_xml(xml);
-		mProject.open_git_repo();
-		mProject.setProjectOpen(true);
-		ui->treeView->setModel(mProject.getModel());
-		ui->treeView->setContextMenuPolicy(Qt::CustomContextMenu);
-		bool b = connect(ui->treeView, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(CustomContextMenuTriggered(const QPoint&)));
-		b = connect(ui->treeView, SIGNAL(clicked(const QModelIndex&)), this, SLOT(file_click(const QModelIndex&)));
-		QString stage = mProject.get_stage();
+    QString s4 = basedir + "/VerifierOutput/";
+    bool exists = QDir(s1).exists() && QDir(s2).exists() && QDir(s3).exists() &&(QDir(s3).exists()|| QDir(s4).exists());
+    if (xml.exists()&& exists) {
+        ui->treeView->reset();
+        mProject.process_xml(xml);
+        mProject.open_git_repo();
+        mProject.setProjectOpen(true);
+        ui->treeView->setModel(mProject.getModel());
+        ui->treeView->setContextMenuPolicy(Qt::CustomContextMenu);
+        bool b = connect(ui->treeView, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(CustomContextMenuTriggered(const QPoint&)));
+        b = connect(ui->treeView, SIGNAL(clicked(const QModelIndex&)), this, SLOT(file_click(const QModelIndex&)));
+        QString stage = mProject.get_stage();
         QString version = mProject.get_version();
         ui->lineEdit_2->setText("Version: " + version);
-		QDir dir = mProject.GetDir();
-		QString str = mProject.GetDir().absolutePath()+"/CorrectorOutput/";
-		QString str2 = mProject.GetDir().absolutePath() + "/VerifierOutput/";
-		watcher.addPath(str);
-		watcher.addPath(str2);
-		QDir cdir(str);
-		Filter * filter = mProject.getFilter("Document");
-		auto list = cdir.entryList(QDir::Filter::Files);
-        //std::cout << stage.toStdString();
-		for (auto f : list) {
-			QString t = str + "/" + f;
-			QFile f2(t);
-			mProject.AddTemp(filter,f2, "CorrectorOutput/" );
-			corrector_set.insert(f);
-		}
-		cdir.setPath(str2);
-		list = cdir.entryList(QDir::Files);
-		for (auto f : list) {
-			verifier_set.insert(f);
-			QString t = str2 + "/" + f;
-			QFile f2(t);
-			mProject.AddTemp(filter, f2, "VerifierOutput/");
-		}
-		if (stage != "Corrector") {
-			auto list = ui->menuGit->actions();
-			for (auto a : list) {
-				QString name = a->text();
-				if (name == "Turn In") {
-					a->setEnabled(false);
-				}
-			}
-		}
-		bool b1 = b;
+        QDir dir = mProject.GetDir();
+        QString str = mProject.GetDir().absolutePath()+"/CorrectorOutput/";
+        QString str2 = mProject.GetDir().absolutePath() + "/VerifierOutput/";
+        watcher.addPath(str);
+        watcher.addPath(str2);
+        QDir cdir(str);
+        Filter * filter = mProject.getFilter("Document");
+        auto list = cdir.entryList(QDir::Filter::Files);
+        std::cout << stage.toStdString();
+        for (auto f : list) {
+            QString t = str + "/" + f;
+            QFile f2(t);
+            mProject.AddTemp(filter,f2, "CorrectorOutput/" );
+            corrector_set.insert(f);
+        }
+        cdir.setPath(str2);
+        list = cdir.entryList(QDir::Files);
+        for (auto f : list) {
+            verifier_set.insert(f);
+            QString t = str2 + "/" + f;
+            QFile f2(t);
+            mProject.AddTemp(filter, f2, "VerifierOutput/");
+        }
+        if (stage != "Corrector") {
+            auto list = ui->menuGit->actions();
+            for (auto a : list) {
+                QString name = a->text();
+                if (name == "Turn In") {
+                    a->setEnabled(false);
+                }
+            }
+        }
+        bool b1 = b;
 
         UpdateFileBrekadown();
         gTimeLogLocation = gDirTwoLevelUp + "/Comments/Timelog.json";
@@ -3199,7 +3232,10 @@ void MainWindow::on_actionOpen_Project_triggered() {
             int seconds    = val.toObject().value("seconds").toInt();
             timeLog[directory] = seconds;
         }
-	}
+        bool isSet = QDir::setCurrent(mProject.GetDir().absolutePath() + "/CorrectorOutput") ; //Change application Directory to any subfolder of mProject folder for Image Insertion feature.
+        if(!QDir(mProject.GetDir().absolutePath() + "/Images/Inserted").exists())
+            QDir().mkdir(mProject.GetDir().absolutePath() + "/Images/Inserted");
+    }
 }
 void MainWindow::directoryChanged(const QString &path) {
 	
@@ -3253,6 +3289,7 @@ void MainWindow::on_actionSymbols_triggered()
     symbols->show();
 }
 
+
 void MainWindow::on_actionAdd_Image_triggered()
 {
     if(curr_browser) {
@@ -3261,59 +3298,85 @@ void MainWindow::on_actionAdd_Image_triggered()
                                             "JPEG (*.jpg *jpeg)\n"
                                             "GIF (*.gif)\n"
                                             "PNG (*.png)\n"));
-        QUrl Uri ( QString ( "file://%1" ).arg ( file ) );
-        QImage image = QImageReader ( file ).read();
+        QFileInfo fileInfo(file);
+        QString fileName = fileInfo.fileName();
+        QString destinationFileName =  mProject.GetDir().absolutePath() + "/Images/Inserted/" + fileName;
+        QString copiedFileName;
+        if(QFileInfo::exists(destinationFileName)) {
+            QString temp = destinationFileName;
+            int i =0;
+            while(QFileInfo::exists(temp)) {
+             temp = destinationFileName ;
+             temp.insert(destinationFileName.lastIndexOf("."),  ("(" + QString::number(++i) + ")"));
+            }
+            destinationFileName = temp;
+            QFileInfo finfo(destinationFileName);
+        }
+        QFile::copy(file, destinationFileName);
+
+        copiedFileName = QDir::current().relativeFilePath(destinationFileName);
+
+        //QUrl Uri ( QString ( "file://%1" ).arg ( file ) );
+        QImage image = QImageReader ( copiedFileName ).read();
         QTextDocument * textDocument = curr_browser->document();
-        textDocument->addResource( QTextDocument::ImageResource, Uri, QVariant ( image ) );
+        textDocument->addResource( QTextDocument::ImageResource, copiedFileName, QVariant ( image ) );
         QTextCursor cursor = curr_browser->textCursor();
+//        int width = image.width();
+//        int height = image.height();
+//        if(width < 0 || height < 0){
+//            width = 256;
+//            height = 256;
+//        }
         QTextImageFormat imageFormat;
         imageFormat.setWidth( image.width() );
         imageFormat.setHeight( image.height() );
-        imageFormat.setName( Uri.toString() );
+        imageFormat.setName( copiedFileName );
+//        QTextDocumentFragment fragment;
+//        fragment = QTextDocumentFragment::fromHtml("<img src=\""+ copiedFileName + "\" width=\"" + width + "\" height=\"" + height + "\" />");
         cursor.insertImage(imageFormat);
     }
 }
 
 void MainWindow::on_actionResize_Image_triggered()
 {
-    if(curr_browser) {
-        QTextBlock currentBlock = curr_browser->textCursor().block();
-        QTextBlock::iterator it;
+    QTextBlock currentBlock = curr_browser->textCursor().block();
+    QTextBlock::iterator it;
 
-        for (it = currentBlock.begin(); !(it.atEnd()); ++it) {
-            QTextFragment fragment = it.fragment();
-            if (fragment.isValid()) {
-                if(fragment.charFormat().isImageFormat ()) {
-                  QTextImageFormat newImageFormat = fragment.charFormat().toImageFormat();
-                  QPair<double, double> size = ResizeImageView::getNewSize(this, newImageFormat.width(), newImageFormat.height());
+    for (it = currentBlock.begin(); !(it.atEnd()); ++it) {
+        QTextFragment fragment = it.fragment();
+        if (fragment.isValid()) {
+            if(fragment.charFormat().isImageFormat ()) {
+              QTextImageFormat newImageFormat = fragment.charFormat().toImageFormat();
+              QPair<double, double> size = ResizeImageView::getNewSize(this, newImageFormat.width(), newImageFormat.height());
 
-                  newImageFormat.setWidth(size.first);
-                  newImageFormat.setHeight(size.second);
+              newImageFormat.setWidth(size.first);
+              newImageFormat.setHeight(size.second);
 
-                  if (newImageFormat.isValid()) {
-                      //QMessageBox::about(this, "Fragment", fragment.text());
-                      //newImageFormat.setName(":/icons/text_bold.png");
-                      QTextCursor helper = curr_browser->textCursor();
+              if (newImageFormat.isValid()) {
+                  //QMessageBox::about(this, "Fragment", fragment.text());
+                  //newImageFormat.setName(":/icons/text_bold.png");
+                  QTextCursor helper = curr_browser->textCursor();
 
-                      helper.setPosition(fragment.position());
-                      helper.setPosition(fragment.position() + fragment.length(), QTextCursor::KeepAnchor);
-                      helper.setCharFormat(newImageFormat);
-                  }
+                  helper.setPosition(fragment.position());
+                  helper.setPosition(fragment.position() + fragment.length(), QTextCursor::KeepAnchor);
+                  helper.setCharFormat(newImageFormat);
               }
           }
-       }
-    }
-
+      }
+   }
 }
 
 
-
-void MainWindow::on_ZoomIn_clicked()
+void MainWindow::on_actionUndo_triggered()
 {
-    on_actionZoom_In_triggered();
+    if(!curr_browser)
+        return;
+    curr_browser->undo();
 }
 
-void MainWindow::on_ZoomOut_clicked()
+void MainWindow::on_actionRedo_triggered()
 {
-    on_actionZoom_Out_triggered();
+    if(!curr_browser)
+        return;
+    curr_browser->redo();
 }
