@@ -14,6 +14,7 @@
 #include <QObject>
 #include <git2.h>
 #include <QProcess>
+#include <QMessageBox>
 void Project::parse_project_xml(rapidxml::xml_document<>& pDoc)
 {
 	
@@ -399,10 +400,11 @@ static int transfer_progress_cb(const git_transfer_progress *stats, void *payloa
 }
 void Project::fetch() {
 	
-    QDir::setCurrent(mProjectDir.absolutePath() + "/CorrectorOutput");
+    QDir::setCurrent(mProjectDir.absolutePath());
 	QProcess::execute("git fetch");
 	QProcess::execute("git reset --hard origin/master");
-
+	QMessageBox messageBox;
+	messageBox.information(0, "Pull", "Pulled changes.");
 }
 
 
