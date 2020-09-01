@@ -2465,59 +2465,68 @@ void MainWindow::on_actionAccuracyLog_triggered()
             }
 
         }
-        int l1,l2,l3, DiffOcr_Corrector,DiffCorrector_Verifier,DiffOcr_Verifier; float correctorChangesPerc,verifierChangesPerc,ocrErrorPerc;
+       int l1,l2,l3, DiffOcr_Corrector,DiffCorrector_Verifier,DiffOcr_Verifier; float correctorChangesPerc,verifierChangesPerc,ocrErrorPerc;
 
-           l1 = GetGraphemesCount(qs1); l2 = GetGraphemesCount(qs2); l3 = GetGraphemesCount(qs3);
-           if(qs1=="" | qs2 == "" | qs3 == "")
-           {
-               continue;
-           }
-           QTextDocument doc;
 
-           doc.setHtml(qs2);
-           qs2 = doc.toPlainText().replace(" \n","\n");
+       QTextDocument doc;
 
-           doc.setHtml(qs3);
-           qs3 = doc.toPlainText().replace(" \n","\n");
+       doc.setHtml(qs2);
+       qs2 = doc.toPlainText().replace(" \n","\n");
 
-           diff_match_patch dmp;
+       doc.setHtml(qs3);
+       qs3 = doc.toPlainText().replace(" \n","\n");
 
-           auto diffs1 = dmp.diff_main(qs1,qs2);
-           DiffOcr_Corrector = LevenshteinWithGraphemes(diffs1);
+       l1 = GetGraphemesCount(qs1); l2 = GetGraphemesCount(qs2); l3 = GetGraphemesCount(qs3);
+       if(qs1=="" | qs2 == "" | qs3 == "")
+       {
+           continue;
+       }
+
+       diff_match_patch dmp;
+
+       auto diffs1 = dmp.diff_main(qs1,qs2);
+       DiffOcr_Corrector = LevenshteinWithGraphemes(diffs1);
+       correctorChangesPerc = ((float)(DiffOcr_Corrector)/(float)l2)*100;
+       if(correctorChangesPerc>100)
            correctorChangesPerc = ((float)(DiffOcr_Corrector)/(float)l1)*100;
-           if(correctorChangesPerc<0) correctorChangesPerc = ((float)(DiffOcr_Corrector)/(float)l2)*100;
-           correctorChangesPerc = (((float)lround(correctorChangesPerc*100))/100);
+       correctorChangesPerc = (((float)lround(correctorChangesPerc*100))/100);
 
-           auto diffs2 = dmp.diff_main(qs2,qs3);
-           DiffCorrector_Verifier = LevenshteinWithGraphemes(diffs2);
+       auto diffs2 = dmp.diff_main(qs2,qs3);
+       DiffCorrector_Verifier = LevenshteinWithGraphemes(diffs2);
+       verifierChangesPerc = ((float)(DiffCorrector_Verifier)/(float)l3)*100;
+       if(verifierChangesPerc>100)
            verifierChangesPerc = ((float)(DiffCorrector_Verifier)/(float)l2)*100;
-           if(verifierChangesPerc<0) verifierChangesPerc = ((float)(DiffCorrector_Verifier)/(float)l3)*100;
-           float correctorCharAcc =100- (((float)lround(verifierChangesPerc*100))/100); //Corrector accuracy = 100-changes mabe by Verfier
+       verifierChangesPerc = (((float)lround(verifierChangesPerc*100))/100);
+       float correctorCharAcc =100- (((float)lround(verifierChangesPerc*100))/100); //Corrector accuracy = 100-changes mabe by Verfier
 
-           auto diffs3 = dmp.diff_main(qs1,qs3);
-           DiffOcr_Verifier = LevenshteinWithGraphemes(diffs3);
+       auto diffs3 = dmp.diff_main(qs1,qs3);
+       DiffOcr_Verifier = LevenshteinWithGraphemes(diffs3);
+       ocrErrorPerc = ((float)(DiffOcr_Verifier)/(float)l3)*100;
+       if(ocrErrorPerc>100)
            ocrErrorPerc = ((float)(DiffOcr_Verifier)/(float)l1)*100;
-           if(ocrErrorPerc<0) ocrErrorPerc = ((float)(DiffOcr_Verifier)/(float)l3)*100;
-           float ocrAcc = 100- (((float)lround(ocrErrorPerc*100))/100);
+       float ocrAcc = 100 - (((float)lround(ocrErrorPerc*100))/100);
 
 
-            auto a = dmp.diff_linesToChars(qs2, qs3); //LinesToChars modifed for WordstoChar in diff_match_patch.cpp
-            auto lineText1 = a[0].toString();
-            auto lineText2 = a[1].toString();
-            auto lineArray = a[2].toStringList();
-            int wordCount = lineArray.count();
-            auto diffs = dmp.diff_main(lineText1, lineText2);
-            int worderrors = dmp.diff_levenshtein(diffs);
-            dmp.diff_charsToLines(diffs, lineArray);
+        auto a = dmp.diff_linesToChars(qs2, qs3); //LinesToChars modifed for WordstoChar in diff_match_patch.cpp
+        auto lineText1 = a[0].toString();
+        auto lineText2 = a[1].toString();
+        auto lineArray = a[2].toStringList();
+        int wordCount2 = qs2.simplified().count(" ");
+        int wordCount3 = qs3.simplified().count(" ");
+        auto diffs = dmp.diff_main(lineText1, lineText2);
+        int worderrors = dmp.diff_levenshtein(diffs);
+        dmp.diff_charsToLines(diffs, lineArray);
 
-            float correctorwordaccuracy = (float)(wordCount-worderrors)/(float)wordCount*100;
-            correctorwordaccuracy = (((float)lround(correctorwordaccuracy*100))/100);
+        float correctorwordaccuracy = (float)(worderrors)/(float)wordCount3*100;
+        if(correctorwordaccuracy>100)
+            correctorwordaccuracy = (float)(worderrors)/(float)wordCount2*100;
+        correctorwordaccuracy = (((float)lround(correctorwordaccuracy*100))/100);
 
-            csvFile<<pageName<<","<<worderrors<<","<<DiffCorrector_Verifier<<","<< correctorwordaccuracy<<","<<correctorCharAcc<<"," <<correctorChangesPerc<<","<<ocrAcc<<"\n";
+        csvFile<<pageName<<","<<worderrors<<","<<DiffCorrector_Verifier<<","<< correctorwordaccuracy<<","<<correctorCharAcc<<"," <<correctorChangesPerc<<","<<ocrAcc<<"\n";
 
-        }
+    }
 
-        csvFile.close();
+    csvFile.close();
 
 }
 
