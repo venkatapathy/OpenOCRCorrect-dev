@@ -2953,7 +2953,7 @@ void MainWindow::on_actionAdd_Image_triggered()
             destinationFileName = temp;
             QFileInfo finfo(destinationFileName);
         }
-        QFile::copy(file, destinationFileName);
+		QFile::copy(file, destinationFileName);
 
         copiedFileName = QDir::current().relativeFilePath(destinationFileName);
 

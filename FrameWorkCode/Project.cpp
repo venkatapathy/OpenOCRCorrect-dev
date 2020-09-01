@@ -360,6 +360,8 @@ void Project::push() {
 		return;
 	}
 	git_remote_free(remote);
+	QMessageBox messageBox;
+	messageBox.information(0, "Turn In", "Turned in Successfully.");
 	return;
 }
 static int progress_cb(const char *str, int len, void *data)
