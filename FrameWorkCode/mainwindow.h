@@ -243,9 +243,9 @@ private slots:
 
     void on_compareVerifierOutput_clicked();
 
-    void on_ZoomIn_clicked();
+    void on_actionUndo_triggered();
 
-    void on_ZoomOut_clicked();
+    void on_actionRedo_triggered();
 
 private:
     Ui::MainWindow *ui;
