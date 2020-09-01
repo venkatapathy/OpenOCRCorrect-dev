@@ -412,7 +412,6 @@ p, li { white-space: pre-wrap; }
      <string>Version Control</string>
     </property>
     <addaction name="actionTurn_In"/>
-    <addaction name="actionCommit"/>
     <addaction name="actionFetch_2"/>
    </widget>
    <addaction name="menuSelectLanguage"/>

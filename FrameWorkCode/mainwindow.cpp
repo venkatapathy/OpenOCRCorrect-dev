@@ -2534,6 +2534,9 @@ void MainWindow::on_actionCommit_triggered() {
 	mProject.commit(text.toStdString());
 }
 void MainWindow::on_actionTurn_In_triggered() {
+	QString version = mProject.get_version();
+	std::string turn_in = "Corrector Turned in: " + version.toStdString();
+	mProject.commit(turn_in);
 	mProject.push();
 	mProject.disable_push();
 	auto list = ui->menuGit->actions();

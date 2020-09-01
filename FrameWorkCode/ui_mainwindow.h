@@ -602,7 +602,6 @@ public:
         menuFontAndLayout->addAction(actionAdd_Image);
         menuFontAndLayout->addAction(actionResize_Image);
         menuGit->addAction(actionTurn_In);
-        menuGit->addAction(actionCommit);
         menuGit->addAction(actionFetch_2);
         toolBar->addAction(actionOpen_Project);
         toolBar->addAction(actionSave);
