@@ -82,7 +82,11 @@ MainWindow::MainWindow(QWidget *parent) :
     b = connect(&watcher, SIGNAL(directoryChanged(const QString&)), this, SLOT(directoryChanged(const QString&)));
     str.replace(",, ", "\n");
     // str.replace(", ","\t");
-    ui->textEdit->setText(str);
+	QFont font("Shobhika-Regular");
+	font.setWeight(14);
+	font.setPointSize(12);
+	ui->textEdit->setFont(font);
+	ui->textEdit->setPlainText(str);
 }
 
 MainWindow::~MainWindow()
@@ -2709,7 +2713,7 @@ void MainWindow::RemoveFile() {
 	QFile * file = item->GetFile();
 	if (file->exists()) {
 		mProject.removeFile(curr_idx, *filtr, *file);
-		ui->treeView->reset();
+		ui->projectView->reset();
 	}
 }
 void MainWindow::AddNewFile() {
@@ -2727,7 +2731,7 @@ void MainWindow::AddNewFile() {
 }
 
 void MainWindow::CustomContextMenuTriggered(const QPoint & p) {
-	curr_idx = ui->treeView->indexAt(p);
+	curr_idx = ui->projectView->indexAt(p);
 
 	if (curr_idx.isValid()) {
 		auto item = (TreeItem*)curr_idx.internalPointer();
@@ -2737,7 +2741,7 @@ void MainWindow::CustomContextMenuTriggered(const QPoint & p) {
 			QAction * act = new QAction("Remove File");
 			connect(act, &QAction::triggered, this, &MainWindow::RemoveFile);
 			m->addAction(act);
-			m->move(ui->treeView->mapToGlobal(p));
+			m->move(ui->projectView->mapToGlobal(p));
 			m->show();
 		}
 						break;
@@ -2751,7 +2755,7 @@ void MainWindow::CustomContextMenuTriggered(const QPoint & p) {
 			QAction * act2 = new QAction("Add Files");
 			connect(act2, &QAction::triggered, this, &MainWindow::OpenDirectory);
 			m->addAction(act2);
-			m->move(ui->treeView->mapToGlobal(p));
+			m->move(ui->projectView->mapToGlobal(p));
 			m->show();
 			break;
 		}
@@ -2797,14 +2801,14 @@ void MainWindow::on_actionOpen_Project_triggered() {
 	QString s4 = basedir + "/VerifierOutput/";
 	bool exists = QDir(s1).exists() && QDir(s2).exists() && QDir(s3).exists() &&(QDir(s3).exists()|| QDir(s4).exists());
 	if (xml.exists()&& exists) {
-		ui->treeView->reset();
+		ui->projectView->reset();
 		mProject.process_xml(xml);
 		mProject.open_git_repo();
 		mProject.setProjectOpen(true);
-		ui->treeView->setModel(mProject.getModel());
-		ui->treeView->setContextMenuPolicy(Qt::CustomContextMenu);
-		bool b = connect(ui->treeView, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(CustomContextMenuTriggered(const QPoint&)));
-		b = connect(ui->treeView, SIGNAL(clicked(const QModelIndex&)), this, SLOT(file_click(const QModelIndex&)));
+		ui->projectView->setModel(mProject.getModel());
+		ui->projectView->setContextMenuPolicy(Qt::CustomContextMenu);
+		bool b = connect(ui->projectView, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(CustomContextMenuTriggered(const QPoint&)));
+		b = connect(ui->projectView, SIGNAL(clicked(const QModelIndex&)), this, SLOT(file_click(const QModelIndex&)));
 		QString stage = mProject.get_stage();
         QString version = mProject.get_version();
         ui->lineEdit_2->setText("Version: " + version);
