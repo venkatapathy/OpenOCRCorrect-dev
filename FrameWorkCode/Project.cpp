@@ -43,7 +43,9 @@ bool Project::enable_push(QWidget *parent) {
 	auto c = doc.child("Project").child("Metadata");
 	bool s = c.child("Stage").first_child().set_value("Corrector");
 	int ver = std::stoi(c.child("Version").child_value());
-    int button = QMessageBox::question(parent, "Select Role", QString("Do you want to Increment the Version and Turn In?\n\nClick Yes to Turnin and Increment the Version from %1 to %2\nClick No to Turnin Without Incrementing Version (When you are Resubmitting or Accepting this as the final Version)").arg(ver, ver+1),
+	int ver2 = ver + 1;
+	QString msg = QString("Do you want to Increment the Version and Turn In?\n\nClick Yes to Turnin and Increment the Version from "+ QString::number(ver) +" to "+QString::number(ver2)+" \nClick No to Turnin Without Incrementing Version (When you are Resubmitting or Accepting this as the final Version)");
+    int button = QMessageBox::question(parent, "Select Role", msg,
                                        "Yes", "No", "Cancel", 0);
 
     if(button == 0)

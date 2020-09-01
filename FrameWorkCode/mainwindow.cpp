@@ -59,6 +59,7 @@ int openedFileWords;
 bool gSaveTriggered = 0;
 map<QString, QString> filestructure_fw = { {"Inds","VerifierOutput"},
                                      {"CorrectorOutput","VerifierOutput",},
+                                     {"CorrectorOutput","VerifierOutput",},
                                         {"VerifierOutput","VerifierOutput" }
 
 };
@@ -2878,11 +2879,7 @@ void MainWindow::on_actionPush_triggered() {
 }
 
 void MainWindow::on_actionCommit_triggered() {
-	QInputDialog inp;
-	bool ok = false;
-//	QString text = QInputDialog::getText(this, tr("QInputDialog::getText()"),
-//		tr("Message:"), QLineEdit::Normal,
-//		QDir::home().dirName(), &ok);
+	
     QString text = "Verifier has Turned in Version:" + mProject.get_version();
 	mProject.commit(text.toStdString());
 }
@@ -2903,9 +2900,11 @@ void MainWindow::on_actionFetch_2_triggered() {
 }
 void MainWindow::on_actionVerifier_Turn_In_triggered() {
 
-    on_actionCommit_triggered();
+   
     if(!mProject.enable_push(this))
         return;
+	QString text = "Verifier has Turned in Version:" + mProject.get_version();
+	mProject.commit(text.toStdString());
 	mProject.push();
 	auto list = ui->menuGit->actions();
 	for (auto a : list) {
@@ -3205,15 +3204,7 @@ void MainWindow::on_actionOpen_Project_triggered() {
             QFile f2(t);
             mProject.AddTemp(filter, f2, "VerifierOutput/");
         }
-        if (stage != "Corrector") {
-            auto list = ui->menuGit->actions();
-            for (auto a : list) {
-                QString name = a->text();
-                if (name == "Turn In") {
-                    a->setEnabled(false);
-                }
-            }
-        }
+       
         bool b1 = b;
 
         UpdateFileBrekadown();
