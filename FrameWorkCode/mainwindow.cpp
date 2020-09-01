@@ -3261,6 +3261,7 @@ void MainWindow::on_actionAdd_Image_triggered()
                                             "JPEG (*.jpg *jpeg)\n"
                                             "GIF (*.gif)\n"
                                             "PNG (*.png)\n"));
+		if (!QFile(file).exists()) return;
         QUrl Uri ( QString ( "file://%1" ).arg ( file ) );
         QImage image = QImageReader ( file ).read();
         QTextDocument * textDocument = curr_browser->document();
