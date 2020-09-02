@@ -521,7 +521,7 @@ public:
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 1366, 22));
+        menuBar->setGeometry(QRect(0, 0, 1366, 21));
         menuOCR_Correction_Window = new QMenu(menuBar);
         menuOCR_Correction_Window->setObjectName(QString::fromUtf8("menuOCR_Correction_Window"));
         menuCreateReports = new QMenu(menuBar);
@@ -793,7 +793,7 @@ public:
 #endif // QT_CONFIG(shortcut)
         viewComments->setText(QCoreApplication::translate("MainWindow", "View Comments", nullptr));
         compareCorrectorOutput->setText(QCoreApplication::translate("MainWindow", "Compare Corrector Output", nullptr));
-        compareVerifierOutput->setText(QCoreApplication::translate("MainWindow", "Comapre Verifer Output", nullptr));
+        compareVerifierOutput->setText(QCoreApplication::translate("MainWindow", "Comapre Verifier Output", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(tab), QCoreApplication::translate("MainWindow", "SLP", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(tab_2), QCoreApplication::translate("MainWindow", "Project", nullptr));
         textBrowser->setHtml(QCoreApplication::translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
