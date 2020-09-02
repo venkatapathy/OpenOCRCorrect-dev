@@ -247,6 +247,10 @@ private slots:
 
     void on_actionRedo_triggered();
 
+    void on_hinButton_toggled(bool checked);
+
+    void on_sanButton_toggled(bool checked);
+
 private:
     Ui::MainWindow *ui;
 	Project mProject;
