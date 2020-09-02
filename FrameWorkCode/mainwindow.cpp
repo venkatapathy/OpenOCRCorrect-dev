@@ -65,28 +65,33 @@ map<QString, QString> filestructure_bw = { {"VerifierOutput","CorrectorOutput"},
 									 {"CorrectorOutput","Inds"},
 										  {"Inds" , "Inds"}
 };
-
+ QString gSanskrit, gHindi;
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+	QMainWindow(parent),
+	ui(new Ui::MainWindow)
 {
-    ui->setupUi(this);
+	ui->setupUi(this);
+    
+    QString common = "अ  - a,, आ/ ा  - A,, इ/ ि  - i,, ई/ ी  - I,, उ/ ु  - u,, ऊ/ ू  - U,, ऋ/ ृ  - f,, ए/ े  - e,, ऐ/ ै  - E,, ओ/ ो  - o,, औ/ ौ  - O,, ं  - M,, ः  - H,,  ँ   - ~,, ज्ञ  - jYa,, त्र  - tra,, श्र  - Sra,, क्ष्/क्ष  - kz/kza,, द्य्/द्य  - dy/dya,, क्/क  - k/ka,, ख्/ख  - K/Ka,, ग्/ग  - g/ga,, घ्/घ  - G/Ga,, ङ्/ङ  - N/Na,, च्/च  - c/ca,, छ्/छ  - C/Ca,, ज्/ज  - j/ja,, झ्/झ  - J/Ja,, ञ्/ञ  - Y/Ya,, ट्/ट  - w/wa,, ठ्/ठ  - W/Wa,, ड्/ड  - q/qa,, ढ्/ढ  - Q/Qa,, ण्/ण  - R/Ra,, त्/त  - t/ta,, थ्/थ  - T/Ta,, द्/द  - d/da,, ध्/ध  - D/Da,, न्/न  - n/na,, प्/प  - p/pa,, फ्/फ  - P/Pa,, ब्/ब  - b/ba,, भ्/भ  - B/Ba,, म्/म  - m/ma,, य्/य  - y/ya,, र्/र  - r/ra,, ल्/ल  - l/la,, व्/व  - v/va,, श्/श  - S/Sa,, ष्/ष  - z/za,, स्/स  - s/sa,, ह्/ह  - h/ha,, ळ्/ळ  - L/La,, १  - 1,, २  - 2,, ३  - 3,, ४  - 4,, ५  - 5,, ६  - 6,, ७  - 7,, ८  - 8,, ९  - 9,, ०  - 0,, ।  - |,, ॥  - ||";
+    gSanskrit = "SLP1 Sanskrit Guide:";
+    gSanskrit += "\n";
+    gSanskrit+= "ऽ - $,, ॐ - %,,  ᳲ  - Z,,   ᳳ   - V,, ॠ/ ॄ  - F,, ऌ/ ॢ  - x,, ॡ/ \"ॣ\”  - X,, ,, ,, ";
+    gSanskrit += common;
+    gSanskrit.replace(",, ", "\n");
 
-    QString str = "SLP1 Guide:";
-    str += "\n";
-    str += "डॉ,, ड़  - xa,, ढ़  -Xa,, अ  - a,, आ/ ा  - A,, इ/ ि  - i,, ई/ ी  - I,, उ/ ु  - u,, ऊ/ ू  - U,, ऋ/ ृ  - f,, ॠ/ ॄ  - F,, ऌ/ ॢ  - x,, ॡ/ \"ॣ\”  - X,, ए/ े  - e,, ऐ/ ै  - E,, ओ/ ो  - o,, औ/ ौ  - O,, ं  - M,, ः  - H,, ँ   - ~,, ऽ  - $,, ॐ  - %,, ज्ञ  - jYa ,, ळ ,, त्र  - tra,, श्र  - Sra,, क्ष्/क्ष  - kz/kza,, द्य्/द्य  - dy/dya,, क्/क  - k/ka,, ख्/ख  - K/Ka,, ग्/ग  - g/ga,, घ्/घ  - G/Ga,, ङ्/ङ  - N/Na,, च्/च  - c/ca,, छ्/छ  - C/Ca,, ज्/ज  - j/ja,, झ्/झ  - J/Ja,, ञ्/ञ  - Y/Ya,, ट्/ट  - w/wa,, ठ्/ठ  - W/Wa,, ड्/ड  - q/qa,, ढ्/ढ  - Q/Qa,, ण्/ण  - R/Ra,, त्/त  - t/ta,, थ्/थ  - T/Ta,, द्/द  - d/da,, ध्/ध  - D/Da,, न्/न  - n/na,, प्/प  - p/pa,, फ्/फ  - P/Pa,, ब्/ब  - b/ba,, भ्/भ  - B/Ba,, म्/म  - m/ma,, य्/य  - y/ya,, र्/र  - r/ra,, ल्/ल  - l/la,, व्/व  - v/va,, श्/श  - S/Sa,, ष्/ष  - z/za,, स्/स  - s/sa,, ह्/ह  - h/ha,, ळ्/ळ  - L/La,, ऩ्  -%,, फ़्  - ^,, य़्  - &,, ऱ्  - V,, १  - 1,, २  - 2,, ३  - 3,, ४  - 4,, ५  - 5,, ६  - 6,, ७  - 7,, ८  - 8,, ९  - 9,, ०  - 0,, ।  - |,, ॥  - ||";
+    gHindi = "SLP1 Hindi Guide:";
+    gHindi += "\n";
+    gHindi+= "ग़् - $,, ऩ् - %,, ऑ - Z,, ऱ् - V,, ज़ - F,, ड़्/ड़ -x/xa,, ढ़्/ढ़  - X/Xa,, डॉ - xZ,, य़्  - &,, क़ - @,, ख़ - #,, फ़् - ^,, ॅ - *,, ,, ,, ";
+    gHindi += common;
+    gHindi.replace(",, ", "\n");
+
+    ui->sanButton->setChecked(true);
+
     ui->tabWidget_2->removeTab(0);
-    ui->tabWidget_2->removeTab(0);
+	ui->tabWidget_2->removeTab(0);
     bool b = connect(ui->tabWidget_2, SIGNAL(tabCloseRequested(int)), this, SLOT(closetab(int)));
     b = connect(ui->tabWidget_2, SIGNAL(currentChanged(int)), this, SLOT(tabchanged(int)));
-    b = connect(&watcher, SIGNAL(directoryChanged(const QString&)), this, SLOT(directoryChanged(const QString&)));
-    str.replace(",, ", "\n");
-    // str.replace(", ","\t");
-	QFont font("Shobhika-Regular");
-	font.setWeight(14);
-	font.setPointSize(12);
-	ui->textEdit->setFont(font);
-	ui->textEdit->setPlainText(str);
+	b = connect(&watcher, SIGNAL(directoryChanged(const QString&)), this, SLOT(directoryChanged(const QString&)));
 }
 
 MainWindow::~MainWindow()
@@ -820,7 +825,10 @@ void MainWindow::on_actionToDevanagari_triggered()
 	int mins = secs / 60;
 	secs = secs - mins * 60;
 	QTextCursor cursor = curr_browser->textCursor();
-	cursor.select(QTextCursor::WordUnderCursor);
+
+    if(!cursor.hasSelection())
+        cursor.select(QTextCursor::WordUnderCursor);
+
 	QString str1 = cursor.selectedText();
 	selectedStr = str1.toUtf8().constData();
 	cursor.beginEditBlock();
@@ -2119,16 +2127,40 @@ void MainWindow::on_actionErrorDetectionRepUniq_triggered()
 void MainWindow::on_actionSanskrit_triggered()
 {
 	HinFlag = 0, SanFlag = 1;
+    ui->textEdit->setText(gSanskrit);
+    ui->hinButton->setChecked(HinFlag);
+    //ui->sanButton->setChecked(SanFlag);
+
+
 }
 
 void MainWindow::on_actionHindi_triggered()
 {
 	HinFlag = 1, SanFlag = 0;
+    ui->textEdit->setText(gHindi);
+    //ui->hinButton->setChecked(HinFlag);
+    ui->sanButton->setChecked(SanFlag);
 }
 
 void MainWindow::on_actionEnglish_triggered()
 {
 	HinFlag = 0, SanFlag = 0;
+    ui->textEdit->setText("");
+    ui->hinButton->setChecked(HinFlag);
+    ui->sanButton->setChecked(SanFlag);
+}
+
+void MainWindow::on_sanButton_toggled(bool checked)
+{
+    if(checked)
+        on_actionSanskrit_triggered();
+}
+
+void MainWindow::on_hinButton_toggled(bool checked)
+{
+
+    if(checked)
+        on_actionHindi_triggered();
 }
 
 void MainWindow::on_actionBold_triggered() //modified
@@ -3029,3 +3061,6 @@ void MainWindow::on_actionRedo_triggered()
         return;
     curr_browser->redo();
 }
+
+
+
