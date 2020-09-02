@@ -88,7 +88,7 @@ MainWindow::MainWindow(QWidget *parent) :
     gHindi += common;
     gHindi.replace(",, ", "\n");
 
-    on_sanButton_toggled(true);
+    ui->sanButton->setChecked(true);
        
     ui->tabWidget_2->removeTab(0);
 	ui->tabWidget_2->removeTab(0);
