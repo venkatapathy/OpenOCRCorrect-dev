@@ -88,7 +88,10 @@ MainWindow::MainWindow(QWidget *parent) :
     gHindi+= "ग़् - $,, ऩ् - %,, ऑ - Z,, ऱ् - V,, ज़ - F,, ड़्/ड़ -x/xa,, ढ़्/ढ़  - X/Xa,, य़्  - &,, क़ - @,, ख़ - #,, फ़् - ^,, ॅ - *,, ,, ,, ";
     gHindi += common;
     gHindi.replace(",, ", "\n");
-
+	QFont font("Shobhika-Regular");
+	font.setWeight(14);
+	font.setPointSize(12);
+	ui->textEdit->setFont(font);
     ui->sanButton->setChecked(true);
        
     ui->tabWidget_2->removeTab(0);
@@ -96,6 +99,7 @@ MainWindow::MainWindow(QWidget *parent) :
     bool b = connect(ui->tabWidget_2, SIGNAL(tabCloseRequested(int)), this, SLOT(closetab(int)));
     b = connect(ui->tabWidget_2, SIGNAL(currentChanged(int)), this, SLOT(tabchanged(int)));
 	b = connect(&watcher, SIGNAL(directoryChanged(const QString&)), this, SLOT(directoryChanged(const QString&)));
+
 }
 
 MainWindow::~MainWindow()

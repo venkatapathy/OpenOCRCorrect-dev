@@ -120,6 +120,9 @@ public:
     QTabWidget *tabWidget;
     QWidget *tab;
     QGridLayout *gridLayout;
+    QHBoxLayout *horizontalLayout_2;
+    QPushButton *hinButton;
+    QPushButton *sanButton;
     QTextEdit *textEdit;
     QWidget *tab_2;
     QGridLayout *gridLayout_3;
@@ -429,6 +432,27 @@ public:
         gridLayout->setSpacing(6);
         gridLayout->setContentsMargins(11, 11, 11, 11);
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
+        horizontalLayout_2 = new QHBoxLayout();
+        horizontalLayout_2->setSpacing(6);
+        horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
+        hinButton = new QPushButton(tab);
+        hinButton->setObjectName(QString::fromUtf8("hinButton"));
+        hinButton->setMaximumSize(QSize(16777215, 20));
+        hinButton->setCheckable(true);
+
+        horizontalLayout_2->addWidget(hinButton);
+
+        sanButton = new QPushButton(tab);
+        sanButton->setObjectName(QString::fromUtf8("sanButton"));
+        sanButton->setMaximumSize(QSize(16777215, 20));
+        sanButton->setCheckable(true);
+        sanButton->setChecked(false);
+
+        horizontalLayout_2->addWidget(sanButton);
+
+
+        gridLayout->addLayout(horizontalLayout_2, 0, 0, 1, 1);
+
         textEdit = new QTextEdit(tab);
         textEdit->setObjectName(QString::fromUtf8("textEdit"));
         sizePolicy1.setHeightForWidth(textEdit->sizePolicy().hasHeightForWidth());
@@ -442,7 +466,7 @@ public:
         textEdit->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
         textEdit->setReadOnly(true);
 
-        gridLayout->addWidget(textEdit, 0, 0, 1, 1);
+        gridLayout->addWidget(textEdit, 1, 0, 1, 1);
 
         tabWidget->addTab(tab, QString());
         tab_2 = new QWidget();
@@ -644,7 +668,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        tabWidget->setCurrentIndex(1);
+        tabWidget->setCurrentIndex(0);
         tabWidget_2->setCurrentIndex(0);
 
 
@@ -794,6 +818,8 @@ public:
         viewComments->setText(QCoreApplication::translate("MainWindow", "View Comments", nullptr));
         compareCorrectorOutput->setText(QCoreApplication::translate("MainWindow", "Compare Corrector Output", nullptr));
         compareVerifierOutput->setText(QCoreApplication::translate("MainWindow", "Comapre Verifier Output", nullptr));
+        hinButton->setText(QCoreApplication::translate("MainWindow", "Hindi/Marathi", nullptr));
+        sanButton->setText(QCoreApplication::translate("MainWindow", "Sanskrit", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(tab), QCoreApplication::translate("MainWindow", "SLP", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(tab_2), QCoreApplication::translate("MainWindow", "Project", nullptr));
         textBrowser->setHtml(QCoreApplication::translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
