@@ -84,7 +84,10 @@ MainWindow::MainWindow(QWidget *parent) :
     gHindi+= "ग़् - $,, ऩ् - %,, ऑ - Z,, ऱ् - V,, ज़ - F,, ड़्/ड़ -x/xa,, ढ़्/ढ़  - X/Xa,, डॉ - xZ,, य़्  - &,, क़ - @,, ख़ - #,, फ़् - ^,, ॅ - *,, ,, ,, ";
     gHindi += common;
     gHindi.replace(",, ", "\n");
-
+	QFont font("Shobhika-Regular");
+	font.setWeight(14);
+	font.setPointSize(12);
+	ui->textEdit->setFont(font);
     ui->sanButton->setChecked(true);
 
     ui->tabWidget_2->removeTab(0);
@@ -463,6 +466,10 @@ void MainWindow::mousePressEvent(QMouseEvent *ev)
                 QMenu* popup_menu = curr_browser->createStandardContextMenu();
                 QMenu* spell_menu;
                 spell_menu = new QMenu("suggestions", this);
+				QFont font("Shobhika-Regular");
+				font.setWeight(14);
+				font.setPointSize(12);
+				spell_menu->setFont(font);
                 //QAction* action = tr("tihor");
                 QAction* act;
                 //vector<string> Words =  print5NearestEntries(TGPage,selectedStr);
