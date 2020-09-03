@@ -471,7 +471,12 @@ void MainWindow::mousePressEvent(QMouseEvent *ev)
 				curr_browser->setContextMenuPolicy(Qt::CustomContextMenu);//IMP TO AVOID UNDO ETC AFTER SELECTING A SUGGESTION
 				QMenu* popup_menu = curr_browser->createStandardContextMenu();
 				QMenu* spell_menu;
+				
 				spell_menu = new QMenu("suggestions", this);
+				QFont font("Shobhika-Regular");
+				font.setWeight(14);
+				font.setPointSize(12);
+				spell_menu->setFont(font);
 				//QAction* action = tr("tihor");
 				QAction* act;
 				//vector<string> Words =  print5NearestEntries(TGPage,selectedStr);
