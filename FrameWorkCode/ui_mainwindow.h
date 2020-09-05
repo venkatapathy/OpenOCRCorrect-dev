@@ -533,7 +533,7 @@ public:
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 1366, 22));
+        menuBar->setGeometry(QRect(0, 0, 1366, 21));
         menuOCR_Correction_Window = new QMenu(menuBar);
         menuOCR_Correction_Window->setObjectName(QString::fromUtf8("menuOCR_Correction_Window"));
         menuCreateReports = new QMenu(menuBar);
@@ -627,13 +627,11 @@ public:
         menuGit->addAction(actionTurn_In);
         menuGit->addAction(actionFetch_2);
         toolBar->addAction(actionOpen_Project);
+        toolBar->addSeparator();
         toolBar->addAction(actionSave);
         toolBar->addAction(actionSave_As);
         toolBar->addSeparator();
         toolBar->addAction(actionLoadData);
-        toolBar->addSeparator();
-        toolBar->addAction(actionLoad_Prev_Page);
-        toolBar->addAction(actionLoad_Next_Page);
         toolBar->addSeparator();
         toolBar->addAction(actionUndo);
         toolBar->addAction(actionRedo);
