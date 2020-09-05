@@ -288,6 +288,7 @@ void create_initial_commit(git_repository * repo,std::string name ,std::string e
 	check_lg2(git_signature_now(&sig, name.c_str(), email.c_str()),"Could not create commit signature","");
 	/* Now let's create an empty tree for this commit */
 
+	
 	check_lg2(git_repository_index(&index, repo),"Could not open repository index", "");
 
 	/**
@@ -422,7 +423,7 @@ void Project::fetch() {
     QDir::setCurrent(mProjectDir.absolutePath());
 	QProcess::execute("git fetch");
 	QProcess::execute("git reset --hard origin/master");
-	
+	QDir::setCurrent(mProjectDir.absolutePath()+"/CorrectorOutput/");
 
 }
 
@@ -490,7 +491,7 @@ void Project::commit(std::string message) {
 	 * but here this is the first commit so there will be no parent.
 	 */
 
-	klass = check_lg2(git_commit_create_v(&commit_id, repo, "HEAD", sig, sig, NULL, message.c_str(), tree, parent ? 1 : 0, parent), "Could not create the initial commit", "");
+	klass = check_lg2(git_commit_create_v(&commit_id, repo, "HEAD", sig, sig, NULL, message.c_str(), tree, parent ? 1 : 0, parent), "Could not create commit", "");
 	if (klass > 0) {
 		git_tree_free(tree);
 		git_signature_free(sig);

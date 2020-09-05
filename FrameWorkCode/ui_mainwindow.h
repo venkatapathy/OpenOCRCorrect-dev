@@ -646,9 +646,6 @@ public:
         mainToolBar->addAction(actionUndo);
         mainToolBar->addAction(actionRedo);
         mainToolBar->addSeparator();
-        mainToolBar->addAction(actionLoad_Prev_Page);
-        mainToolBar->addAction(actionLoad_Next_Page);
-        mainToolBar->addSeparator();
         mainToolBar->addAction(actionLoadGDocPage);
         mainToolBar->addSeparator();
         mainToolBar->addAction(actionToDevanagari);
@@ -663,6 +660,7 @@ public:
         mainToolBar->addSeparator();
         mainToolBar->addAction(actionHighlight);
         mainToolBar->addAction(actionSymbols);
+        mainToolBar->addSeparator();
         mainToolBar->addAction(actionZoom_In);
         mainToolBar->addAction(actionZoom_Out);
 
