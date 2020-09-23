@@ -451,10 +451,12 @@ p, li { white-space: pre-wrap; }
       <string>Tables</string>
      </property>
      <addaction name="actionInsert_Table_2"/>
-     <addaction name="actionAdd_Columns"/>
-     <addaction name="actionAdd_Rows"/>
-     <addaction name="actionRemove_Columns"/>
+     <addaction name="actionInsert_Rowabove"/>
+     <addaction name="actionInsert_Rowbelow"/>
+     <addaction name="actionInsert_Columnleft"/>
+     <addaction name="actionInsert_Columnright"/>
      <addaction name="actionRemove_Rows"/>
+     <addaction name="actionRemove_Columns"/>
     </widget>
     <addaction name="actionAllFontProperties"/>
     <addaction name="actionBold"/>
@@ -1084,24 +1086,34 @@ p, li { white-space: pre-wrap; }
     <string>Insert Table</string>
    </property>
   </action>
-  <action name="actionAdd_Columns">
-   <property name="text">
-    <string>Add Columns</string>
-   </property>
-  </action>
-  <action name="actionAdd_Rows">
-   <property name="text">
-    <string>Add Rows</string>
-   </property>
-  </action>
   <action name="actionRemove_Columns">
    <property name="text">
-    <string>Remove Columns</string>
+    <string>Remove Column</string>
    </property>
   </action>
   <action name="actionRemove_Rows">
    <property name="text">
-    <string>Remove Rows</string>
+    <string>Remove Row</string>
+   </property>
+  </action>
+  <action name="actionInsert_Rowabove">
+   <property name="text">
+    <string>Insert Row Above</string>
+   </property>
+  </action>
+  <action name="actionInsert_Rowbelow">
+   <property name="text">
+    <string>Insert Row Below</string>
+   </property>
+  </action>
+  <action name="actionInsert_Columnleft">
+   <property name="text">
+    <string>Insert Column Left</string>
+   </property>
+  </action>
+  <action name="actionInsert_Columnright">
+   <property name="text">
+    <string>Insert Column Right</string>
    </property>
   </action>
  </widget>

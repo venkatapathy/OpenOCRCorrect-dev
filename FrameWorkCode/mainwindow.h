@@ -260,13 +260,17 @@ private slots:
 
     void on_actionInsert_Table_2_triggered();
 
-    void on_actionAdd_Columns_triggered();
-
-    void on_actionAdd_Rows_triggered();
-
     void on_actionRemove_Columns_triggered();
 
     void on_actionRemove_Rows_triggered();
+
+    void on_actionInsert_Rowabove_triggered();
+
+    void on_actionInsert_Rowbelow_triggered();
+
+    void on_actionInsert_Columnleft_triggered();
+
+    void on_actionInsert_Columnright_triggered();
 
 private:
     bool mExitStatus = false;
